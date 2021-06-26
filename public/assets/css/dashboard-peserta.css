@@ -1,0 +1,26 @@
+* {
+    scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
+}
+
+div#container {
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    height: 100px;
+    background: red;
+    display: flex;
+}
+
+div#content {
+    height: 800px;
+    background: blue;
+}
+
+footer {
+    height: 100px;
+    background: yellow;
+}
