@@ -1,26 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+/* [RICKY] CSS keseluruhan */
 * {
     scroll-behavior: smooth;
     padding: 0;
     margin: 0;
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+    font-size: 20px;
 }
 
+/* [RICKY] CSS bagian container */
 div#container {
     display: flex;
     flex-direction: column;
 }
 
+/* [RICKY] CSS bagian header */
 header {
     height: 100px;
-    background: red;
     display: flex;
 }
 
+div.header-left {
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    padding-left: 3%;
+}
+
+div.header-right {
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 3%;
+}
+
+span.team-info {
+    margin-right: 3%;
+}
+
+/* [RICKY] CSS bagian content */
 div#content {
-    height: 800px;
+    height: 980px;
+    background: blue;
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    padding: 1%;
+}
+
+/* [RICKY] CSS bagian content atas (gift, boss, history) */
+div.content-top {
+    background: lightgreen;
+    height: 60%;
+    display: flex;
+}
+
+section.gift, section.history {
+    flex-basis: 20%;
+    background: red;
+}
+
+section.boss {
+    flex-basis: 60%;
     background: blue;
 }
 
-footer {
-    height: 100px;
-    background: yellow;
+/* [RICKY] CSS bagian section gift */
+
+
+
+/* [RICKY] CSS bagian content bawah (material, equipment, control) */
+div.content-bottom {
+    background: lightgrey;
+    height: 40%;
+    display: flex;
+}
+
+section.material, section.equipment {
+    flex-basis: 30%;
+    background: red;
+    border: 1px solid black;
+}
+
+section.control {
+    flex-basis: 40%;
+    background: blue;
 }
