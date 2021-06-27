@@ -167,13 +167,97 @@ div.content-bottom {
     display: flex;
 }
 
-section.material, section.equipment {
-    flex-basis: 30%;
+section.material {
+    flex-basis: 25%;
     background: red;
-    border: 1px solid black;
+}
+
+section.equipment {
+    flex-basis: 35%;
+    background: green;
 }
 
 section.control {
     flex-basis: 40%;
     background: blue;
+}
+
+/* [RICKY] CSS bagian section material */
+table.material-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.material-table td {
+    border: 1px solid #444444;
+}
+
+table.material-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+table.material-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.material-table td:nth-of-type(odd) {
+    width: 75%;
+    text-align: center;
+    padding: 2%;
+}
+
+table.material-table td:nth-of-type(even) {
+    width: 25%;
+    text-align: center;
+    padding: 2%;
+}
+
+/* [RICKY] CSS bagian section equipment */
+table.equipment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.equipment-table td {
+    border: 1px solid #444444;
+}
+
+table.equipment-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+table.equipment-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.equipment-table td:nth-child(1) {
+    width: 40%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(2) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(3) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(4) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
 }

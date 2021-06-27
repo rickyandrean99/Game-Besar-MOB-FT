@@ -35,10 +35,10 @@
                     <section class="gift">
                         <table class="gift-table">
                             <tbody>
-                                @for($i = 1; $i <= 30; $i++)
+                                @for($i = 2; $i <= 30; $i++)
                                     <tr>
                                         <td>Tim {{ $i }}</td>
-                                        <td><button type="button" style="width: 80%; padding: 1%" class="btn-gift-material">Gift</button></td>
+                                        <td><button type="button" style="width: 80%; padding: 2%" class="btn-gift-material">Gift</button></td>
                                     </tr>
                                 @endfor
                             </tbody>
@@ -78,12 +78,34 @@
 
                 <!-- [RICKY] Struktur content bagian bawah (material, equipment, control) -->
                 <div class="content-bottom">
+                    <!-- [RICKY] Struktur section material -->
                     <section class="material">
-
+                        <table class="material-table">
+                            <tbody>
+                                @for($i = 1; $i <= 10; $i++)
+                                    <tr>
+                                        <td>Material {{ $i }}</td>
+                                        <td>0</td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+                        </table>
                     </section>
 
+                    <!-- [RICKY] Struktur section equipment -->
                     <section class="equipment">
-                        
+                        <table class="equipment-table">
+                            <tbody>
+                                @for($i = 1; $i <= 10; $i++)
+                                    <tr>
+                                        <td>Equipment {{ $i }}</td>
+                                        <td>0</td>
+                                        <td><button type="button" style="width: 80%; padding: 2%">Crafting</button></td>
+                                        <td><button type="button" style="width: 80%; padding: 2%">Use</button></td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+                        </table>
                     </section>
 
                     <section class="control">
