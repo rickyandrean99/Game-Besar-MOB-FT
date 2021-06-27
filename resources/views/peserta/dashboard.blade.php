@@ -33,28 +33,46 @@
                 <div class="content-top">
                     <!-- [RICKY] Struktur section gift -->
                     <section class="gift">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Nama Tim</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-
+                        <table class="gift-table">
                             <tbody>
-
+                                @for($i = 1; $i <= 30; $i++)
+                                    <tr>
+                                        <td>Tim {{ $i }}</td>
+                                        <td><button type="button" style="width: 80%; padding: 1%" class="btn-gift-material">Gift</button></td>
+                                    </tr>
+                                @endfor
                             </tbody>
                         </table>
                     </section>
 
                     <!-- [RICKY] Struktur section boss -->
                     <section class="boss">
-                        
+                        <div class="boss-image">
+                            <img src="{{ asset('assets/image/cat.jpeg') }}" width="40%" alt="boss-image" style="border-radius: 20px">
+                        </div>
+
+                        <div class="boss-hp">
+                            <label for="file">Monster Boss HP :&nbsp;&nbsp;&nbsp;</label>
+                            <progress value="95000" max="100000"></progress>
+                        </div>
+
+                        <div class="secret-weapon">
+                            <label for="file">Secret Weapon Progress :&nbsp;&nbsp;&nbsp;</label>
+                            <progress value="80" max="300"></progress>
+                        </div>
                     </section>
 
                     <!-- [RICKY] Struktur section history -->
                     <section class="history">
-                        
+                        <table class="history-table">
+                            <tbody>
+                                @for($i = 1; $i <= 30; $i++)
+                                    <tr>
+                                        <td>History {{ $i }}</td>
+                                    </tr>
+                                @endfor
+                            </tbody>
+                        </table>
                     </section>
                 </div>
 
