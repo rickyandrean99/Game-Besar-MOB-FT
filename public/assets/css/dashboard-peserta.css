@@ -69,6 +69,7 @@ div.content-top {
 
 section.gift, section.history {
     flex-basis: 20%;
+    border: 1px solid black;
 }
 
 section.boss {
@@ -162,24 +163,25 @@ table.history-table td {
 
 /* [RICKY] CSS bagian content bawah (material, equipment, control) */
 div.content-bottom {
-    background: lightgrey;
     height: 40%;
     display: flex;
 }
 
 section.material {
     flex-basis: 25%;
-    background: red;
+    border: 1px solid black;
 }
 
 section.equipment {
     flex-basis: 35%;
-    background: green;
+    border: 1px solid black;
 }
 
 section.control {
     flex-basis: 40%;
-    background: blue;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
 }
 
 /* [RICKY] CSS bagian section material */
@@ -260,4 +262,10 @@ table.equipment-table td:nth-child(4) {
     width: 20%;
     text-align: center;
     padding: 1%;
+}
+
+/* [RICKY] CSS bagian section control */
+
+section.control > div {
+    padding: 2% 1%;
 }

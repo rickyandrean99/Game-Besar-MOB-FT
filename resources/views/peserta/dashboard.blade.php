@@ -52,13 +52,13 @@
                         </div>
 
                         <div class="boss-hp">
-                            <label for="file">Monster Boss HP :&nbsp;&nbsp;&nbsp;</label>
-                            <progress value="95000" max="100000"></progress>
+                            <label>Monster Boss HP<br><br><br></label>
+                            <progress value="95000" max="100000" style="width: 30%; position: absolute"></progress>
                         </div>
 
                         <div class="secret-weapon">
-                            <label for="file">Secret Weapon Progress :&nbsp;&nbsp;&nbsp;</label>
-                            <progress value="80" max="300"></progress>
+                            <label>Secret Weapon Progress<br><br><br></label>
+                            <progress value="80" max="300" style="width: 30%; position: absolute"></progress>
                         </div>
                     </section>
 
@@ -108,8 +108,22 @@
                         </table>
                     </section>
 
+                    <!-- [RICKY] Struktur section control -->
                     <section class="control">
-                        
+                        <div class="coin">Coin : 0</div>
+
+                        <div class="attack">
+                            <button type="button" style="width: 100%">Attack</button>
+                        </div>
+
+                        <div class="team-hp">
+                            <label for="file">Team HP :&nbsp;&nbsp;&nbsp;</label>
+                            <progress value="790" max="1000" style="width: 100%"></progress>
+                        </div>
+
+                        <div class="status">
+
+                        </div>
                     </section>
                 </div>
             </div>
