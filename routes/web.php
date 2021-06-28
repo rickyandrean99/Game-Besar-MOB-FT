@@ -17,4 +17,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// [RICKY] Route tipe get yang digunakan saat reload halaman
 Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
+
+// [RICKY] Route tipe post yang digunakan olex Ajax
+Route::post('/get-equipment-requirement', 'TeamController@getEquipmentRequirement')->name('get-equipment-requirement');
