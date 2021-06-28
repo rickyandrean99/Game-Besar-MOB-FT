@@ -96,14 +96,14 @@
                     <section class="equipment">
                         <table class="equipment-table">
                             <tbody>
-                                @for($i = 1; $i <= 10; $i++)
+                                @foreach($equipments as $e)
                                     <tr>
-                                        <td>Equipment {{ $i }}</td>
+                                        <td>{{ $e->name }}</td>
                                         <td>0</td>
-                                        <td><button type="button" style="width: 80%; padding: 2%">Crafting</button></td>
+                                        <td><button type="button" id="craft" style="width: 80%; padding: 2%">Crafting</button></td>
                                         <td><button type="button" style="width: 80%; padding: 2%">Use</button></td>
                                     </tr>
-                                @endfor
+                                @endforeach
                             </tbody>
                         </table>
                     </section>
