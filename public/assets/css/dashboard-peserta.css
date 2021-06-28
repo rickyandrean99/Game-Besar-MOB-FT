@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+
+/* [RICKY] CSS Scrollbar */
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(150,150,150,0.5);
+}
+
+/* [RICKY] CSS keseluruhan */
+* {
+    scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+    font-size: 20px;
+}
+
+/* [RICKY] CSS bagian container */
+div#container {
+    display: flex;
+    flex-direction: column;
+}
+
+/* [RICKY] CSS bagian header */
+header {
+    height: 100px;
+    display: flex;
+}
+
+div.header-left {
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    padding-left: 3%;
+}
+
+div.header-right {
+    flex-basis: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 3%;
+}
+
+span.team-info {
+    margin-right: 3%;
+}
+
+/* [RICKY] CSS bagian content */
+div#content {
+    height: 980px;
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    padding: 1%;
+}
+
+/* [RICKY] CSS bagian content atas (gift, boss, history) */
+div.content-top {
+    height: 60%;
+    display: flex;
+}
+
+section.gift, section.history {
+    flex-basis: 20%;
+    border: 1px solid black;
+}
+
+section.boss {
+    flex-basis: 60%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* [RICKY] CSS bagian section gift */
+table.gift-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.gift-table td {
+    border: 1px solid #444444;
+}
+
+table.gift-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 550px;
+}
+
+table.gift-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.gift-table td:nth-of-type(odd) {
+    width: 60%;
+    text-align: center;
+    padding: 2%;
+}
+
+table.gift-table td:nth-of-type(even) {
+    width: 40%;
+    text-align: center;
+    padding: 2%;
+}
+
+/* [RICKY] CSS bagian section boss */
+div.boss-image {
+    flex-basis: 80%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.boss-hp {
+    flex-basis: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+div.secret-weapon {
+    flex-basis: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* [RICKY] CSS bagian section history */
+table.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.history-table td {
+    border: 1px solid #444444;
+}
+
+table.history-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 550px;
+}
+
+table.history-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.history-table td {
+    padding: 2%;
+}
+
+
+/* [RICKY] CSS bagian content bawah (material, equipment, control) */
+div.content-bottom {
+    height: 40%;
+    display: flex;
+}
+
+section.material {
+    flex-basis: 25%;
+    border: 1px solid black;
+}
+
+section.equipment {
+    flex-basis: 35%;
+    border: 1px solid black;
+}
+
+section.control {
+    flex-basis: 40%;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+
+/* [RICKY] CSS bagian section material */
+table.material-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.material-table td {
+    border: 1px solid #444444;
+}
+
+table.material-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+table.material-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.material-table td:nth-of-type(odd) {
+    width: 75%;
+    text-align: center;
+    padding: 2%;
+}
+
+table.material-table td:nth-of-type(even) {
+    width: 25%;
+    text-align: center;
+    padding: 2%;
+}
+
+/* [RICKY] CSS bagian section equipment */
+table.equipment-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.equipment-table td {
+    border: 1px solid #444444;
+}
+
+table.equipment-table > tbody {
+    display: block;
+    overflow-y: auto;
+    max-height: 350px;
+}
+
+table.equipment-table tr {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
+table.equipment-table td:nth-child(1) {
+    width: 40%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(2) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(3) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
+}
+
+table.equipment-table td:nth-child(4) {
+    width: 20%;
+    text-align: center;
+    padding: 1%;
+}
+
+/* [RICKY] CSS bagian section control */
+
+section.control > div {
+    padding: 2% 1%;
+}
