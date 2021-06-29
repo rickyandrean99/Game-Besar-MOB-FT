@@ -17,11 +17,27 @@ class TeamController extends Controller
         ]);
     }
 
+    // [RICKY] Mendapatkan list material yang dibutuhkan saat click crafting
     public function getEquipmentRequirement(Request $request) {
         $equipment_requirement = DB::table('equipment_requirement')->join('materials', 'equipment_requirement.materials_id', '=', 'materials.id')->where('equipment_requirement.equipments_id', $request->get('id_equipment'))->select('materials.name AS nama_material', 'equipment_requirement.amount_need AS jumlah_material')->get();
         
         return response()->json(array(
             'equipment_requirement' => $equipment_requirement
+        ), 200);
+    }
+
+    // [RICKY] Crafting equipment berdasarkan material yang dimiliki
+    public function craftingEquipment(Request $request) {
+        // $id_equipment = $request->get('id_equipment');
+        // $amount = $request->get('amount');
+
+        $id_equipment = 1;
+        $amount = 3;
+
+        $equipment_requirement = DB::table('equipment_requirement')->where();
+        
+        return response()->json(array(
+            'crafting_result' => true
         ), 200);
     }
 }
