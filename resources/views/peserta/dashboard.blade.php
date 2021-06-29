@@ -99,9 +99,19 @@
                                 @foreach($equipments as $e)
                                     <tr>
                                         <td class="nama-equipment">{{ $e->nama_equipment }}</td>
-                                        <td>{{ $e->jumlah_equipment }}</td>
-                                        <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
-                                        <td><button type="button" class="btn-use" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Use</button></td>
+                                        <td id="jumlah-equipment-{{ $e->id_equipment }}">{{ $e->jumlah_equipment }}</td>
+                                        @if ($e->tipe_equipment == 1)
+                                            @if ($e->jumlah_equipment >= 1)
+                                                <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%" disabled="disabled">Crafting</button></td>
+                                            @else
+                                                <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
+                                            @endif
+                                            
+                                            <td>Active</td>
+                                        @else
+                                            <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
+                                            <td><button type="button" class="btn-use" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Use</button></td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -113,7 +123,11 @@
                         <div class="coin">Coin : 0</div>
 
                         <div class="attack">
-                            <button type="button" style="width: 100%">Attack</button>
+                            <button type="button" style="width: 100%">Weapon Attack Lv 0</button>
+                        </div>
+
+                        <div class="upgrade">
+                            <button type="button" style="width: 100%">Upgrade Weapon</button>
                         </div>
 
                         <div class="team-hp">
@@ -134,19 +148,35 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h6 class="modal-title" id="modal-title-crafting" style="margin: auto">Equipment Crafting</h6>
+                        <h6 class="modal-title" id="modal-title-crafting" style="margin: auto"></h6>
                     </div>
 
                     <div class="modal-body">
                         <div style="margin-bottom: 1%;">&nbsp;Material yang dibutuhkan :</div>
                         <div id="modal-equipment-requirement-content"></div>
                         <div style="margin-top: 5%; margin-bottom: 3%;">&nbsp;Jumlah crafting :</div>
-                        <input class="form-control" type="number" min="0" value="0" id="crafting-amount">
+                        <input class="form-control" type="number" min="1" value="1" id="crafting-amount">
                     </div>
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-confirm-crafting">Crafting</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [RICKY] Modal use equipment -->
+        <div class="modal fade" id="equipment-use" tabindex="-1" role="dialog" aria-labelledby="equipmentUse" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title" id="modal-title-use" style="margin: auto">Use Equipment</h6>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-confirm-use">Use</button>
                     </div>
                 </div>
             </div>
@@ -165,7 +195,7 @@
         </div>
         
         <script>
-            // [RICKY] Event click button crafting (untuk ambil list material yang dibutuhkan)
+            // [RICKY] Event click button crafting
             $(document).on("click", ".btn-craft", function() {
                 var nama_equipment = $(this).parent().parent().children('.nama-equipment').text();
                 var id_equipment = $(this).val();
@@ -189,28 +219,69 @@
                 });
             });
 
-            // [RICKY] Event click button crafting di modal (untuk ambil list material yang dibutuhkan)
+            // [RICKY] Event click button use
+            $(document).on("click", ".btn-use", function() {
+                var nama_equipment = $(this).parent().parent().children('.nama-equipment').text();
+                var id_equipment = $(this).val();
+
+                $('#modal-title-use').text("Use " + nama_equipment + " x1?");
+                $('#btn-confirm-use').val(id_equipment);
+                $('#equipment-use').modal('show');
+            });
+
+            // [RICKY] Event click button crafting di modal
             $(document).on("click", "#btn-confirm-crafting", function() {
+                var id_equipment = $(this).val();
+                var amount = $('#crafting-amount').val();
+                
                 $.ajax({
                     type: 'POST',
                     url: '{{ route("crafting-equipment") }}',
                     data: {
                         '_token':'<?php echo csrf_token() ?>',
-                        'id_equipment': $(this).val(),
-                        'amount': $('#crafting-amount').val()
+                        'id_equipment': id_equipment,
+                        'amount': amount
                     },
                     success: function(data) {
                         $('#result-modal').modal('show');
-                        $('#crafting-amount').val(0);
+                        $('#crafting-amount').val(1);
 
                         if (data.crafting_result) {
                             $('#modal-result-message').text("Crafting Berhasil");
+                            var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
+                            $("#jumlah-equipment-" + id_equipment).text(amount_now);
                         } else {
                             $('#modal-result-message').text("Crafting Gagal");
                         }
                     }
                 });
             });
+
+            // [RICKY] Event click button use di modal
+            $(document).on("click", "#btn-confirm-use", function() {
+                var id_equipment = $(this).val();
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("use-equipment") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>',
+                        'id_equipment': id_equipment
+                    },
+                    success: function(data) {
+                        if (data.use_result) {
+                            $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
+                        } else {
+                            
+                        }
+                    }
+                });
+            });
+
+            // [RICKY] Reset jumlah crafting ketika modal crafting ditutup
+            $('#equipment-crafting').on('hidden.bs.modal', function() {
+                $('#crafting-amount').val(1);
+            })
         </script>
     </body>
 </html>

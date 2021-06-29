@@ -23,3 +23,4 @@ Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
 // [RICKY] Route tipe post yang digunakan olex Ajax
 Route::post('/get-equipment-requirement', 'TeamController@getEquipmentRequirement')->name('get-equipment-requirement');
 Route::post('/crafting-equipment', 'TeamController@craftingEquipment')->name('crafting-equipment');
+Route::post('/use-equipment', 'TeamController@useEquipment')->name('use-equipment');
