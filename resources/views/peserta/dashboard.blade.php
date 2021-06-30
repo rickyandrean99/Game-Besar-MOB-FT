@@ -187,7 +187,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <span id="modal-result-message"></span>
+                        <span id="modal-result-message" style="display:inline-block; width: 90%"></span>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right"></button>
                     </div>
                 </div>
@@ -245,13 +245,11 @@
                     success: function(data) {
                         $('#result-modal').modal('show');
                         $('#crafting-amount').val(1);
+                        $('#modal-result-message').text(data.message);
 
                         if (data.crafting_result) {
-                            $('#modal-result-message').text("Crafting Berhasil");
                             var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
                             $("#jumlah-equipment-" + id_equipment).text(amount_now);
-                        } else {
-                            $('#modal-result-message').text("Crafting Gagal");
                         }
                     }
                 });
@@ -269,10 +267,11 @@
                         'id_equipment': id_equipment
                     },
                     success: function(data) {
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.message);
+
                         if (data.use_result) {
                             $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
-                        } else {
-                            
                         }
                     }
                 });
@@ -281,7 +280,7 @@
             // [RICKY] Reset jumlah crafting ketika modal crafting ditutup
             $('#equipment-crafting').on('hidden.bs.modal', function() {
                 $('#crafting-amount').val(1);
-            })
+            });
         </script>
     </body>
 </html>
