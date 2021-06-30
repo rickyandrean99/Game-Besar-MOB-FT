@@ -47,7 +47,7 @@ class TeamController extends Controller
 
         // [RICKY] Lakukan pengecekan apakah material yang dimiliki mencukupi
         foreach ($equipment_requirement as $er) {
-            $material_team = DB::table('material_team')->where('teams_id', 1)->where('materials_id', $er->materials_id)->get();
+            $material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $er->materials_id)->get();
             if (count($material_team) > 0) {
                 if ($material_team[0]->amount >= ($er->amount_need * $amount)) {
                     $crafting_result = true; 
@@ -64,7 +64,7 @@ class TeamController extends Controller
         if ($crafting_result) {
             // [RICKY] Lakukan pengurangan material yang dimiliki apabila persyaratan tercukupi
             foreach ($equipment_requirement as $er) {
-                $kurangi_material_team = DB::table('material_team')->where('teams_id', 1)->where('materials_id', $er->materials_id)->decrement('amount', $er->amount_need * $amount);
+                $kurangi_material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $er->materials_id)->decrement('amount', $er->amount_need * $amount);
             }
 
             // [RICKY] Menambah equipment yang di crafting
@@ -95,6 +95,7 @@ class TeamController extends Controller
         $team_detail = Team::find($id_team);
         $use_access = false;
         $equipment_amount = 0;
+        $new_hp = 0;
 
         // [RICKY] Cek apakah memiliki equipment terkait
         $equipment_check = DB::table('equipment_team')->join('equipments', 'equipment_team.equipments_id', '=', 'equipments.id')->where('equipments_id', $id_equipment)->where('teams_id', $id_team)->get();
@@ -159,6 +160,9 @@ class TeamController extends Controller
                     } else {
                         $update_hp = DB::table('teams')->where('id', $id_team)->increment('hp_amount', $hp_regen);
                     }
+
+                    $team = Team::find($id_team);
+                    $new_hp = $team->hp_amount;
                 }
             }
         }
@@ -174,7 +178,43 @@ class TeamController extends Controller
         return response()->json(array(
             'use_result' => $use_access,
             'message' => $message,
+            'update_hp' => $new_hp,
             'amount_now' => $equipment_amount
+        ), 200);
+    }
+
+    // [RICKY] Mengupgrade weapon
+    public function upgradeWeapon(Request $request) {
+        $id_team = 1;
+        $team_detail = Team::find($id_team);
+        $weapon_requirement = DB::table('equipment_requirement')->where('equipments_id', $team_detail->weapon_level + 1)->get();
+        
+        // [RICKY] Lakukan pengecekan apakah material untuk upgrade weapon mencukupi
+        foreach ($weapon_requirement as $wr) {
+            $material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->get();
+            dd($material_team);
+            if (count($material_team) > 0) {
+                if ($material_team[0]->amount >= $wr->amount_need) {
+                    $upgrade_weapon = true;
+                } else {
+                    $upgrade_weapon = false;
+                    break;
+                }
+            } else {
+                $upgrade_weapon = false;
+                break;
+            }
+        }
+
+        $message = "Material tidak mencukupi untuk upgrade weapon";
+        if ($upgrade_weapon) {
+            $message = "Berhasil upgrade weapon";
+            $update_weapon = DB::table('teams')->where('id', $id_team)->increment('weapon_level', 1);
+        }
+
+        return response()->json(array(
+            'status' => $upgrade_weapon,
+            'message' => $message
         ), 200);
     }
 }
