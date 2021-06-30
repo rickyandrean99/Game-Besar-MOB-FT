@@ -160,7 +160,6 @@ table.history-table td {
     padding: 2%;
 }
 
-
 /* [RICKY] CSS bagian content bawah (material, equipment, control) */
 div.content-bottom {
     height: 40%;
@@ -264,8 +263,14 @@ table.equipment-table td:nth-child(4) {
     padding: 1%;
 }
 
-/* [RICKY] CSS bagian section control */
+#modal-equipment-requirement-content > div {
+    margin: 3% 1%;
+    padding: 4% 2%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
 
+/* [RICKY] CSS bagian section control */
 section.control > div {
     padding: 2% 1%;
 }
