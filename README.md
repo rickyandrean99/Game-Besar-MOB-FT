@@ -1,2 +1,2 @@
 # Game-Besar-MOB-FT
- Game Besar
+ Web Game Besar untuk Masa Orientasi Bersama Fakultas Teknik Universitas Surabaya
