@@ -114,24 +114,26 @@ table.gift-table td:nth-of-type(even) {
 
 /* [RICKY] CSS bagian section boss */
 div.boss-image {
-    flex-basis: 80%;
+    flex-basis: 70%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 div.boss-hp {
-    flex-basis: 10%;
-    display: flex;
+    flex-basis: 15%;
+    padding: 0 20%;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 
 div.secret-weapon {
-    flex-basis: 10%;
-    display: flex;
+    flex-basis: 15%;
+    padding: 0 20%;
+    /* display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: center; */
 }
 
 /* [RICKY] CSS bagian section history */
@@ -273,4 +275,15 @@ table.equipment-table td:nth-child(4) {
 /* [RICKY] CSS bagian section control */
 section.control > div {
     padding: 2% 1%;
+}
+
+.progress {
+    height: 30px;
+    position: relative;
+}
+
+.progress-text {
+    position: absolute;
+    text-align: center;
+    width: 100%
 }
