@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Team;
+use App\EnemyBoss;
+use App\SecretWeapon;
 use Illuminate\Http\Request;
 use DB;
 
@@ -11,9 +13,16 @@ class TeamController extends Controller
     // [RICKY] Reload halaman dashboard peserta
     public function dashboard() {
         $id_team = 1;
+
+        $team_info = Team::find($id_team);
+        $enemy_info = EnemyBoss::find(1);
+        $secret_weapon = SecretWeapon::find(1);
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
-        
+
         return view('peserta.dashboard', [
+            'team' => $team_info,
+            'boss' => $enemy_info,
+            'weapon' => $secret_weapon,
             'equipments' => $equipment_list
         ]);
     }

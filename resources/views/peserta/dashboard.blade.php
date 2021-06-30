@@ -50,15 +50,21 @@
                         <div class="boss-image">
                             <img src="{{ asset('assets/image/cat.jpeg') }}" width="40%" alt="boss-image" style="border-radius: 20px">
                         </div>
-
+                        
                         <div class="boss-hp">
-                            <label>Monster Boss HP<br><br><br></label>
-                            <progress value="95000" max="100000" style="width: 30%; position: absolute"></progress>
+                            @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
+                            <div style="text-align: center; margin: 1% 0">Monster Boss HP</div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_boss }}%;"></div>
+                            </div>
                         </div>
 
                         <div class="secret-weapon">
-                            <label>Secret Weapon Progress<br><br><br></label>
-                            <progress value="80" max="300" style="width: 30%; position: absolute"></progress>
+                            @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
+                            <div style="text-align: center; margin: 1% 0">Secret Weapon</div>
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: {{ $weapon_progress }}%;"></div>
+                            </div>
                         </div>
                     </section>
 
@@ -120,19 +126,44 @@
 
                     <!-- [RICKY] Struktur section control -->
                     <section class="control">
-                        <div class="coin">Coin : 0</div>
+                        <div class="coin">Coin : <span class="coin-amount">{{ $team->coin }}</span></div>
 
                         <div class="attack">
-                            <button type="button" style="width: 100%">Weapon Attack Lv 0</button>
-                        </div>
+                            @if($team->weapon_level == 0)
+                                <button type="button" style="width: 49%; display: inline-block" id="btn-weapon-attack" disabled="disabled">Attack</button>
+                            @else
+                                <button type="button" style="width: 49%; display: inline-block" id="btn-weapon-attack">Attack</button>
+                            @endif
 
-                        <div class="upgrade">
-                            <button type="button" style="width: 100%">Upgrade Weapon</button>
+                            @if($team->weapon_level == 3)
+                                <button type="button" style="width: 49%; display: inline-block" disabled="disabled">Upgrade Weapon</button>
+                            @else
+                                <button type="button" style="width: 49%; display: inline-block">Upgrade Weapon</button>
+                            @endif
+                            
+                            <div style="margin-top: 1%">
+                                Weapon:
+                                <span id="weapon-name">
+                                    @if($team->weapon_level == 0)
+                                        -
+                                    @elseif($team->weapon_level == 1)
+                                        Loops Hammer (Lv1)
+                                    @elseif($team->weapon_level == 2)
+                                        Master Sword (Lv2)
+                                    @elseif($team->weapon_level == 3)
+                                        Quantum Gun (Lv3)
+                                    @endif
+                                </span>
+                            </div>
                         </div>
 
                         <div class="team-hp">
-                            <label for="file">Team HP :&nbsp;&nbsp;&nbsp;</label>
-                            <progress value="790" max="1000" style="width: 100%"></progress>
+                            <div style="margin-bottom: 1%">Team HP :</div>
+                            @php $hp_amount = $team->hp_amount * 100 / 1000; @endphp
+                            <div class="progress">
+                                <div class="progress-text" id="hp-team">{{ $team->hp_amount }}/1000</div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_amount }}%;"></div>
+                            </div>
                         </div>
 
                         <div class="status">
