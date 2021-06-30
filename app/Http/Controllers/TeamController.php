@@ -95,18 +95,33 @@ class TeamController extends Controller
         } else {
             // [RICKY] Cek equipment aktif yang sedang digunakan dan update status penggunaan equipment
             $use_access = true;
-            if ($id_equipment == 4 && !$team_detail->debuff_disable) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_disable' => true]);
-            } else if ($id_equipment == 5 && $team_detail->debuff_decreased == 0) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_decreased' => 2]);
-            } else if ($id_equipment == 6 && !$team_detail->debuff_overtime) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_overtime' => true]);
-            } else if ($id_equipment == 7 && $team_detail->buff_increased == 0) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_increased' => 2]);
-            } else if ($id_equipment == 8 && !$team_detail->buff_immortal) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_immortal' => true]);
-            } else if ($id_equipment == 9 && $team_detail->buff_regeneration == 0) {
-                $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_regeneration' => 2]);
+            if ($equipment_check[0]->equipment_types_id == 2 || $equipment_check[0]->equipment_types_id == 3) {
+                // [RICKY] Use buff/debuff
+                if ($team_detail->heal_status || $team_detail->buff_debuff_status) {
+                    $message = "Tidak dapat menggunakan equipment buff/debuff karena sudah melakukan heal/buff/debuff";
+                    $use_access = false;
+                } else {
+                    if ($id_equipment == 4 && !$team_detail->debuff_disable) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_disable' => true]);
+                    } else if ($id_equipment == 5 && $team_detail->debuff_decreased == 0) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_decreased' => 2]);
+                    } else if ($id_equipment == 6 && !$team_detail->debuff_overtime) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['debuff_overtime' => true]);
+                    } else if ($id_equipment == 7 && $team_detail->buff_increased == 0) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_increased' => 2]);
+                    } else if ($id_equipment == 8 && !$team_detail->buff_immortal) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_immortal' => true]);
+                    } else if ($id_equipment == 9 && $team_detail->buff_regeneration == 0) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_regeneration' => 2]);
+                    } else {
+                        $message = "Tidak dapat digunakan karena equipment serupa masih aktif";
+                        $use_access = false;
+                    }
+
+                    if ($use_access) {
+                        $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_debuff_status' => true]);
+                    }
+                }
             } else if ($equipment_check[0]->equipment_types_id == 4) {
                 // [RICKY] Use shield
                 if ($team_detail->attack_status || $team_detail->heal_status || $team_detail->shield) {
@@ -123,16 +138,19 @@ class TeamController extends Controller
                 } else {
                     $update_status = DB::table('teams')->where('id', $id_team)->update(['heal_status' => true]);
                     if ($id_equipment == 11) {
-                        $update_hp = DB::table('teams')->where('id', $id_team)->increment('hp_amount', 25);
+                        $hp_regen = 25;
                     } else if ($id_equipment == 12) {
-                        $update_hp = DB::table('teams')->where('id', $id_team)->increment('hp_amount', 50);
+                        $hp_regen = 50;
                     } else if ($id_equipment == 13) {
-                        $update_hp = DB::table('teams')->where('id', $id_team)->increment('hp_amount', 75);
+                        $hp_regen = 75;
+                    }
+
+                    if (($team_detail->hp_amount + $hp_regen) > 1000) {
+                        $update_hp = DB::table('teams')->where('id', $id_team)->update(['hp_amount'=> 1000]);
+                    } else {
+                        $update_hp = DB::table('teams')->where('id', $id_team)->increment('hp_amount', $hp_regen);
                     }
                 }
-            } else {
-                $message = "Tidak dapat digunakan karena equipment serupa masih aktif";
-                $use_access = false;
             }
         }
 
