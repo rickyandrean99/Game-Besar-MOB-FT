@@ -29,3 +29,7 @@ Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-we
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
