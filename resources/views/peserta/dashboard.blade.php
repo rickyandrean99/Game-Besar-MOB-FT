@@ -106,18 +106,8 @@
                                     <tr>
                                         <td class="nama-equipment">{{ $e->nama_equipment }}</td>
                                         <td id="jumlah-equipment-{{ $e->id_equipment }}">{{ $e->jumlah_equipment }}</td>
-                                        @if ($e->tipe_equipment == 1)
-                                            @if ($e->jumlah_equipment >= 1)
-                                                <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%" disabled="disabled">Crafting</button></td>
-                                            @else
-                                                <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
-                                            @endif
-                                            
-                                            <td>Active</td>
-                                        @else
-                                            <td><button type="button" class="btn-craft" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
-                                            <td><button type="button" class="btn-use" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Use</button></td>
-                                        @endif
+                                        <td><button type="button" class="btn btn-info btn-craft text-white p-1" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Crafting</button></td>
+                                        <td><button type="button" class="btn btn-primary btn-use p-1" value="{{ $e->id_equipment }}" style="width: 80%; padding: 2%">Use</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -130,15 +120,15 @@
 
                         <div class="attack">
                             @if($team->weapon_level == 0)
-                                <button type="button" style="width: 49%; display: inline-block" id="btn-weapon-attack" disabled="disabled">Attack</button>
+                                <button class="btn btn-secondary me-1" style="width: 49%;" id="btn-weapon-attack" disabled="disabled">Attack</button>
                             @else
-                                <button type="button" style="width: 49%; display: inline-block" id="btn-weapon-attack">Attack</button>
+                                <button class="btn btn-danger me-1" style="width: 49%;" id="btn-weapon-attack">Attack</button>
                             @endif
 
                             @if($team->weapon_level == 3)
-                                <button type="button" style="width: 49%; display: inline-block" disabled="disabled">Upgrade Weapon</button>
+                                <button class="btn btn-secondary" style="width: 49%;" disabled="disabled" id="btn-upgrade">Upgrade Weapon</button>
                             @else
-                                <button type="button" style="width: 49%; display: inline-block">Upgrade Weapon</button>
+                                <button class="btn btn-primary" style="width: 49%;" id="btn-upgrade">Upgrade Weapon</button>
                             @endif
                             
                             <div style="margin-top: 1%">
@@ -160,9 +150,9 @@
                         <div class="team-hp">
                             <div style="margin-bottom: 1%">Team HP :</div>
                             @php $hp_amount = $team->hp_amount * 100 / 1000; @endphp
-                            <div class="progress">
-                                <div class="progress-text" id="hp-team">{{ $team->hp_amount }}/1000</div>
-                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_amount }}%;"></div>
+                            <div class="progress" style="background: rgba(0,0,0,0.35)">
+                                <div class="progress-text text-white" id="hp-team">{{ $team->hp_amount }}/1000</div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_amount }}%;" id="team-hp-bar"></div>
                             </div>
                         </div>
 
@@ -208,6 +198,22 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-confirm-use">Use</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [RICKY] Modal upgrade weapon -->
+        <div class="modal fade" id="weapon-upgrade" tabindex="-1" role="dialog" aria-labelledby="weaponUpgrade" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title"style="margin: auto">Upgrade Weapon?</h6>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="btn-confirm-upgrade">Upgrade</button>
                     </div>
                 </div>
             </div>
@@ -260,6 +266,26 @@
                 $('#equipment-use').modal('show');
             });
 
+            // [RICKY] Event click button attack
+            $(document).on("click", "#btn-weapon-attack", function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("attack-weapon") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>'
+                    },
+                    success: function(data) {
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.message);
+                    }
+                });
+            });
+
+            // [RICKY] Event click button upgrade weapon
+            $(document).on("click", "#btn-upgrade", function() {
+                $('#weapon-upgrade').modal('show');
+            });
+
             // [RICKY] Event click button crafting di modal
             $(document).on("click", "#btn-confirm-crafting", function() {
                 var id_equipment = $(this).val();
@@ -303,6 +329,46 @@
 
                         if (data.use_result) {
                             $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
+                        }
+
+                        if (data.update_hp != 0) {
+                            $('#hp-team').text(data.update_hp + "/1000");
+                            var hpBar = (parseInt(data.update_hp) * 100 / 1000) + "%";
+                            $('#team-hp-bar').css('width', hpBar);
+                        }
+                    }
+                });
+            });
+
+            // [RICKY] Event click button upgrade di modal
+            $(document).on("click", "#btn-confirm-upgrade", function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("upgrade-weapon") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>'
+                    },
+                    success: function(data) {
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.message);
+
+                        if (data.status) {
+                            if (data.level_weapon == 1) {
+                                $('#weapon-name').text("Loops Hammer (Lv1)");
+                            } else if (data.level_weapon == 2) {
+                                $('#weapon-name').text("Master Sword (Lv2)");
+                            } else if (data.level_weapon == 3) {
+                                $('#weapon-name').text("Quantum Gun (Lv3)");
+                                $('#btn-upgrade').attr('disabled','disabled');
+                                $('#btn-upgrade').removeClass("btn-primary");
+                                $('#btn-upgrade').addClass("btn-secondary");
+                            }
+
+                            if (data.level_weapon >= 1) {
+                                $('#btn-weapon-attack').removeAttr('disabled');
+                                $('#btn-weapon-attack').removeClass("btn-secondary");
+                                $('#btn-weapon-attack').addClass("btn-danger");
+                            }
                         }
                     }
                 });

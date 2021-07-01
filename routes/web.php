@@ -24,3 +24,5 @@ Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
 Route::post('/get-equipment-requirement', 'TeamController@getEquipmentRequirement')->name('get-equipment-requirement');
 Route::post('/crafting-equipment', 'TeamController@craftingEquipment')->name('crafting-equipment');
 Route::post('/use-equipment', 'TeamController@useEquipment')->name('use-equipment');
+Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapon');
+Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
