@@ -26,3 +26,6 @@ Route::post('/crafting-equipment', 'TeamController@craftingEquipment')->name('cr
 Route::post('/use-equipment', 'TeamController@useEquipment')->name('use-equipment');
 Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapon');
 Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
