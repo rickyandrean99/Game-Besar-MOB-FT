@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="header-right">
-                    <span class="team-info">Team 1</span>
+                    <span class="team-info">{{ $team->name }}</span>
                     <span class="logout">Logout</span>
                 </div>
             </header>
