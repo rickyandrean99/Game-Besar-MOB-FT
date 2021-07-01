@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Team;
+use App\Round;
 use App\EnemyBoss;
 use App\SecretWeapon;
 use Illuminate\Http\Request;
@@ -16,13 +17,19 @@ class TeamController extends Controller
 
         $team_info = Team::find($id_team);
         $enemy_info = EnemyBoss::find(1);
+        $round_info = Round::find(1);
         $secret_weapon = SecretWeapon::find(1);
+        $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
+        // dd(strtotime($round_info->time_end)." --- ".strtotime(date("Y-m-d H:i:s")));
+        // dd($difference);
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
 
         return view('peserta.dashboard', [
             'team' => $team_info,
             'boss' => $enemy_info,
+            'round' => $round_info,
             'weapon' => $secret_weapon,
+            'seconds' => $difference,
             'equipments' => $equipment_list
         ]);
     }

@@ -13,15 +13,20 @@ use Illuminate\Queue\SerializesModels;
 class UpdateRound implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $round;
+    public $action;
+    public $minutes;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($round, $action, $minutes)
     {
-        //
+        $this->round = $round;
+        $this->action = $action;
+        $this->minutes = $minutes;
     }
 
     /**

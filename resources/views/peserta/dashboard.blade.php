@@ -8,6 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="../js/app.js"></script>
         <link rel="stylesheet" href="{{ asset('assets/css/dashboard-peserta.css') }}">
     </head>
     
@@ -232,6 +233,11 @@
         </div>
         
         <script>
+            var ronde = parseInt("{{ $round->round }}");
+            var aksi = {{ $round->action }};
+            var seconds = {{ $seconds }};
+            console.log("Ronde: " + ronde + " ---- " + "Action: " + aksi + " ---- " + "Timer: " + seconds + "s");
+
             // [RICKY] Event click button crafting
             $(document).on("click", ".btn-craft", function() {
                 var nama_equipment = $(this).parent().parent().children('.nama-equipment').text();
@@ -377,6 +383,11 @@
             // [RICKY] Reset jumlah crafting ketika modal crafting ditutup
             $('#equipment-crafting').on('hidden.bs.modal', function() {
                 $('#crafting-amount').val(1);
+            });
+
+            // [RICKY] Memperbaharui timer setelah ronde di update
+            window.Echo.channel('roundChannel').listen('.update', (e) => {
+                console.log("Ronde: " + e.round + " ---- " + "Action: " + e.action + " ---- " + "Timer: " +  (e.minutes*60) + "s");
             });
         </script>
     </body>
