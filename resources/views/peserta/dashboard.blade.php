@@ -126,7 +126,7 @@
                             @endif
 
                             @if($team->weapon_level == 3)
-                                <button class="btn btn-primary" style="width: 49%;" disabled="disabled" id="btn-upgrade">Upgrade Weapon</button>
+                                <button class="btn btn-secondary" style="width: 49%;" disabled="disabled" id="btn-upgrade">Upgrade Weapon</button>
                             @else
                                 <button class="btn btn-primary" style="width: 49%;" id="btn-upgrade">Upgrade Weapon</button>
                             @endif
@@ -266,6 +266,21 @@
                 $('#equipment-use').modal('show');
             });
 
+            // [RICKY] Event click button attack
+            $(document).on("click", "#btn-weapon-attack", function() {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("attack-weapon") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>'
+                    },
+                    success: function(data) {
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.message);
+                    }
+                });
+            });
+
             // [RICKY] Event click button upgrade weapon
             $(document).on("click", "#btn-upgrade", function() {
                 $('#weapon-upgrade').modal('show');
@@ -334,7 +349,27 @@
                         '_token':'<?php echo csrf_token() ?>'
                     },
                     success: function(data) {
-                        console.log(data.status + " " + data.message);
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.message);
+
+                        if (data.status) {
+                            if (data.level_weapon == 1) {
+                                $('#weapon-name').text("Loops Hammer (Lv1)");
+                            } else if (data.level_weapon == 2) {
+                                $('#weapon-name').text("Master Sword (Lv2)");
+                            } else if (data.level_weapon == 3) {
+                                $('#weapon-name').text("Quantum Gun (Lv3)");
+                                $('#btn-upgrade').attr('disabled','disabled');
+                                $('#btn-upgrade').removeClass("btn-primary");
+                                $('#btn-upgrade').addClass("btn-secondary");
+                            }
+
+                            if (data.level_weapon >= 1) {
+                                $('#btn-weapon-attack').removeAttr('disabled');
+                                $('#btn-weapon-attack').removeClass("btn-secondary");
+                                $('#btn-weapon-attack').addClass("btn-danger");
+                            }
+                        }
                     }
                 });
             });

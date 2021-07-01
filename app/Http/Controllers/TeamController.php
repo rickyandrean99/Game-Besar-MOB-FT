@@ -187,33 +187,75 @@ class TeamController extends Controller
     public function upgradeWeapon(Request $request) {
         $id_team = 1;
         $team_detail = Team::find($id_team);
-        $weapon_requirement = DB::table('equipment_requirement')->where('equipments_id', $team_detail->weapon_level + 1)->get();
-        
-        // [RICKY] Lakukan pengecekan apakah material untuk upgrade weapon mencukupi
-        foreach ($weapon_requirement as $wr) {
-            $material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->get();
-            dd($material_team);
-            if (count($material_team) > 0) {
-                if ($material_team[0]->amount >= $wr->amount_need) {
-                    $upgrade_weapon = true;
+        $level_weapon = $team_detail->weapon_level;
+
+        // [RICKY] Pastikan weapon dibawah level 3, karena level 3 adalah max
+        if ($team_detail->weapon_level < 3) {
+            $weapon_requirement = DB::table('equipment_requirement')->where('equipments_id', $team_detail->weapon_level + 1)->get();
+
+            // [RICKY] Lakukan pengecekan apakah material untuk upgrade weapon mencukupi
+            foreach ($weapon_requirement as $wr) {
+                $material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->get();
+                
+                if (count($material_team) > 0) {
+                    if ($material_team[0]->amount >= $wr->amount_need) {
+                        $upgrade_weapon = true;
+                    } else {
+                        $upgrade_weapon = false;
+                        break;
+                    }
                 } else {
                     $upgrade_weapon = false;
                     break;
                 }
-            } else {
-                $upgrade_weapon = false;
-                break;
             }
-        }
+    
+            $message = "Material tidak mencukupi untuk upgrade weapon";
+            if ($upgrade_weapon) {
+                // [RICKY] Upgrade level weapon
+                $update_weapon = DB::table('teams')->where('id', $id_team)->increment('weapon_level', 1);
+    
+                // [RICKY] Kurangi material untuk upgrade weapon
+                foreach ($weapon_requirement as $wr) {
+                    $kurangi_material_weapon = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->decrement('amount', $wr->amount_need);
+                }
 
-        $message = "Material tidak mencukupi untuk upgrade weapon";
-        if ($upgrade_weapon) {
-            $message = "Berhasil upgrade weapon";
-            $update_weapon = DB::table('teams')->where('id', $id_team)->increment('weapon_level', 1);
+                $level_weapon++;
+                $message = "Berhasil upgrade weapon";
+            }
+        } else {
+            $upgrade_weapon = false;
+            $message = "Level weapon sudah mencapai maximal";
+        }
+        
+        return response()->json(array(
+            'status' => $upgrade_weapon,
+            'message' => $message,
+            'level_weapon' => $level_weapon
+        ), 200);
+    }
+
+    // [RICKY] Menyerang boss dengan menggunakan weapon
+    public function attackWeapon() {
+        $id_team = 1;
+        $team_detail = Team::find($id_team);
+
+        if ($team_detail->weapon_level >= 1) {
+            if ($team_detail->attack_status || $team_detail->heal_status || $team_detail->shield) {
+                $attack_status = false;
+                $message = "Tidak dapat attack karena sudah melakukan attack/defense/heal";
+            } else {
+                $update_status = DB::table('teams')->where('id', $id_team)->update(['attack_status' => true]);
+                $attack_status = true;
+                $message = "Attack berhasil dilancarkan";
+            }
+        } else {
+            $attack_status = false;
+            $message = "Silahkan crafting senjata terlebih dahulu";
         }
 
         return response()->json(array(
-            'status' => $upgrade_weapon,
+            'status' => $attack_status,
             'message' => $message
         ), 200);
     }
