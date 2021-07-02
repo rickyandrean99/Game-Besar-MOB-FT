@@ -8,6 +8,7 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="../js/app.js"></script>
         <link rel="stylesheet" href="{{ asset('assets/css/dashboard-peserta.css') }}">
     </head>
     
@@ -16,9 +17,9 @@
             <!-- [RICKY] Struktur header halaman -->
             <header>
                 <div class="header-left">
-                    <span class="ronde">Round X&nbsp;</span>
-                    <span class="sesi">Preparation&nbsp;</span>
-                    <span class="timer">03:00</span>
+                    <span class="ronde"></span>
+                    <span class="sesi"></span>
+                    <span class="timer"></span>
                 </div>
 
                 <div class="header-right">
@@ -232,6 +233,76 @@
         </div>
         
         <script>
+            // [RICKY] Ronde, sesi, timer
+            var ronde = parseInt("{{ $round->round }}");
+            var aksi = {{ $round->action }};
+            var time = {{ $times }};
+
+            // [RICKY] Tampilkan Ronde Sesi Timer saat reload halaman
+            $(document).ready(function() {
+                roundSessionTimer();
+
+                if (aksi) {
+                    $('.btn-gift-material').attr('disabled', 'disabled');
+                    $('.btn-craft').attr('disabled', 'disabled');
+                    $('#btn-upgrade').attr('disabled', 'disabled');
+
+                    $('.btn-use').removeAttr('disabled');
+                    $('#btn-weapon-attack').removeAttr('disabled');
+                } else {
+                    $('.btn-gift-material').removeAttr('disabled');
+                    $('.btn-craft').removeAttr('disabled');
+                    
+                    if ({{ $team->weapon_level }} == 3) {
+                        $('#btn-upgrade').attr('disabled', 'disabled');
+                    } else {
+                        $('#btn-upgrade').removeAttr('disabled');
+                    }
+
+                    $('.btn-use').attr('disabled', 'disabled');
+                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                }
+            });
+            
+            // [RICKY] Tampilkan Ronde Sesi Timer secara realtime
+            var runTimer = setInterval(function () { roundSessionTimer(); }, 1000);
+
+            // [RICKY] Round, session, timer
+            function roundSessionTimer() {
+                if(ronde < 1) {
+                    $('.ronde').html("Game Besar Belum Dimulai");
+                    
+                    $('.btn-gift-material').attr('disabled', 'disabled');
+                    $('.btn-craft').attr('disabled', 'disabled');
+                    $('#btn-upgrade').attr('disabled', 'disabled');
+                    $('.btn-use').attr('disabled', 'disabled');
+                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                } else if (ronde > 20) {
+                    $('.ronde').html("Game Besar Sudah Selesai");
+                    $('.sesi').text("");
+                    $('.timer').text("");
+
+                    $('.btn-gift-material').attr('disabled', 'disabled');
+                    $('.btn-craft').attr('disabled', 'disabled');
+                    $('#btn-upgrade').attr('disabled', 'disabled');
+                    $('.btn-use').attr('disabled', 'disabled');
+                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                } else {
+                    $('.ronde').html("Round " + ronde + "&nbsp;(");
+                    var sesi = (aksi) ? "Action" : "Preparation";
+                    $('.sesi').text(sesi);
+                    
+                    if (time > 0) {
+                        minutes = (Math.floor(time / 60)).toString().padStart(2, '0');
+                        seconds = (time % 60).toString().padStart(2, '0');
+                        $('.timer').html(") " + minutes + ":" + seconds);
+                        time--;
+                    } else {
+                        $('.timer').html(") 00:00");
+                    }
+                }
+            }
+
             // [RICKY] Event click button crafting
             $(document).on("click", ".btn-craft", function() {
                 var nama_equipment = $(this).parent().parent().children('.nama-equipment').text();
@@ -368,6 +439,10 @@
                                 $('#btn-weapon-attack').removeAttr('disabled');
                                 $('#btn-weapon-attack').removeClass("btn-secondary");
                                 $('#btn-weapon-attack').addClass("btn-danger");
+
+                                if (!(aksi)) {
+                                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                                }
                             }
                         }
                     }
@@ -377,6 +452,29 @@
             // [RICKY] Reset jumlah crafting ketika modal crafting ditutup
             $('#equipment-crafting').on('hidden.bs.modal', function() {
                 $('#crafting-amount').val(1);
+            });
+
+            // [RICKY] Memperbaharui timer setelah ronde/sesi di update
+            window.Echo.channel('roundChannel').listen('.update', (e) => {
+                ronde = e.round;
+                aksi = e.action;
+                time = e.minutes * 60;
+
+                if (aksi) {
+                    $('.btn-gift-material').attr('disabled', 'disabled');
+                    $('.btn-craft').attr('disabled', 'disabled');
+                    $('#btn-upgrade').attr('disabled', 'disabled');
+
+                    $('.btn-use').removeAttr('disabled');
+                    $('#btn-weapon-attack').removeAttr('disabled');
+                } else {
+                    $('.btn-gift-material').removeAttr('disabled');
+                    $('.btn-craft').removeAttr('disabled');
+                    $('#btn-upgrade').removeAttr('disabled');
+
+                    $('.btn-use').attr('disabled', 'disabled');
+                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                }
             });
         </script>
     </body>

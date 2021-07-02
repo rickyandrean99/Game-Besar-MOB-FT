@@ -19,6 +19,7 @@ Route::get('/', function () {
 
 // [RICKY] Route tipe get yang digunakan saat reload halaman
 Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
+Route::get('/round', 'RoundController@round')->name('round');
 
 // [RICKY] Route tipe post yang digunakan olex Ajax
 Route::post('/get-equipment-requirement', 'TeamController@getEquipmentRequirement')->name('get-equipment-requirement');
@@ -26,10 +27,8 @@ Route::post('/crafting-equipment', 'TeamController@craftingEquipment')->name('cr
 Route::post('/use-equipment', 'TeamController@useEquipment')->name('use-equipment');
 Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapon');
 Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
+Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
+Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
+
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Team;
+use App\Round;
 use App\EnemyBoss;
 use App\SecretWeapon;
 use Illuminate\Http\Request;
@@ -16,13 +17,17 @@ class TeamController extends Controller
 
         $team_info = Team::find($id_team);
         $enemy_info = EnemyBoss::find(1);
+        $round_info = Round::find(1);
         $secret_weapon = SecretWeapon::find(1);
+        $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
 
         return view('peserta.dashboard', [
             'team' => $team_info,
             'boss' => $enemy_info,
+            'round' => $round_info,
             'weapon' => $secret_weapon,
+            'times' => $difference,
             'equipments' => $equipment_list
         ]);
     }
@@ -120,7 +125,14 @@ class TeamController extends Controller
                     } else if ($id_equipment == 7 && $team_detail->buff_increased == 0) {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_increased' => 2]);
                     } else if ($id_equipment == 8 && !$team_detail->buff_immortal) {
-                        $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_immortal' => true]);
+                        $round = Round::find(1);
+                        if ($round->round % 4 == 0) {
+                            $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_immortal' => true]);
+                        } else {
+                            $use_access = false;
+                            $message = "Immortal Armor hanya dapat digunakan saat special turn";
+                        }
+                        
                     } else if ($id_equipment == 9 && $team_detail->buff_regeneration == 0) {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_regeneration' => 2]);
                     } else {
