@@ -470,7 +470,12 @@
                 } else {
                     $('.btn-gift-material').removeAttr('disabled');
                     $('.btn-craft').removeAttr('disabled');
-                    $('#btn-upgrade').removeAttr('disabled');
+
+                    if ({{ $team->weapon_level }} == 3) {
+                        $('#btn-upgrade').attr('disabled', 'disabled');
+                    } else {
+                        $('#btn-upgrade').removeAttr('disabled');
+                    }
 
                     $('.btn-use').attr('disabled', 'disabled');
                     $('#btn-weapon-attack').attr('disabled', 'disabled');
