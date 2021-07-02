@@ -27,8 +27,11 @@ Route::post('/crafting-equipment', 'TeamController@craftingEquipment')->name('cr
 Route::post('/use-equipment', 'TeamController@useEquipment')->name('use-equipment');
 Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapon');
 Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
-Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
+Route::get('/update-round', 'RoundController@updateRound')->name('update-round');
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
+
+//[Yobong] Route gift
+Route::post('/gift', 'TeamController@gift')->name('gift');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');

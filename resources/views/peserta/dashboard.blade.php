@@ -34,16 +34,32 @@
                 <div class="content-top">
                     <!-- [RICKY] Struktur section gift -->
                     <section class="gift">
-                        <table class="gift-table">
-                            <tbody>
-                                @for($i = 2; $i <= 30; $i++)
-                                    <tr>
-                                        <td>Tim {{ $i }}</td>
-                                        <td><button type="button" style="width: 80%; padding: 2%" class="btn-gift-material">Gift</button></td>
-                                    </tr>
-                                @endfor
-                            </tbody>
-                        </table>
+                        <h3>GIFT</h3>
+                        <label for="">
+                            Pilih Team <br>
+                            <select name="" id="gift-kelompok">
+                                <option value="" selected disabled>-- Pilih Kelompok --</option>
+                                @foreach($friend as $f)
+                                    <option value="{{$f->id}}">{{$f->name}}</option>
+                                @endforeach
+                            </select>
+                        </label>
+
+                        <label for="">
+                            Pilih Material <br>
+                            <select name="" id="gift-material">
+                                <option value="" selected disabled>-- Pilih Material --</option>
+                                @foreach($material as $m)
+                                    <option value="{{$m->id}}">{{$m->name}}</option>
+                                @endforeach
+                            </select>
+                        </label>
+
+                        <label for="">
+                            Jumlah <br>
+                            <input type="number" id="gift_jumlah" min='0' value="0">
+                        </label>
+                        <button type="button" class="btn btn-primary" id="" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Kirim</button>
                     </section>
 
                     <!-- [RICKY] Struktur section boss -->
@@ -89,12 +105,12 @@
                     <section class="material">
                         <table class="material-table">
                             <tbody>
-                                @for($i = 1; $i <= 10; $i++)
+                                @foreach($material as $m)
                                     <tr>
-                                        <td>Material {{ $i }}</td>
-                                        <td>0</td>
+                                        <td>{{$m->name}}</td>
+                                        <td>{{$m->amount}}</td>
                                     </tr>
-                                @endfor
+                                @endforeach
                             </tbody>
                         </table>
                     </section>
@@ -227,6 +243,22 @@
                     <div class="modal-body">
                         <span id="modal-result-message" style="display:inline-block; width: 90%"></span>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="float: right"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- [Yobong] Modal Konfirmasi Gift (Ya/Tidak) -->
+         <div class="modal fade" id="konfirmasi-gift" tabindex="-1" role="dialog" aria-labelledby="weaponUpgrade" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h6 class="modal-title"style="margin: auto">Yakin mengirim material?</h6>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Tidak</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="gift_kirim" onclick="gift()">Ya</button>
                     </div>
                 </div>
             </div>
@@ -481,6 +513,28 @@
                     $('#btn-weapon-attack').attr('disabled', 'disabled');
                 }
             });
+
+            //[Yobong] kirim gift
+            function gift(){
+                var tujuan = $('#gift-kelompok').val();
+                var material = $('#gift-material').val();
+                var jumlah = $('#gift_jumlah').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("gift") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>',
+                        'tujuan': tujuan,
+                        'material': material,
+                        'jumlah': jumlah
+                    },
+                    success: function(data) {
+                        alert(data.msg + " dengan sisa material " + data.jumlah_sekarang);
+                        $('#gift_jumlah').val('0');
+                    }
+                });
+            }
         </script>
     </body>
 </html>
