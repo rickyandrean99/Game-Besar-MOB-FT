@@ -17,7 +17,8 @@ class RoundController extends Controller
     // [RICKY] Reload halaman admin untuk ganti ronde dan sesi
     public function round() {
         $round = Round::find(1);
-        return view('admin.round', ['round'=> $round]);
+        $difference = strtotime($round->time_end) - strtotime(date("Y-m-d H:i:s"));
+        return view('admin.round', ['round'=> $round, 'times'=> $difference]);
     }
 
     // [RICKY] Untuk update round dan set sesi jadi preparation

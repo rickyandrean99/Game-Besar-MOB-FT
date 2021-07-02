@@ -15,9 +15,61 @@
         <button class="btn btn-primary ms-5 mt-5" id="btn-update">Update Round</button>
         <button class="btn btn-danger ms-5 mt-5" id="btn-action">Update Sesi Action</button>
 
-        <div class="round ms-5 mt-5">{{ $round->round }}</div>
+        <div class="ms-5 mt-3 h4">
+            <span class="ronde"></span>
+            <span class="sesi"></span>
+            <span class="timer"></span>
+        </div>
 
         <script>
+            // [RICKY] Ronde, sesi, timer
+            var ronde = parseInt("{{ $round->round }}");
+            var aksi = {{ $round->action }};
+            var time = {{ $times }};
+
+            // [RICKY] Tampilkan Ronde Sesi Timer saat reload halaman
+            $(document).ready(function() {
+                roundSessionTimer();
+            });
+            
+            // [RICKY] Tampilkan Ronde Sesi Timer secara realtime
+            var runTimer = setInterval(function () { roundSessionTimer(); }, 1000);
+
+            // [RICKY] Round, session, timer
+            function roundSessionTimer() {
+                if (ronde < 1) {
+                    $('.ronde').html("Game Besar Belum Dimulai");
+                    $('#btn-action').attr('disabled', 'disabled');
+                } else if (ronde > 20) {
+                    $('.ronde').html("Game Besar Sudah Selesai");
+                    $('.sesi').text("");
+                    $('.timer').text("");
+                    $('#btn-action').attr('disabled', 'disabled');
+                    $('#btn-update').attr('disabled', 'disabled');
+                } else {
+                    $('.ronde').html("Round " + ronde + "&nbsp;(");
+                    var sesi = (aksi) ? "Action" : "Preparation";
+                    $('.sesi').text(sesi);
+
+                    if (aksi) {
+                        $('#btn-action').attr('disabled', 'disabled');
+                        $('#btn-update').removeAttr('disabled');
+                    } else {
+                        $('#btn-update').attr('disabled', 'disabled');
+                        $('#btn-action').removeAttr('disabled');
+                    }
+                    
+                    if (time > 0) {
+                        minutes = (Math.floor(time / 60)).toString().padStart(2, '0');
+                        seconds = (time % 60).toString().padStart(2, '0');
+                        $('.timer').html(") " + minutes + ":" + seconds);
+                        time--;
+                    } else {
+                        $('.timer').html(") 00:00");
+                    }
+                }
+            }
+
             // [RICKY] Event untuk update ke ronde selanjutnya dengan aksi preparation
             $(document).on('click', '#btn-update', function(e) {
                 e.preventDefault();
@@ -27,7 +79,6 @@
                     url: '/update-round',
                     data: {},
                     transformResponse: [(data) => {
-                        alert('Berhasil Update Ronde');
                         return data;
                     }]
                 }
@@ -44,12 +95,18 @@
                     url: '/update-sesi',
                     data: {},
                     transformResponse: [(data) => {
-                        alert('Berhasil Update Sesi');
                         return data;
                     }]
                 }
 
                 axios(options);
+            });
+
+            // [RICKY] Memperbaharui timer setelah ronde/sesi di update
+            window.Echo.channel('roundChannel').listen('.update', (e) => {
+                ronde = e.round;
+                aksi = e.action;
+                time = e.minutes * 60;
             });
         </script>
     </body>
