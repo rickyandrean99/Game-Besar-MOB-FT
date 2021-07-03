@@ -24,7 +24,8 @@ class RoundController extends Controller
     // [RICKY] Untuk update round dan set sesi jadi preparation
     public function updateRound() {
         $round_detail = Round::find(1);
-        $debuff_overtime = 0; // Cek ini untuk keseluruhan tim
+        $debuff_overtime = 0;
+        $damage_dealt_to_boss = 0;
         
         // [RICKY] Sistem serang boss
         if ($round_detail->round > 0 && $round_detail->round <= 20) {
@@ -44,114 +45,91 @@ class RoundController extends Controller
             // [RICKY] Team melancarkan serangan ke boss
             $team_list = Team::all();
             foreach ($team_list as $team) {
-                $buff_increased = false;
+                $damage_weapon = ($team->attack_status)? $team->weapon_level * 50 : 0;
 
-                // Buff regeneration sekalian (RETURNER)
+                // [RICKY] Cek buff_regeneration (RETURNER)
                 if ($team->buff_regeneration > 0) { 
-                    $update_hp_team = DB::table('teams')->where('id', $team->id)->increment('hp_amount', 50);
+                    $update_hp_team = DB::table('teams')->where('id', $team->id)->increment('hp_amount', 30);
                 }
 
-                // Cek Status debuff_overtime yang stackable di seluruh tim (PARADOX SPHERE)
+                // [RICKY] Cek Status debuff_overtime yang stackable (PARADOX SPHERE)
                 if ($team->debuff_overtime) {
                     $debuff_overtime++;
                 }
 
-                // Cek Status buff_increased seluruh tim saat mau melancarkan attack (SCARLET PHANTOM)
+                // [RICKY] Cek Status buff_increased (SCARLET PHANTOM)
                 if ($team->buff_increased > 0) {
-                    $buff_increased = true;
-                }
-
-                // Player attack ke boss
-                $damage_weapon = $team->weapon_level * 50;
-                if ($buff_increased) {
                     $damage_weapon += (0.25 * $damage_weapon);
                 }
 
-                $attack_boss = DB::table('enemy_bosses')->where('id', 1)->decrement('hp_amount', $damage_weapon);
+                $damage_dealt_to_boss += $damage_weapon;
             }
+
+            // [RICKY] Kurangi hp boss berdasarkan damage_dealt_to_boss dan debuff overtime
+            $damage_dealt_to_boss += ($debuff_overtime*10);
+            $attack_boss = DB::table('enemy_bosses')->where('id', 1)->decrement('hp_amount', $damage_dealt_to_boss);
 
             // [RICKY] Boss melancarkan serangan tim yang sudah ditentukan
             foreach ($boss_attack_list as $value) {
                 $team_detail = Team::find($value);
+                $damage_dealt_to_team = $boss_damage;
                 
                 // [RICKY] Memastikan apakah tim masih bisa bermain dengan mengecek hp yang dimiliki
-                if ($team_detail->hp_amount != 0) {
-                    // [RICKY] Pengecekan apakah monster boss dapat menyerang tim ini (WINDTALKER)
-                    if (!($team_detail->debuff_disable)) {
-                        // Damage yang diterima boss berkurang (ANTIQUE CUIRASS)
+                if ($team_detail->hp_amount > 0) {
+                    // [RICKY] Pengecekan apakah monster boss dapat menyerang tim ini (WINDTALKER & IMMORTAL ARMOR)
+                    if (!($team_detail->debuff_disable) && !($team_detail->buff_immortal)) {
+                        // [RICKY] Damage yang diterima dari serangan boss berkurang 25% (ANTIQUE CUIRASS)
                         if ($team_detail->debuff_decreased > 0) {
-                            $boss_damage = 0.75 * $boss_damage;
+                            $damage_dealt_to_team = 0.75 * $damage_dealt_to_team;
                         }
 
-                        // Cek Status shield tim [SHIELD]
+                        // [RICKY] Damage yang diterima dari serangan boss berkurang 50% [SHIELD]
                         if ($team_detail->shield) {
-                            $boss_damage = 0.5 * $boss_damage;
-                        }
-
-                        // Cek Status buff_immortal tim saat special turn [IMMORTAL ARMOR]
-                        if ($round_detail->round % 4 == 0) {
-                            if ($round_detail->buff_immortal) {
-                                $boss_damage = 0;
-                            }
+                            $damage_dealt_to_team = (int)(0.5 * $damage_dealt_to_team);
                         }
                         
-                        // Kurangi HP Team (Cek darah diatas atau dibawah damage boss)
-                        $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $boss_damage);
-                    } else {
-                        // cari tim baru (pake loop tentukan tim barunya)
+                        // [RICKY] Kurangi HP Team
+                        if ($team_detail->hp_amount > $damage_dealt_to_team) {
+                            $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $damage_dealt_to_team);
+                        } else {
+                            $attack_team = DB::table('teams')->where('id', $team_detail->id)->update(['hp_amount'=> 0]);
+                        }
                     }
                 }
             }
 
-            // [RICKY] Remove status
+            // [RICKY] Hapus status buff/debuff dll
             $team_list = Team::all();
             foreach ($team_list as $team) {
-                // Reset debuff disable
-                if ($team->debuff_disable) {
-                    $reset = DB::table('teams')->where('id', $team->id)->update(['debuff_disable'=> false]);
-                }
+                // [RICKY] Reset jika tim masih diperbolehkan bermain
+                if ($team->hp_amount > 0) {
+                    $set_debuff_decreased = ($team->debuff_decreased > 0)? $team->debuff_decreased - 1 : 0;
+                    $set_buff_increased = ($team->buff_increased > 0)? $team->buff_increased - 1 : 0;
+                    $set_buff_regeneration = ($team->buff_regeneration  > 0)? $team->buff_regeneration  - 1 : 0;
 
-                // Reset debuff decreased
-                if ($team->debuff_decreased > 0) {
-                    $reset = DB::table('teams')->where('id', $team->id)->decrement('debuff_decreased', 1);
-                }
-
-                // Reset debuff overtime
-                if ($team->debuff_overtime) {
-                    $reset = DB::table('teams')->where('id', $team->id)->update(['debuff_overtime'=> false]);
-                }
-
-                // Reset buff increased
-                if ($team->buff_increased) {
-                    $reset = DB::table('teams')->where('id', $team->id)->decrement('buff_increased', 1);
-                }
-
-                // Reset buff increased
-                if ($team->buff_immortal) {
-                    $reset = DB::table('teams')->where('id', $team->id)->update(['buff_immortal'=> false]);
-                }
-
-                // Reset buff regeneration
-                if ($team->buff_regeneration) {
-                    $reset = DB::table('teams')->where('id', $team->id)->decrement('buff_regeneration', 1);
-                }
-
-                // Reset shield
-                if ($team->shield) {
-                    $reset = DB::table('teams')->where('id', $team->id)->update(['shield'=> false]);
+                    $reset = DB::table('teams')->where('id', $team->id)->update([
+                        'debuff_disable' => false,
+                        'debuff_decreased' => $set_debuff_decreased,
+                        'debuff_overtime' => false,
+                        'buff_increased' => $set_buff_increased,
+                        'buff_immortal' => false,
+                        'buff_regeneration' => $set_buff_regeneration,
+                        'shield' => false,
+                        'attack_status' => false,
+                        'heal_status' => false,
+                        'buff_debuff_status' => false
+                    ]);
                 }
             }
-        } else {
-            // Gamebes belum mulai atau sudah selesai
         }
 
         // [RICKY] Update round
-        // $end_time = Carbon::now()->addMinutes(3);
-        // $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
+        $end_time = Carbon::now()->addMinutes(3);
+        $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
 
         // [RICKY] Pusher broadcast
-        // event(new UpdateRound($round_detail->round + 1, false, 3));
-        // return ["success" => true];
+        event(new UpdateRound($round_detail->round + 1, false, 3));
+        return ["success" => true];
     }
 
     // [RICKY] Untuk update sesi jadi action
