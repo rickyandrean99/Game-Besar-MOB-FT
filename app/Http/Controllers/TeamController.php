@@ -21,14 +21,17 @@ class TeamController extends Controller
         $secret_weapon = SecretWeapon::find(1);
         $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
-
+        $material_list = DB::table('material_team')->join('materials','material_team.materials_id','=','materials.id')->where('material_team.teams_id',$id_team)->get();
+        $friend_list = DB::table('teams')->select('id','name')->whereNotIn('id',[$id_team])->get();
         return view('peserta.dashboard', [
             'team' => $team_info,
             'boss' => $enemy_info,
             'round' => $round_info,
             'weapon' => $secret_weapon,
             'times' => $difference,
-            'equipments' => $equipment_list
+            'equipments' => $equipment_list,
+            'material' =>$material_list,
+            'friend' =>$friend_list
         ]);
     }
 
@@ -270,5 +273,52 @@ class TeamController extends Controller
             'status' => $attack_status,
             'message' => $message
         ), 200);
+    }
+
+    //[Yobong] funtion untuk gift
+    public function gift(Request $request){
+        $tujuan = $request->get('tujuan');
+        $material = $request->get('material');
+        $jumlah = $request->get('jumlah');
+        // $tujuan = 2;
+        // $material = 1;
+        // $jumlah = 5;
+        $id_team = 1;
+        $msg = "Gagal mengirim material, Jumlah yang dikirim melebihi Inventory";
+
+        //cek jumlah kepunyaan
+        $cek_jumlah = DB::table('material_team')
+        ->select('amount')
+        ->where('materials_id',$material)
+        ->where('teams_id',$id_team)
+        ->get();
+
+        $jumlah_sekarang = $cek_jumlah[0]->amount;
+        if($jumlah<= $cek_jumlah[0]->amount){
+            $cek = DB::table('material_team')
+                ->where('materials_id',$material)
+                ->where('teams_id',$tujuan)
+                ->get();
+            if(count($cek)>0){
+                $uodate_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
+            }
+            else{
+                $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
+                    'materials_id'=> $material,
+                    'teams_id'=> $tujuan,
+                    'amount'=> $jumlah
+                ]);
+            }
+            $uodate_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
+
+            $msg="berhasil melakukan gift";
+            $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
+        }
+        
+        return response()->json(array(
+            'msg' => $msg,
+            'jumlah_sekarang'=> $jumlah_sekarang
+        ), 200);
+
     }
 }

@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 // [RICKY] Route tipe get yang digunakan saat reload halaman
@@ -29,6 +29,9 @@ Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapo
 Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
 Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
+
+//[Yobong] Route gift
+Route::post('/gift', 'TeamController@gift')->name('gift');
 
 Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
