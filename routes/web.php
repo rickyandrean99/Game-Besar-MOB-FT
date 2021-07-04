@@ -17,9 +17,13 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-// [RICKY] Route tipe get yang digunakan saat reload halaman
-Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
-Route::get('/round', 'RoundController@round')->name('round');
+// [RICKY] Route tipe get yang digunakan saat mengakses halaman
+Route::middleware(['auth'])->group(function(){
+    Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
+    Route::get('/round', 'RoundController@round')->name('round');
+    Route::get('/shop', 'ShopController@index')->name('shop');
+    Route::get('/quest', 'QuestController@index')->name('quest');
+});
 
 // [RICKY] Route tipe post yang digunakan olex Ajax
 Route::post('/get-equipment-requirement', 'TeamController@getEquipmentRequirement')->name('get-equipment-requirement');
@@ -33,5 +37,6 @@ Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
 //[Yobong] Route gift
 Route::post('/gift', 'TeamController@gift')->name('gift');
 
-Auth::routes();
+// Auth::routes();
+Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');

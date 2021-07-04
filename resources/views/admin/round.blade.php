@@ -12,6 +12,11 @@
     </head>
 
     <body>
+        <div class="mt-4 me-4" style="float: right">
+            <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+        </div>
+        
         <button class="btn btn-primary ms-5 mt-5" id="btn-update">Update Round</button>
         <button class="btn btn-danger ms-5 mt-5" id="btn-action">Update Sesi Action</button>
 
