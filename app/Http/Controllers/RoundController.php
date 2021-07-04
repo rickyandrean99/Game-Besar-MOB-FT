@@ -16,6 +16,8 @@ class RoundController extends Controller
 {
     // [RICKY] Reload halaman admin untuk ganti ronde dan sesi
     public function round() {
+        $this->authorize('admin-itd');
+
         $round = Round::find(1);
         $difference = strtotime($round->time_end) - strtotime(date("Y-m-d H:i:s"));
         return view('admin.round', ['round'=> $round, 'times'=> $difference]);
@@ -23,6 +25,8 @@ class RoundController extends Controller
 
     // [RICKY] Untuk update round dan set sesi jadi preparation
     public function updateRound() {
+        $this->authorize('admin-itd');
+
         $round_detail = Round::find(1);
         $debuff_overtime = 0;
         $damage_dealt_to_boss = 0;
@@ -134,6 +138,8 @@ class RoundController extends Controller
 
     // [RICKY] Untuk update sesi jadi action
     public function updateSesi() {
+        $this->authorize('admin-itd');
+        
         $round_detail = Round::find(1);
 
         // [RICKY] Update round

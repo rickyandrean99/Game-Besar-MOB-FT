@@ -23,8 +23,9 @@
                 </div>
 
                 <div class="header-right">
-                    <span class="team-info">{{ $team->name }}</span>
-                    <span class="logout">Logout</span>
+                    <span class="team-info">{{ Auth::user()->name }}</span>
+                    <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                 </div>
             </header>
             

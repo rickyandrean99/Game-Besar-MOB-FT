@@ -8,12 +8,15 @@ use App\EnemyBoss;
 use App\SecretWeapon;
 use Illuminate\Http\Request;
 use DB;
+use Auth;
 
 class TeamController extends Controller
 {
     // [RICKY] Reload halaman dashboard peserta
     public function dashboard() {
-        $id_team = 1;
+        $this->authorize('team');
+
+        $id_team = Auth::user()->team;
 
         $team_info = Team::find($id_team);
         $enemy_info = EnemyBoss::find(1);
@@ -37,6 +40,7 @@ class TeamController extends Controller
 
     // [RICKY] Mendapatkan list material yang dibutuhkan saat click crafting
     public function getEquipmentRequirement(Request $request) {
+        $this->authorize('team');
         $equipment_requirement = DB::table('equipment_requirement')->join('materials', 'equipment_requirement.materials_id', '=', 'materials.id')->where('equipment_requirement.equipments_id', $request->get('id_equipment'))->select('materials.name AS nama_material', 'equipment_requirement.amount_need AS jumlah_material')->get();
         
         return response()->json(array(
@@ -46,7 +50,9 @@ class TeamController extends Controller
 
     // [RICKY] Crafting equipment berdasarkan material yang dimiliki
     public function craftingEquipment(Request $request) {
-        $id_team = 1;
+        $this->authorize('team');
+
+        $id_team = Auth::user()->team;
         $id_equipment = $request->get('id_equipment');
         $amount = $request->get('amount');
         $message = "Material tidak mencukupi";
@@ -98,7 +104,9 @@ class TeamController extends Controller
 
     // [RICKY] Use equipment yang dimiliki
     public function useEquipment(Request $request) {
-        $id_team = 1;
+        $this->authorize('team');
+        
+        $id_team = Auth::user()->team;
         $id_equipment = $request->get('id_equipment');
         $team_detail = Team::find($id_team);
         $use_access = false;
@@ -200,7 +208,9 @@ class TeamController extends Controller
 
     // [RICKY] Mengupgrade weapon
     public function upgradeWeapon(Request $request) {
-        $id_team = 1;
+        $this->authorize('team');
+        
+        $id_team = Auth::user()->team;
         $team_detail = Team::find($id_team);
         $level_weapon = $team_detail->weapon_level;
 
@@ -252,7 +262,9 @@ class TeamController extends Controller
 
     // [RICKY] Menyerang boss dengan menggunakan weapon
     public function attackWeapon() {
-        $id_team = 1;
+        $this->authorize('team');
+        
+        $id_team = Auth::user()->team;
         $team_detail = Team::find($id_team);
 
         if ($team_detail->weapon_level >= 1) {
@@ -277,13 +289,12 @@ class TeamController extends Controller
 
     //[Yobong] funtion untuk gift
     public function gift(Request $request){
+        $this->authorize('team');
+        
         $tujuan = $request->get('tujuan');
         $material = $request->get('material');
         $jumlah = $request->get('jumlah');
-        // $tujuan = 2;
-        // $material = 1;
-        // $jumlah = 5;
-        $id_team = 1;
+        $id_team = Auth::user()->team;
         $msg = "Gagal mengirim material, Jumlah yang dikirim melebihi Inventory";
 
         //cek jumlah kepunyaan
@@ -319,6 +330,5 @@ class TeamController extends Controller
             'msg' => $msg,
             'jumlah_sekarang'=> $jumlah_sekarang
         ), 200);
-
     }
 }
