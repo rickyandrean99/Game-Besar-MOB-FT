@@ -12,25 +12,48 @@
     </head>
 
     <body>
-        <div class="mt-4 me-4" style="float: right">
-            <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
+        <div class="me-4" style="float: right">
+            <span class="h4 fw-bold mr-4 text-dark p-2 pt-0" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
-        
-        <button class="btn btn-primary ms-5 mt-5 text-white fw-bold" id="btn-update">Update Round</button><br>
-        <button class="btn btn-danger ms-5 mt-5 text-white fw-bold" id="btn-action">Update Sesi Action</button><br>
-        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-reminder" onclick="broadcastVideo(false)">Broadcast Video Reminder</button><br>
-        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-winner" onclick="broadcastVideo(true)">Broadcast Video Winner</button><br>
-        <input class="form-control w-25" type="number" min="1" value="1" id="part-amount">
-        <button class="btn btn-info ms-5 mt-5 text-white fw-bold" id="btn-update-part">Update Special Weapon Part</button><br>
-        
 
         <div class="ms-5 mt-3 h4">
             <span class="ronde"></span>
             <span class="sesi"></span>
             <span class="timer"></span>
         </div>
+        
+        <hr class="mt-4" style="height: 5px;">
+        <!-- [RICKY] Bagian round & sesi -->
+        <div class="ms-5 d-inline-block fw-bold h5">Update Round/Sesi : </div>
+        <button class="btn btn-primary ms-3 text-white fw-bold" id="btn-update">Update Round</button>
+        <button class="btn btn-danger ms-3 text-white fw-bold" id="btn-action">Update Sesi Action</button><br>
+        <hr style="height: 5px;">
 
+        <!-- [RICKY] Bagian broadcast video -->
+        <div class="ms-5 d-inline-block fw-bold h5">Pilih Jenis Video : </div>
+        <button class="btn btn-dark ms-3 text-white fw-bold" id="btn-broadcast-reminder" onclick="broadcastVideo(false)">Broadcast Video Reminder</button>
+        <button class="btn btn-dark ms-3 text-white fw-bold" id="btn-broadcast-winner" onclick="broadcastVideo(true)">Broadcast Video Winner</button>
+        <hr style="height: 5px;">
+
+        <!-- [RICKY] Bagian part special weapon -->
+        <div class="ms-5 d-inline-block fw-bold h5">Jumlah Part : </div>
+        <input class="form-control ms-3 w-25 d-inline-block" type="number" min="1" value="1" id="part-amount">
+        <button class="d-inline-block btn btn-info ms-5 text-white fw-bold" id="btn-update-part">Update Special Weapon Part</button><br>
+        <hr style="height: 5px;">
+
+        <!-- [RICKY] Bagian quest tiap tim -->
+        <div class="ms-5 d-inline-block fw-bold h5">Pilih Kelompok : </div>
+        <select class="d-inline-block form-select form-select-lg ms-3 w-25" aria-label=".form-select-lg example" id="quest-team">
+            <option value="" selected disabled>Pilih Kelompok</option>
+            @for($i = 1; $i <= 30; $i++)
+                <option value="{{ $i }}">{{ $i }}</option>
+            @endfor
+        </select>
+        <button class="d-inline-block btn btn-primary ms-5 me-3 ps-4 pe-4 text-white fw-bold" onclick="sendQuestStatus(true)">Berhasil</button>
+        <button class="d-inline-block btn btn-danger text-white ps-4 pe-4 fw-bold" onclick="sendQuestStatus(false)">Gagal</button>
+        <hr style="height: 5px;">
+        
         <script>
             // [RICKY] Ronde, sesi, timer
             var ronde = parseInt("{{ $round->round }}");
@@ -145,6 +168,23 @@
 
                 axios(options);
             });
+
+            // [RICKY] Event untuk private chat quest status (testing doang)
+            function sendQuestStatus(status) {
+                const options = {
+                    method: 'post',
+                    url: '/coba-private-quest',
+                    data: {
+                        'id_team': $('#quest-team').val(),
+                        'status': status
+                    },
+                    transformResponse: [(data) => {
+                        return data;
+                    }]
+                }
+
+                axios(options);
+            }
 
             // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {

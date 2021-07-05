@@ -21,7 +21,8 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
     Route::get('/round', 'RoundController@round')->name('round');
-    Route::get('/shop', 'ShopController@index')->name('shop');
+    Route::resource('shop', "MaterialController");
+    Route::post('buymaterials', "MaterialController@buymaterial")->name('buymaterials');
     Route::get('/quest', 'QuestController@index')->name('quest');
 });
 
@@ -35,6 +36,7 @@ Route::post('/update-round', 'RoundController@updateRound')->name('update-round'
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
 Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadcast-video');
 Route::post('/testing-part-doang', 'RoundController@testingPartDoang')->name('testing-part-doang'); // Nanti pake route, controller, sama function punya erha kalo tim berhasil selesaiin quest
+Route::post('/coba-private-quest', 'RoundController@cobaPrivate')->name('coba-private'); // ini cuma testing private doang (Gabung sama punya erha)
 
 //[Yobong] Route gift
 Route::post('/gift', 'TeamController@gift')->name('gift');

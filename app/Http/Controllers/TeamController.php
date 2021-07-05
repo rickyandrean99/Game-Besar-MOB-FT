@@ -6,6 +6,8 @@ use App\Team;
 use App\Round;
 use App\EnemyBoss;
 use App\SecretWeapon;
+use App\Material;
+use App\Events\SendGift;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
@@ -24,8 +26,9 @@ class TeamController extends Controller
         $secret_weapon = SecretWeapon::find(1);
         $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
-        $material_list = DB::table('material_team')->join('materials','material_team.materials_id','=','materials.id')->where('material_team.teams_id',$id_team)->get();
+        $material_list = DB::select(DB::raw("SELECT m.id AS materials_id, m.name AS nama_material, coalesce(mt.amount, '0') AS jumlah FROM materials AS m LEFT JOIN (SELECT * FROM material_team WHERE teams_id = $id_team) AS mt ON m.id = mt.materials_id ORDER BY materials_id"));
         $friend_list = DB::table('teams')->select('id','name')->whereNotIn('id',[$id_team])->get();
+        
         return view('peserta.dashboard', [
             'team' => $team_info,
             'boss' => $enemy_info,
@@ -56,6 +59,7 @@ class TeamController extends Controller
         $id_equipment = $request->get('id_equipment');
         $amount = $request->get('amount');
         $message = "Material tidak mencukupi";
+        $material_update = null;
 
         $equipment_requirement = DB::table('equipment_requirement')->where('equipments_id', $id_equipment)->get();
 
@@ -79,6 +83,8 @@ class TeamController extends Controller
             // [RICKY] Lakukan pengurangan material yang dimiliki apabila persyaratan tercukupi
             foreach ($equipment_requirement as $er) {
                 $kurangi_material_team = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $er->materials_id)->decrement('amount', $er->amount_need * $amount);
+                $get_new_material = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $er->materials_id)->select('materials_id', 'amount')->get();
+                $material_update[] = $get_new_material[0];
             }
 
             // [RICKY] Menambah equipment yang di crafting
@@ -98,7 +104,8 @@ class TeamController extends Controller
         
         return response()->json(array(
             'crafting_result' => $crafting_result,
-            'message' => $message
+            'message' => $message,
+            'material_update' => $material_update
         ), 200);
     }
 
@@ -213,6 +220,7 @@ class TeamController extends Controller
         $id_team = Auth::user()->team;
         $team_detail = Team::find($id_team);
         $level_weapon = $team_detail->weapon_level;
+        $material_update = null;
 
         // [RICKY] Pastikan weapon dibawah level 3, karena level 3 adalah max
         if ($team_detail->weapon_level < 3) {
@@ -243,6 +251,8 @@ class TeamController extends Controller
                 // [RICKY] Kurangi material untuk upgrade weapon
                 foreach ($weapon_requirement as $wr) {
                     $kurangi_material_weapon = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->decrement('amount', $wr->amount_need);
+                    $get_new_material = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $wr->materials_id)->select('materials_id', 'amount')->get();
+                    $material_update[] = $get_new_material[0];
                 }
 
                 $level_weapon++;
@@ -256,7 +266,8 @@ class TeamController extends Controller
         return response()->json(array(
             'status' => $upgrade_weapon,
             'message' => $message,
-            'level_weapon' => $level_weapon
+            'level_weapon' => $level_weapon,
+            'material_update' => $material_update
         ), 200);
     }
 
@@ -295,7 +306,9 @@ class TeamController extends Controller
         $material = $request->get('material');
         $jumlah = $request->get('jumlah');
         $id_team = Auth::user()->team;
+        $material_detail = Material::find($material);
         $msg = "Gagal mengirim material, Jumlah yang dikirim melebihi Inventory";
+        $jumlah_sekarang = 0;
 
         //cek jumlah kepunyaan
         $cek_jumlah = DB::table('material_team')
@@ -303,28 +316,42 @@ class TeamController extends Controller
         ->where('materials_id',$material)
         ->where('teams_id',$id_team)
         ->get();
+        
+        if(count($cek_jumlah)>0){
+            $jumlah_sekarang = $cek_jumlah[0]->amount;
 
-        $jumlah_sekarang = $cek_jumlah[0]->amount;
-        if($jumlah<= $cek_jumlah[0]->amount){
-            $cek = DB::table('material_team')
-                ->where('materials_id',$material)
-                ->where('teams_id',$tujuan)
-                ->get();
-            if(count($cek)>0){
-                $uodate_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
-            }
-            else{
-                $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
-                    'materials_id'=> $material,
-                    'teams_id'=> $tujuan,
-                    'amount'=> $jumlah
-                ]);
-            }
-            $uodate_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
+            if($jumlah<= $cek_jumlah[0]->amount){
+                $cek = DB::table('material_team')
+                    ->where('materials_id',$material)
+                    ->where('teams_id',$tujuan)
+                    ->get();
+                if(count($cek)>0){
+                    $update_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
+                }
+                else{
+                    $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
+                        'materials_id'=> $material,
+                        'teams_id'=> $tujuan,
+                        'amount'=> $jumlah
+                    ]);
+                }
+                $update_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
+    
+                $msg="berhasil melakukan gift";
+                $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
 
-            $msg="berhasil melakukan gift";
-            $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
+                $msg_to_them = "Kamu mendapatkan ".$jumlah." ".$material_detail->name." dari Tim ".$id_team;
+
+                // Pusher send gift disini
+                broadcast(new SendGift($tujuan, $msg_to_them, $material, $jumlah))->toOthers();
+            }
         }
+        else{
+            $msg = "Gagal mengirim material, tidak ada material tersebut di inventory";
+        }
+       
+
+        
         
         return response()->json(array(
             'msg' => $msg,

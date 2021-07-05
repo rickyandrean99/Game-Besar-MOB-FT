@@ -1,0 +1,113 @@
+/* [KENNETH] CSS Scrollbar */
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(150, 150, 150, 0.5);
+}
+
+* {
+    scroll-behavior: smooth;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Rubik', sans-serif;
+    font-size: 20px;
+}
+
+header {
+    display: flex;
+    padding: 10px;
+}
+
+main {
+    margin-top: 60px;
+}
+
+.table-scroll {
+    position: relative;
+    width: 1000px;
+    z-index: 1;
+    margin: auto;
+    overflow: auto;
+    height: 600px;
+}
+
+.table-scroll table {
+    width: 100%;
+    margin: auto;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table-scroll thead th {
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+}
+
+.table-scroll tfoot,
+.table-scroll tfoot th,
+.table-scroll tfoot td {
+    position: -webkit-sticky;
+    position: sticky;
+    bottom: 0;
+    background: #666;
+    color: #fff;
+    z-index: 4;
+    padding: 10px;
+}
+
+.table-scroll tbody td {
+    padding: 10px;
+}
+
+.logout {
+    margin-left: auto;
+}
+
+.pilih {
+    display: flex;
+    justify-content: space-between;
+    width: 1000px;
+    margin: auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.koin {
+    font-weight: bold;
+    text-align: right;
+    margin: 0px !important;
+}
+
+.cboTeam {
+    width: 50%;
+}
+
+.koinKelompok {
+    width: 50%;
+    font-size: 40px;
+    text-align: right;
+}
+
+.red {
+    color: red;
+}
+
+.tombol {
+    width: 1000px;
+    margin: auto;
+    margin-top: 30px;
+    text-align: right;
+}
+
+.btn {
+    width: 200px;
+    height: 50px;
+}
