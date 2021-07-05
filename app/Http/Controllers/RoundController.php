@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Events\BroadcastVideo;
 use App\Events\UpdatePart;
 use App\Events\UpdateRound;
+use App\Events\PrivateQuestResult;
+use App\Events\UpdateHitpoint;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Team;
@@ -97,8 +99,10 @@ class RoundController extends Controller
                         // [RICKY] Kurangi HP Team
                         if ($team_detail->hp_amount > $damage_dealt_to_team) {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $damage_dealt_to_team);
+                            broadcast(new UpdateHitpoint($team_detail->id, $team_detail->hp_amount - $damage_dealt_to_team))->toOthers();
                         } else {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->update(['hp_amount'=> 0]);
+                            broadcast(new UpdateHitpoint($team_detail->id, 0))->toOthers();
                         }
                     }
                 }
@@ -171,6 +175,20 @@ class RoundController extends Controller
             event(new BroadcastVideo(true));
         }
 
+        return ["success" => true];
+    }
+
+    // [RICKY] Coba coba private quest result ke tim gan
+    public function cobaPrivate(Request $request) {
+        $receiver_id = $request->get('id_team');
+
+        if ($request->get('status')) {
+            $message = "Tim mu berhasil menyelesaikan quest";
+        } else {
+            $message = "Tim mu gagal menyelesaikan quest";
+        }
+
+        broadcast(new PrivateQuestResult($receiver_id, $message))->toOthers();
         return ["success" => true];
     }
 }

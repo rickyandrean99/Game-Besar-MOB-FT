@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Game Besar MOB FT</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -51,7 +52,7 @@
                             <select name="" id="gift-material">
                                 <option value="" selected disabled>-- Pilih Material --</option>
                                 @foreach($material as $m)
-                                    <option value="{{$m->id}}">{{$m->name}}</option>
+                                    <option value="{{$m->materials_id}}">{{$m->nama_material}}</option>
                                 @endforeach
                             </select>
                         </label>
@@ -60,7 +61,7 @@
                             Jumlah <br>
                             <input type="number" id="gift_jumlah" min='0' value="0">
                         </label>
-                        <button type="button" class="btn btn-primary" id="" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Kirim</button>
+                        <button type="button" class="btn btn-primary" id="btn-gift" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Kirim</button>
                     </section>
 
                     <!-- [RICKY] Struktur section boss -->
@@ -108,8 +109,8 @@
                             <tbody>
                                 @foreach($material as $m)
                                     <tr>
-                                        <td>{{$m->name}}</td>
-                                        <td>{{$m->amount}}</td>
+                                        <td>{{$m->nama_material}}</td>
+                                        <td id="jumlah-material-{{ $m->materials_id }}">{{$m->jumlah}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -290,35 +291,101 @@
         </div>
         
         <script>
-            // [RICKY] Ronde, sesi, timer
+            // [RICKY] Ronde, sesi, timer, status, weapon level
             var ronde = parseInt("{{ $round->round }}");
             var aksi = {{ $round->action }};
             var time = {{ $times }};
+            var teamStatus = ( {{ $team->hp_amount }} > 0 ) ? true : false;
+            var weaponLevel = {{ $team->weapon_level }};
+            
+            // [RICKY] Pengecekan apakah boleh bermain
+            // function checkPlayable() {
+            //     if (!teamStatus) {
+            //         disableAllControl();
+            //     }
+            // }
 
-            // [RICKY] Tampilkan Ronde Sesi Timer saat reload halaman
-            $(document).ready(function() {
-                roundSessionTimer();
+            // [RICKY] Disable semua control
+            function disableAllControl() {
+                $('#gift-kelompok').attr('disabled', 'disabled');
+                $('#gift-material').attr('disabled', 'disabled');
+                $('#gift_jumlah').attr('disabled', 'disabled');
+                $('#btn-gift').attr('disabled', 'disabled');
+                $('.btn-craft').attr('disabled', 'disabled');
+                $('.btn-use').attr('disabled', 'disabled');
+                $('#btn-weapon-attack').attr('disabled', 'disabled');
+                $('#btn-upgrade').attr('disabled', 'disabled');
+            }
 
-                if (aksi) {
-                    $('.btn-gift-material').attr('disabled', 'disabled');
-                    $('.btn-craft').attr('disabled', 'disabled');
-                    $('#btn-upgrade').attr('disabled', 'disabled');
+            // [RICKY] Pengecekan level senjata dan action
+            function checkWeaponAction() {
+                if (teamStatus) {
+                    if (aksi) {
+                        $('#gift-kelompok').attr('disabled', 'disabled');
+                        $('#gift-material').attr('disabled', 'disabled');
+                        $('#gift_jumlah').attr('disabled', 'disabled');
+                        $('#btn-gift').attr('disabled', 'disabled');
+                        $('.btn-craft').attr('disabled', 'disabled');
+                        $('.btn-use').removeAttr('disabled');
 
-                    $('.btn-use').removeAttr('disabled');
-                    $('#btn-weapon-attack').removeAttr('disabled');
-                } else {
-                    $('.btn-gift-material').removeAttr('disabled');
-                    $('.btn-craft').removeAttr('disabled');
-                    
-                    if ({{ $team->weapon_level }} == 3) {
-                        $('#btn-upgrade').attr('disabled', 'disabled');
+                        if (weaponLevel > 0) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
+
+                            $('#btn-weapon-attack').removeAttr('disabled');
+                            $('#btn-weapon-attack').removeClass("btn-secondary");
+                            $('#btn-weapon-attack').addClass("btn-danger");
+                        } else if (weaponLevel <= 0) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
+
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        } 
                     } else {
-                        $('#btn-upgrade').removeAttr('disabled');
-                    }
+                        $('#gift-kelompok').removeAttr('disabled');
+                        $('#gift-material').removeAttr('disabled');
+                        $('#gift_jumlah').removeAttr('disabled');
+                        $('#btn-gift').removeAttr('disabled');
+                        $('.btn-craft').removeAttr('disabled');
+                        $('.btn-use').attr('disabled', 'disabled');
+                        
+                        if (weaponLevel >= 3) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
 
-                    $('.btn-use').attr('disabled', 'disabled');
-                    $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        } else if (weaponLevel < 3) {
+                            $('#btn-upgrade').removeAttr('disabled');
+                            $('#btn-upgrade').removeClass("btn-secondary");
+                            $('#btn-upgrade').addClass("btn-primary");
+
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        }
+                    }
+                } else {
+                    disableAllControl();
                 }
+            }
+
+            // [RICKY] Tampilan halaman saat reload
+            $(document).ready(function() {
+                // [RICKY] Jika hp abis atau ronde tidak aktif, disable semua kontrol
+                if (teamStatus && ronde > 0 && ronde <= 20) {
+                    checkWeaponAction();
+                } else {
+                    disableAllControl();
+                }
+
+                roundSessionTimer();
             });
             
             // [RICKY] Tampilkan Ronde Sesi Timer secara realtime
@@ -327,23 +394,13 @@
             // [RICKY] Round, session, timer
             function roundSessionTimer() {
                 if(ronde < 1) {
+                    disableAllControl();
                     $('.ronde').html("Game Besar Belum Dimulai");
-                    
-                    $('.btn-gift-material').attr('disabled', 'disabled');
-                    $('.btn-craft').attr('disabled', 'disabled');
-                    $('#btn-upgrade').attr('disabled', 'disabled');
-                    $('.btn-use').attr('disabled', 'disabled');
-                    $('#btn-weapon-attack').attr('disabled', 'disabled');
                 } else if (ronde > 20) {
+                    disableAllControl();
                     $('.ronde').html("Game Besar Sudah Selesai");
                     $('.sesi').text("");
                     $('.timer').text("");
-
-                    $('.btn-gift-material').attr('disabled', 'disabled');
-                    $('.btn-craft').attr('disabled', 'disabled');
-                    $('#btn-upgrade').attr('disabled', 'disabled');
-                    $('.btn-use').attr('disabled', 'disabled');
-                    $('#btn-weapon-attack').attr('disabled', 'disabled');
                 } else {
                     $('.ronde').html("Round " + ronde + "&nbsp;(");
                     var sesi = (aksi) ? "Action" : "Preparation";
@@ -435,6 +492,10 @@
                         if (data.crafting_result) {
                             var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
                             $("#jumlah-equipment-" + id_equipment).text(amount_now);
+
+                            $.each(data.material_update, function(index, value) {
+                                $("#jumlah-material-" + value.materials_id).text(value.amount);
+                            });
                         }
                     }
                 });
@@ -481,27 +542,21 @@
                         $('#modal-result-message').text(data.message);
 
                         if (data.status) {
-                            if (data.level_weapon == 1) {
+                            weaponLevel = data.level_weapon;
+                            checkWeaponAction();
+                            
+                            if (weaponLevel == 1) {
                                 $('#weapon-name').text("Loops Hammer (Lv1)");
-                            } else if (data.level_weapon == 2) {
+                            } else if (weaponLevel == 2) {
                                 $('#weapon-name').text("Master Sword (Lv2)");
-                            } else if (data.level_weapon == 3) {
+                            } else if (weaponLevel == 3) {
                                 $('#weapon-name').text("Quantum Gun (Lv3)");
-                                $('#btn-upgrade').attr('disabled','disabled');
-                                $('#btn-upgrade').removeClass("btn-primary");
-                                $('#btn-upgrade').addClass("btn-secondary");
-                            }
-
-                            if (data.level_weapon >= 1) {
-                                $('#btn-weapon-attack').removeAttr('disabled');
-                                $('#btn-weapon-attack').removeClass("btn-secondary");
-                                $('#btn-weapon-attack').addClass("btn-danger");
-
-                                if (!(aksi)) {
-                                    $('#btn-weapon-attack').attr('disabled', 'disabled');
-                                }
                             }
                         }
+
+                        $.each(data.material_update, function(index, value) {
+                            $("#jumlah-material-" + value.materials_id).text(value.amount);
+                        });
                     }
                 });
             });
@@ -511,8 +566,8 @@
                 $('#crafting-amount').val(1);
             });
 
-            //[Yobong] kirim gift
-            function gift(){
+            // [Yobong] kirim gift
+            function gift() {
                 var tujuan = $('#gift-kelompok').val();
                 var material = $('#gift-material').val();
                 var jumlah = $('#gift_jumlah').val();
@@ -527,8 +582,10 @@
                         'jumlah': jumlah
                     },
                     success: function(data) {
-                        alert(data.msg + " dengan sisa material " + data.jumlah_sekarang);
                         $('#gift_jumlah').val('0');
+                        $('#result-modal').modal('show');
+                        $('#modal-result-message').text(data.msg);
+                        $("#jumlah-material-" + material).text(data.jumlah_sekarang);
                     }
                 });
             }
@@ -539,28 +596,11 @@
                 aksi = e.action;
                 time = e.minutes * 60;
 
-                if (aksi) {
-                    $('.btn-gift-material').attr('disabled', 'disabled');
-                    $('.btn-craft').attr('disabled', 'disabled');
-                    $('#btn-upgrade').attr('disabled', 'disabled');
+                checkWeaponAction();
 
-                    $('.btn-use').removeAttr('disabled');
-                    $('#btn-weapon-attack').removeAttr('disabled');
-                } else {
-                    $('.btn-gift-material').removeAttr('disabled');
-                    $('.btn-craft').removeAttr('disabled');
-
-                    if ({{ $team->weapon_level }} == 3) {
-                        $('#btn-upgrade').attr('disabled', 'disabled');
-                    } else {
-                        $('#btn-upgrade').removeAttr('disabled');
-                    }
-
-                    $('.btn-use').attr('disabled', 'disabled');
-                    $('#btn-weapon-attack').attr('disabled', 'disabled');
-
+                if (!aksi) {
                     var boss_hp = 100 * e.boss_hp / 100000;
-                     $('#boss-hp-amount').css('width', boss_hp + "%");
+                    $('#boss-hp-amount').css('width', boss_hp + "%");
                 }
             });
 
@@ -585,6 +625,31 @@
             window.Echo.channel('partChannel').listen('.progress', (e) => {
                 var progress = 100 * e.collected / e.target;
                 $('#part-progress').css('width', progress + "%");
+            });
+
+            // [RICKY] Mendapatkan quest result yang dijalanakan
+            window.Echo.private('privatequest.' + {{ Auth::user()->team }}).listen('PrivateQuestResult', (e) => {
+                alert(e.message);
+            });
+
+            // [RICKY] Mendapatkan hp team terbaru saat round berganti
+            window.Echo.private('update-hitpoint.' + {{ Auth::user()->team }}).listen('UpdateHitpoint', (e) => {
+                var hpAmount = (parseInt(e.health) * 100 / 1000) + "%";
+                $('#team-hp-bar').css('width', hpAmount);
+                $('#hp-team').text(e.health + "/1000");
+
+                teamStatus = (e.health > 0) ? true : false;
+                checkWeaponAction();
+            });
+
+            // [RICKY] Mendapatkan gift yang dikirimkan kelompok lain
+            window.Echo.private('send-gift.' + {{ Auth::user()->team }}).listen('SendGift', (e) => {
+                $('#result-modal').modal('show');
+                $('#modal-result-message').text(e.message);
+
+                var getAmountNow = parseInt($("#jumlah-material-" + e.id_material).text());
+                var amount = parseInt(getAmountNow) + parseInt(e.amount);
+                $("#jumlah-material-" + e.id_material).text(amount);
             });
         </script>
     </body>

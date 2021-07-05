@@ -16,3 +16,16 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('privatequest.{receiver_id}', function ($user, $receiver_id) {
+    return auth()->check();
+});
+
+Broadcast::channel('send-gift.{receiver_id}', function ($user, $receiver_id) {
+    return auth()->check();
+});
+
+Broadcast::channel('update-hitpoint.{receiver_id}', function ($user, $receiver_id) {
+    return auth()->check();
+});
+
