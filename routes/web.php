@@ -33,10 +33,10 @@ Route::post('/attack-weapon', 'TeamController@attackWeapon')->name('attack-weapo
 Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-weapon');
 Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
+Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadcast-video');
 
 //[Yobong] Route gift
 Route::post('/gift', 'TeamController@gift')->name('gift');
 
-// Auth::routes();
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
