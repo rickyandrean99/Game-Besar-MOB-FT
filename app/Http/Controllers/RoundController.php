@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\UpdateRound;
 use App\Events\BroadcastVideo;
+use App\Events\UpdatePart;
+use App\Events\UpdateRound;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Team;
@@ -133,7 +134,8 @@ class RoundController extends Controller
         $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
 
         // [RICKY] Pusher broadcast
-        event(new UpdateRound($round_detail->round + 1, false, 3));
+        $boss_detail = EnemyBoss::find(1);
+        event(new UpdateRound($round_detail->round + 1, false, 3, $boss_detail->hp_amount));
         return ["success" => true];
     }
 
@@ -148,13 +150,27 @@ class RoundController extends Controller
         $update_round = DB::table('rounds')->where('id', 1)->update(['action'=> true, 'time_end'=> $end_time]);
 
         // [RICKY] Pusher broadcast
-        event(new UpdateRound($round_detail->round, true, 1));
+        event(new UpdateRound($round_detail->round, true, 1, null));
         return ["success" => true];
     }
 
-    // [RICKY] Untuk update sesi jadi action
+    // [RICKY] Untuk broadcast video
     public function broadcastVideo(Request $request) {
         event(new BroadcastVideo($request->get('broadcast_type')));
+        return ["success" => true];
+    }
+
+    // [RICKY] Test untuk update progress dari special weapon part
+    public function testingPartDoang(Request $request) {
+        $part_amount = $request->get('amount');
+        $secret_weapon = SecretWeapon::find(1);
+        $update_part = DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
+        event(new UpdatePart($secret_weapon->part_amount_collected + $part_amount, $secret_weapon->part_amount_target));
+
+        if ($secret_weapon->part_amount_collected + $part_amount >= $secret_weapon->part_amount_target) {
+            event(new BroadcastVideo(true));
+        }
+
         return ["success" => true];
     }
 }

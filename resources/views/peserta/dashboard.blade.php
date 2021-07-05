@@ -73,7 +73,7 @@
                             @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
                             <div style="text-align: center; margin: 1% 0">Monster Boss HP</div>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_boss }}%;"></div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ $hp_boss }}%;" id="boss-hp-amount"></div>
                             </div>
                         </div>
 
@@ -81,7 +81,7 @@
                             @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
                             <div style="text-align: center; margin: 1% 0">Secret Weapon</div>
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" style="width: {{ $weapon_progress }}%;"></div>
+                                <div class="progress-bar" role="progressbar" style="width: {{ $weapon_progress }}%;" id="part-progress"></div>
                             </div>
                         </div>
                     </section>
@@ -175,7 +175,7 @@
                         </div>
 
                         <div class="status">
-
+                            
                         </div>
                     </section>
                 </div>
@@ -256,6 +256,7 @@
                     <div class="modal-body">
                         <video id="video-reminder" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/reminder.mp4") }}' type='video/mp4'></video>
                     </div>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -267,6 +268,7 @@
                     <div class="modal-body">
                         <video id="video-winner" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/winner.mp4") }}' type='video/mp4'></video>
                     </div>
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -509,6 +511,28 @@
                 $('#crafting-amount').val(1);
             });
 
+            //[Yobong] kirim gift
+            function gift(){
+                var tujuan = $('#gift-kelompok').val();
+                var material = $('#gift-material').val();
+                var jumlah = $('#gift_jumlah').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route("gift") }}',
+                    data: {
+                        '_token':'<?php echo csrf_token() ?>',
+                        'tujuan': tujuan,
+                        'material': material,
+                        'jumlah': jumlah
+                    },
+                    success: function(data) {
+                        alert(data.msg + " dengan sisa material " + data.jumlah_sekarang);
+                        $('#gift_jumlah').val('0');
+                    }
+                });
+            }
+
             // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {
                 ronde = e.round;
@@ -534,6 +558,9 @@
 
                     $('.btn-use').attr('disabled', 'disabled');
                     $('#btn-weapon-attack').attr('disabled', 'disabled');
+
+                    var boss_hp = 100 * e.boss_hp / 100000;
+                     $('#boss-hp-amount').css('width', boss_hp + "%");
                 }
             });
 
@@ -542,9 +569,11 @@
                 var x = null;
 
                 if (e.broadcast_winner) {
+                    $('#winner-modal').modal({backdrop: 'static', keyboard: false});
                     $('#winner-modal').modal('show');
                     x = document.getElementById('video-winner');
                 } else {
+                    $('#reminder-modal').modal({backdrop: 'static', keyboard: false});
                     $('#reminder-modal').modal('show');
                     x = document.getElementById('video-reminder');
                 }
@@ -552,27 +581,11 @@
                 x.load();
             });
 
-            //[Yobong] kirim gift
-            function gift(){
-                var tujuan = $('#gift-kelompok').val();
-                var material = $('#gift-material').val();
-                var jumlah = $('#gift_jumlah').val();
-
-                $.ajax({
-                    type: 'POST',
-                    url: '{{ route("gift") }}',
-                    data: {
-                        '_token':'<?php echo csrf_token() ?>',
-                        'tujuan': tujuan,
-                        'material': material,
-                        'jumlah': jumlah
-                    },
-                    success: function(data) {
-                        alert(data.msg + " dengan sisa material " + data.jumlah_sekarang);
-                        $('#gift_jumlah').val('0');
-                    }
-                });
-            }
+            // [RICKY] Mendapatkan jumlah part terbaru
+            window.Echo.channel('partChannel').listen('.progress', (e) => {
+                var progress = 100 * e.collected / e.target;
+                $('#part-progress').css('width', progress + "%");
+            });
         </script>
     </body>
 </html>

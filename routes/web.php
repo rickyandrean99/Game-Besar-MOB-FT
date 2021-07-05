@@ -34,6 +34,7 @@ Route::post('/upgrade-weapon', 'TeamController@upgradeWeapon')->name('upgrade-we
 Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
 Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadcast-video');
+Route::post('/testing-part-doang', 'RoundController@testingPartDoang')->name('testing-part-doang'); // Nanti pake route, controller, sama function punya erha kalo tim berhasil selesaiin quest
 
 //[Yobong] Route gift
 Route::post('/gift', 'TeamController@gift')->name('gift');

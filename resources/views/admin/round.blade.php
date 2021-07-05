@@ -17,11 +17,13 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
         
-        <button class="btn btn-primary ms-5 mt-5 text-white fw-bold" id="btn-update">Update Round</button>
-        <button class="btn btn-danger ms-5 mt-5 text-white fw-bold" id="btn-action">Update Sesi Action</button>
-        <br>
-        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-reminder" onclick="broadcastVideo(false)">Broadcast Video Reminder</button>
-        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-winner" onclick="broadcastVideo(true)">Broadcast Video Winner</button>
+        <button class="btn btn-primary ms-5 mt-5 text-white fw-bold" id="btn-update">Update Round</button><br>
+        <button class="btn btn-danger ms-5 mt-5 text-white fw-bold" id="btn-action">Update Sesi Action</button><br>
+        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-reminder" onclick="broadcastVideo(false)">Broadcast Video Reminder</button><br>
+        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-winner" onclick="broadcastVideo(true)">Broadcast Video Winner</button><br>
+        <input class="form-control w-25" type="number" min="1" value="1" id="part-amount">
+        <button class="btn btn-info ms-5 mt-5 text-white fw-bold" id="btn-update-part">Update Special Weapon Part</button><br>
+        
 
         <div class="ms-5 mt-3 h4">
             <span class="ronde"></span>
@@ -125,6 +127,24 @@
 
                 axios(options);
             }
+
+            // [RICKY] Event untuk update special part (testing doang)
+            $(document).on('click', '#btn-update-part', function(e) {
+                e.preventDefault();
+                const options = {
+                    method: 'post',
+                    url: '/testing-part-doang',
+                    data: {
+                        'amount': $('#part-amount').val()
+                    },
+                    transformResponse: [(data) => {
+                        $('#part-amount').val(1);
+                        return data;
+                    }]
+                }
+
+                axios(options);
+            });
 
             // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {
