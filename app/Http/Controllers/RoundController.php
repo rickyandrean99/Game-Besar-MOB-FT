@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\UpdateRound;
+use App\Events\BroadcastVideo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Team;
@@ -148,6 +149,12 @@ class RoundController extends Controller
 
         // [RICKY] Pusher broadcast
         event(new UpdateRound($round_detail->round, true, 1));
+        return ["success" => true];
+    }
+
+    // [RICKY] Untuk update sesi jadi action
+    public function broadcastVideo(Request $request) {
+        event(new BroadcastVideo($request->get('broadcast_type')));
         return ["success" => true];
     }
 }

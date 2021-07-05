@@ -249,6 +249,28 @@
             </div>
         </div>
 
+        <!-- [RICKY] Modal video reminder -->
+        <div class="modal fade" id="reminder-modal" tabindex="-1" role="dialog" aria-labelledby="reminderModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 800px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <video id="video-reminder" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/reminder.mp4") }}' type='video/mp4'></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- [RICKY] Modal video winner -->
+        <div class="modal fade" id="winner-modal" tabindex="-1" role="dialog" aria-labelledby="winnerModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 800px;">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <video id="video-winner" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/winner.mp4") }}' type='video/mp4'></video>
+                    </div>
+                </div>
+            </div>
+        </div>
+
          <!-- [Yobong] Modal Konfirmasi Gift (Ya/Tidak) -->
          <div class="modal fade" id="konfirmasi-gift" tabindex="-1" role="dialog" aria-labelledby="weaponUpgrade" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -487,7 +509,7 @@
                 $('#crafting-amount').val(1);
             });
 
-            // [RICKY] Memperbaharui timer setelah ronde/sesi di update
+            // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {
                 ronde = e.round;
                 aksi = e.action;
@@ -513,6 +535,21 @@
                     $('.btn-use').attr('disabled', 'disabled');
                     $('#btn-weapon-attack').attr('disabled', 'disabled');
                 }
+            });
+
+            // [RICKY] Mendapatkan instruksi saat video di broadcast
+            window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
+                var x = null;
+
+                if (e.broadcast_winner) {
+                    $('#winner-modal').modal('show');
+                    x = document.getElementById('video-winner');
+                } else {
+                    $('#reminder-modal').modal('show');
+                    x = document.getElementById('video-reminder');
+                }
+                
+                x.load();
             });
 
             //[Yobong] kirim gift

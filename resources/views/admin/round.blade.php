@@ -17,8 +17,11 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
         
-        <button class="btn btn-primary ms-5 mt-5" id="btn-update">Update Round</button>
-        <button class="btn btn-danger ms-5 mt-5" id="btn-action">Update Sesi Action</button>
+        <button class="btn btn-primary ms-5 mt-5 text-white fw-bold" id="btn-update">Update Round</button>
+        <button class="btn btn-danger ms-5 mt-5 text-white fw-bold" id="btn-action">Update Sesi Action</button>
+        <br>
+        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-reminder" onclick="broadcastVideo(false)">Broadcast Video Reminder</button>
+        <button class="btn btn-dark ms-5 mt-5 text-white fw-bold" id="btn-broadcast-winner" onclick="broadcastVideo(true)">Broadcast Video Winner</button>
 
         <div class="ms-5 mt-3 h4">
             <span class="ronde"></span>
@@ -107,7 +110,23 @@
                 axios(options);
             });
 
-            // [RICKY] Memperbaharui timer setelah ronde/sesi di update
+            // [RICKY] Event untuk broadcast video reminder/winner
+            function broadcastVideo(type) {
+                const options = {
+                    method: 'post',
+                    url: '/broadcast-video',
+                    data: {
+                        'broadcast_type': type
+                    },
+                    transformResponse: [(data) => {
+                        return data;
+                    }]
+                }
+
+                axios(options);
+            }
+
+            // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {
                 ronde = e.round;
                 aksi = e.action;
