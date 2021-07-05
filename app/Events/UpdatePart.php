@@ -10,25 +10,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UpdateRound implements ShouldBroadcast
+class UpdatePart implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $round;
-    public $action;
-    public $minutes;
-    public $boss_hp;
+    public $collected;
+    public $target;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($round, $action, $minutes, $boss_hp)
+    public function __construct($collected, $target)
     {
-        $this->round = $round;
-        $this->action = $action;
-        $this->minutes = $minutes;
-        $this->boss_hp = $boss_hp;
+        $this->collected = $collected;
+        $this->target = $target;
     }
 
     /**
@@ -38,11 +34,11 @@ class UpdateRound implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('roundChannel');
+        return new Channel('partChannel');
     }
 
     public function broadcastAs()
     {
-        return 'update';
+        return 'progress';
     }
 }
