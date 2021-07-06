@@ -41,5 +41,8 @@ Route::post('/coba-private-quest', 'RoundController@cobaPrivate')->name('coba-pr
 //[Yobong] Route gift
 Route::post('/gift', 'TeamController@gift')->name('gift');
 
+// [eRHa] Route hasil quest
+Route::post('/quest-result', 'QuestController@result');
+
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
