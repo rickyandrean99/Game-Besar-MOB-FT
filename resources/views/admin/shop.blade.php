@@ -27,7 +27,7 @@
             <div class="cboTeam">
                 <label for="kelompok" style="font-weight:bold">Pilih kelompok:</label>
                 <select class="form-control" id="kelompok">
-                    <option value="-">--Pilih Team--</option>
+                    <option value="-" id="-">--Pilih Team--</option>
                     @foreach($team as $t)
                     <option value="{{$t->id}}" id="{{$t->coin}}">{{$t->name}}</option>
                     @endforeach
@@ -39,9 +39,9 @@
             </div>
         </div>
         <form id="myform">
-        <!-- <form id="myform" method="POST" action=""> -->
+            <!-- <form id="myform" method="POST" action=""> -->
             <div class="table-scroll">
-                <table id = "materialTable">
+                <table id="materialTable">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -77,7 +77,7 @@
             </div>
         </form>
     </main>
-    <!-- Modal -->
+    <!-- Modal Buy -->
     <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -88,12 +88,50 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="showTable">
-                    </form>
+                    <div id="showTable">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="buysemua">Buy</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="buysemua">Buy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Error -->
+    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Gagal membeli!</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="showError"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Oke</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Sukses -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Berhasil membeli!</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="showSuccess"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="location.reload();">Oke</button>
                 </div>
             </div>
         </div>
@@ -102,17 +140,37 @@
 <script>
     document.getElementById('myform').reset();
     $('document').ready(function() {
+        //Nonaktifkan tombol buy dan kosongkan isi koin
+        document.getElementById('buy').disabled = true;
+        $('.koinKelompok').text("-");
+        var coin = "";
+        var total = "";
+
         //Koin kelompok berubah ketika combo box berubah
         $('#kelompok').on('change', function(e) {
-            var coin = $(this).children(":selected").attr("id");
+            coin = $(this).children(":selected").attr("id");
             $('.koinKelompok').text(coin);
+            if (coin == "-") {
+                document.getElementById('myform').reset();
+                $('.total').text("-");
+                document.getElementById('buy').disabled = true;
+            } else {
+                total = $('#total').text();
+                if (total > coin) {
+                    $('.koinKelompok').addClass('red');
+                } else {
+                    $('.koinKelompok').removeClass('red');
+                }
+                document.getElementById('buy').disabled = false;
+            }
         });
 
         //Kalau qty berubah
         $('.qty').on('change', function() {
+            coin = $('#kelompok').children(":selected").attr("id");
             var seq = $(this).attr('seq');
             var price = $(".price[seq=" + seq + "]").text();
-            var qty = $(".qty[seq=" + seq + "]").val();          
+            var qty = $(".qty[seq=" + seq + "]").val();
 
             $(".subtotal[seq=" + seq + "]").html(price * qty);
 
@@ -121,65 +179,71 @@
                 grand += $(this).html() * 1;
             });
             $('.total').text(grand);
-        });
-        
-        //Kalau total berubah (blm fix)
-        $('.total').on('change', function(){
-            if(total > koin){
+
+            if (grand > coin) {
                 $('.koinKelompok').addClass('red');
-            }
-            else{
+            } else {
                 $('.koinKelompok').removeClass('red');
             }
         });
-        var arrVal=[];
-       
+
+        var arrVal = [];
         //Ambil data tabel dimana input value-nya tdk kosong
-        function getDataTable(){
-            var total = $('#total').text();
-            alert(total);
-            arrVal=[];
+        function getDataTable() {
+            arrVal = [];
             $('#showTable').empty();
             //Iterasi tiap data di table
-            $('#materialTable tr').each(function(){
+            $('#materialTable tr').each(function() {
                 var qty = $(this).find(".qty").val();
-                if(qty > 0){
-                    var idmaterial =$(this).find(".idMaterial").text();
-
+                if (qty > 0) {
+                    var idmaterial = $(this).find(".idMaterial").text();
                     var nama = $(this).find(".namaMaterial").text();
                     var subtotal = $(this).find(".subtotal").text();
-                    var val = {id:idmaterial, qty:qty, total:total};
+                    var val = {
+                        id: idmaterial,
+                        qty: qty,
+                        total: total
+                    };
                     arrVal.push(val);
-
-                    $('#showTable').append(nama + " (" + qty + "x) = " + subtotal + "<br>");    
+                    $('#showTable').append(nama + " (" + qty + "x) = " + subtotal + "<br>");
                 }
             });
-            $('#showTable').append("Total = " + total); 
+            $('#showTable').append("Total = " + total);
         }
 
         //Kalau button Buy diklik
         $('#buy').on("click", function() {
-            $('#buyModal').modal('show');
-            getDataTable();
+            coin = parseInt($('#kelompok').children(":selected").attr("id"));
+            total = parseInt($('#total').text());
+            if (coin >= total) {
+                if (total == 0) {
+                    $('#errorModal').modal('show');
+                    $('#showError').text('Kelompok belum membeli material sama sekali.');
+                } else {
+                    $('#buyModal').modal('show');
+                }
+                getDataTable();
+            } else if (coin < total) {
+                $('#errorModal').modal('show');
+                $('#showError').text('Koin kelompok tidak mencukupi.');
+            }
         });
 
         // //Kalau modal Buy diklik
         $('#buysemua').on("click", function() {
-           var team_id =  $('#kelompok').val();
-           var cart = arrVal;
-            alert(cart[0]['id']);
+            var team_id = $('#kelompok').val();
+            var cart = arrVal;
             $.ajax({
                 type: "POST",
-                url: "{{route('buymaterials')}}",
+                url: "{{route('insertOrUpdate')}}",
                 data: {
                     '_token': '<?php echo csrf_token() ?>',
-                    'team_id': team_id,
+                    'teams_id': team_id,
                     'cart': cart
                 },
                 success: function(data) {
-                     alert(data.cart);
-                     location.reload();
-
+                    $('#successModal').modal('show');
+                    $('#showSuccess').text(data.message);
                 },
             })
         });
