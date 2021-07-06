@@ -39,5 +39,8 @@ Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadca
 Route::post('/testing-part-doang', 'RoundController@testingPartDoang')->name('testing-part-doang'); // Nanti pake route, controller, sama function punya erha kalo tim berhasil selesaiin quest
 Route::post('/coba-private-quest', 'RoundController@cobaPrivate')->name('coba-private'); // ini cuma testing private doang (Gabung sama punya erha)
 
+// [eRHa] Route hasil quest
+Route::post('/quest-result', 'QuestController@result');
+
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');
