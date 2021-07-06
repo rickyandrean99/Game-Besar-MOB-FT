@@ -32,6 +32,7 @@
                     <option value="{{$t->id}}" id="{{$t->coin}}">{{$t->name}}</option>
                     @endforeach
                 </select>
+                
             </div>
             <div class="koin">
                 <span>Koin</span><br>
@@ -48,7 +49,7 @@
                             <th scope="col">Nama</th>
                             <th scope="col">Stok</th>
                             <th scope="col">Harga</th>
-                            <th scope="col" style="width: 150px;">Jumlah</th>
+                            <th scope="col" style="width: 200px;">Jumlah</th>
                             <th scope="col">Subtotal</th>
                         </tr>
                     </thead>
@@ -59,7 +60,7 @@
                             <td scope="row" class="namaMaterial" id="{{$m->id}}">{{$m->name}}</td>
                             <td>{{$m-> stock}}</td>
                             <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
-                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0></td>
+                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0><button class="btn btn-secondary" style="margin-left:10px; width:50px; height: 45px;">&#8634;</button></td>
                             <td class="subtotal" seq="{{$m->id}}">0</td>
                         </tr>
                         @endforeach

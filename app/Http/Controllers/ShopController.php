@@ -58,13 +58,13 @@ class ShopController extends Controller
             $stockNow = $stock - $quantity;
 
             //Jika stok sudah berkurang sebanyak 10%
-            if ($beginning_stock - round(($beginning_stock * 0.1)) == $stockNow) {
+            if ($beginning_stock - round(($beginning_stock * 0.1)) < $stockNow) {
                 //Ubah stok awal menjadi stok sekarang
                 $material->beginning_stock = $stockNow;
                 $material->stock = $stockNow;
 
                 //Ubah harga
-                $price += $price * 0.1;
+                $price += ($price * 0.1);
                 //Kalau harga sudah maksimal
                 if ($max_price == $price) {
                     //Jadikan harga skrg == harga maks
@@ -72,7 +72,8 @@ class ShopController extends Controller
                 }
                 $material->price = $price;
             }
-            //Simpan
+            //Simpan material
+            $material->stock = $stockNow;
             $material->save();
         }
 
