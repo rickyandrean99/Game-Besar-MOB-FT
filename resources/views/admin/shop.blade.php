@@ -9,17 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- <script src="../js/app.js"></script> -->
     <link rel="stylesheet" href="{{ asset('assets/css/toko-admin.css') }}">
 </head>
 
 <body>
     <header>
         <div>
-            Selamat Datang, Admin.
+            Selamat Datang, {{ Auth::user()->name }}.
         </div>
         <div class="logout">
-            LOGOUT
+            <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
     </header>
     <main>
@@ -32,6 +32,7 @@
                     <option value="{{$t->id}}" id="{{$t->coin}}">{{$t->name}}</option>
                     @endforeach
                 </select>
+
             </div>
             <div class="koin">
                 <span>Koin</span><br>
@@ -46,9 +47,9 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Harga</th>
                             <th scope="col">Stok</th>
-                            <th scope="col" style="width: 150px;">Jumlah</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col" style="width: 200px;">Jumlah</th>
                             <th scope="col">Subtotal</th>
                         </tr>
                     </thead>
@@ -57,9 +58,9 @@
                         <tr>
                             <td scope="row" class="idMaterial">{{$m->id}}</td>
                             <td scope="row" class="namaMaterial" id="{{$m->id}}">{{$m->name}}</td>
-                            <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
                             <td>{{$m-> stock}}</td>
-                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0></td>
+                            <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
+                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0><input type="button" seq="{{$m->id}}" class="btn btn-secondary reset" style="margin-left:10px; width:50px; height: 45px;" value=&#8634;></td>
                             <td class="subtotal" seq="{{$m->id}}">0</td>
                         </tr>
                         @endforeach
@@ -148,11 +149,14 @@
 
         //Koin kelompok berubah ketika combo box berubah
         $('#kelompok').on('change', function(e) {
+            document.getElementById('myform').reset();
+            $('.subtotal').text(0);
+            $('.total').text(0);
             coin = $(this).children(":selected").attr("id");
             $('.koinKelompok').text(coin);
             if (coin == "-") {
-                document.getElementById('myform').reset();
                 $('.total').text("-");
+                $('.koinKelompok').removeClass('red');
                 document.getElementById('buy').disabled = true;
             } else {
                 total = $('#total').text();
@@ -171,6 +175,11 @@
             var seq = $(this).attr('seq');
             var price = $(".price[seq=" + seq + "]").text();
             var qty = $(".qty[seq=" + seq + "]").val();
+
+            if (qty <= 0) {
+                qty = 0;
+                $(".qty[seq=" + seq + "]").val(qty);
+            }
 
             $(".subtotal[seq=" + seq + "]").html(price * qty);
 
@@ -192,6 +201,7 @@
         function getDataTable() {
             arrVal = [];
             $('#showTable').empty();
+            $('#showTable').append("Item yang akan dibeli:<br>");
             //Iterasi tiap data di table
             $('#materialTable tr').each(function() {
                 var qty = $(this).find(".qty").val();
@@ -246,6 +256,17 @@
                     $('#showSuccess').text(data.message);
                 },
             })
+        });
+
+        $(document).on("click", ".reset", function() {
+            var seq = $(this).attr('seq');
+            $(".qty[seq=" + seq + "]").val(0);
+            $(".subtotal[seq=" + seq + "]").text(0);
+            var grand = 0;
+            $('.subtotal').each(function() {
+                grand += $(this).html() * 1;
+            });
+            $('.total').text(grand);
         });
     });
 </script>

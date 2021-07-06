@@ -12,8 +12,8 @@ class ShopController extends Controller
 {
     public function index()
     {
-        // $this->authorize('admin-shop');
-        return view('admin.shop', ["material" => Material::all(), "team" => Team::all()]);
+        $this->authorize('admin-shop');
+        return view('admin.shop', ["material" => Material::all(), "team" => Team::where('material_shopping',0)->get()]);
     }
 
     public function insertOrUpdate(Request $request, Team $team)
@@ -59,13 +59,13 @@ class ShopController extends Controller
             $stockNow = $stock - $quantity;
 
             //Jika stok sudah berkurang sebanyak 10%
-            if ($beginning_stock - round(($beginning_stock * 0.1)) == $stockNow) {
+            if ($beginning_stock - round(($beginning_stock * 0.1)) < $stockNow) {
                 //Ubah stok awal menjadi stok sekarang
                 $material->beginning_stock = $stockNow;
                 $material->stock = $stockNow;
 
                 //Ubah harga
-                $price += $price * 0.1;
+                $price += ($price * 0.1);
                 //Kalau harga sudah maksimal
                 if ($max_price == $price) {
                     //Jadikan harga skrg == harga maks
@@ -73,7 +73,8 @@ class ShopController extends Controller
                 }
                 $material->price = $price;
             }
-            //Simpan
+            //Simpan material
+            $material->stock = $stockNow;
             $material->save();
         }
 
@@ -84,9 +85,16 @@ class ShopController extends Controller
             $totalCoinsNow = $coin - $total;
             $team->coin = $totalCoinsNow;
             $team->timestamps = false;
-            $team->save();
+        } else {
+            $team->coin = 0;
         }
 
+        //Ubah material shopping ke 1
+        $team->material_shopping = 1;
+
+        //Simpan
+        $team->save();
+        
         return response()->json(array(
             'message' => 'Transaksi berhasil!',
         ), 200);
