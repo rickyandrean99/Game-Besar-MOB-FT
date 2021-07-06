@@ -255,9 +255,9 @@
             <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 800px;">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <video id="video-reminder" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/reminder.mp4") }}' type='video/mp4'></video>
+                        <iframe id="video-reminder" width="100%" height="450" src=""></iframe>
                     </div>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger stop-video" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -267,9 +267,9 @@
             <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 800px;">
                 <div class="modal-content">
                     <div class="modal-body">
-                        <video id="video-winner" autoplay muted width='100%' height='auto'><source src='{{ asset("assets/video/winner.mp4") }}' type='video/mp4'></video>
+                        <iframe id="video-winner" width="100%" height="450" src=""></iframe>
                     </div>
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger stop-video" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -297,13 +297,6 @@
             var time = {{ $times }};
             var teamStatus = ( {{ $team->hp_amount }} > 0 ) ? true : false;
             var weaponLevel = {{ $team->weapon_level }};
-            
-            // [RICKY] Pengecekan apakah boleh bermain
-            // function checkPlayable() {
-            //     if (!teamStatus) {
-            //         disableAllControl();
-            //     }
-            // }
 
             // [RICKY] Disable semua control
             function disableAllControl() {
@@ -566,6 +559,12 @@
                 $('#crafting-amount').val(1);
             });
 
+            // [RICKY] Berhentiin video youtube ketika modal close
+            $(document).on("click", ".stop-video", function() {
+                $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=1');
+                $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=1');
+            });
+
             // [Yobong] kirim gift
             function gift() {
                 var tujuan = $('#gift-kelompok').val();
@@ -597,6 +596,10 @@
                 time = e.minutes * 60;
 
                 checkWeaponAction();
+                $('#equipment-crafting').modal('hide');
+                $('#equipment-use').modal('hide');
+                $('#weapon-upgrade').modal('hide');
+                $('#konfirmasi-gift').modal('hide');
 
                 if (!aksi) {
                     var boss_hp = 100 * e.boss_hp / 100000;
@@ -606,19 +609,21 @@
 
             // [RICKY] Mendapatkan instruksi saat video di broadcast
             window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
-                var x = null;
-
                 if (e.broadcast_winner) {
+                    $('#reminder-modal').modal('hide');
+                    $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=1');
+
                     $('#winner-modal').modal({backdrop: 'static', keyboard: false});
                     $('#winner-modal').modal('show');
-                    x = document.getElementById('video-winner');
+                    $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
                 } else {
+                    $('#winner-modal').modal('hide');
+                    $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=1');
+
                     $('#reminder-modal').modal({backdrop: 'static', keyboard: false});
                     $('#reminder-modal').modal('show');
-                    x = document.getElementById('video-reminder');
+                    $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
                 }
-                
-                x.load();
             });
 
             // [RICKY] Mendapatkan jumlah part terbaru
