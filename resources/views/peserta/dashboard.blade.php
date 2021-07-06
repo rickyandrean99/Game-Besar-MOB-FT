@@ -300,73 +300,73 @@
 
             // [RICKY] Disable semua control
             function disableAllControl() {
-                // $('#gift-kelompok').attr('disabled', 'disabled');
-                // $('#gift-material').attr('disabled', 'disabled');
-                // $('#gift_jumlah').attr('disabled', 'disabled');
-                // $('#btn-gift').attr('disabled', 'disabled');
-                // $('.btn-craft').attr('disabled', 'disabled');
-                // $('.btn-use').attr('disabled', 'disabled');
-                // $('#btn-weapon-attack').attr('disabled', 'disabled');
-                // $('#btn-upgrade').attr('disabled', 'disabled');
+                $('#gift-kelompok').attr('disabled', 'disabled');
+                $('#gift-material').attr('disabled', 'disabled');
+                $('#gift_jumlah').attr('disabled', 'disabled');
+                $('#btn-gift').attr('disabled', 'disabled');
+                $('.btn-craft').attr('disabled', 'disabled');
+                $('.btn-use').attr('disabled', 'disabled');
+                $('#btn-weapon-attack').attr('disabled', 'disabled');
+                $('#btn-upgrade').attr('disabled', 'disabled');
             }
 
             // [RICKY] Pengecekan level senjata dan action
             function checkWeaponAction() {
-                // if (teamStatus) {
-                //     if (aksi) {
-                //         $('#gift-kelompok').attr('disabled', 'disabled');
-                //         $('#gift-material').attr('disabled', 'disabled');
-                //         $('#gift_jumlah').attr('disabled', 'disabled');
-                //         $('#btn-gift').attr('disabled', 'disabled');
-                //         $('.btn-craft').attr('disabled', 'disabled');
-                //         $('.btn-use').removeAttr('disabled');
+                if (teamStatus) {
+                    if (aksi) {
+                        $('#gift-kelompok').attr('disabled', 'disabled');
+                        $('#gift-material').attr('disabled', 'disabled');
+                        $('#gift_jumlah').attr('disabled', 'disabled');
+                        $('#btn-gift').attr('disabled', 'disabled');
+                        $('.btn-craft').attr('disabled', 'disabled');
+                        $('.btn-use').removeAttr('disabled');
 
-                //         if (weaponLevel > 0) {
-                //             $('#btn-upgrade').attr('disabled', 'disabled');
-                //             $('#btn-upgrade').removeClass("btn-primary");
-                //             $('#btn-upgrade').addClass("btn-secondary");
+                        if (weaponLevel > 0) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
 
-                //             $('#btn-weapon-attack').removeAttr('disabled');
-                //             $('#btn-weapon-attack').removeClass("btn-secondary");
-                //             $('#btn-weapon-attack').addClass("btn-danger");
-                //         } else if (weaponLevel <= 0) {
-                //             $('#btn-upgrade').attr('disabled', 'disabled');
-                //             $('#btn-upgrade').removeClass("btn-primary");
-                //             $('#btn-upgrade').addClass("btn-secondary");
+                            $('#btn-weapon-attack').removeAttr('disabled');
+                            $('#btn-weapon-attack').removeClass("btn-secondary");
+                            $('#btn-weapon-attack').addClass("btn-danger");
+                        } else if (weaponLevel <= 0) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
 
-                //             $('#btn-weapon-attack').attr('disabled', 'disabled');
-                //             $('#btn-weapon-attack').removeClass("btn-danger");
-                //             $('#btn-weapon-attack').addClass("btn-secondary");
-                //         } 
-                //     } else {
-                //         $('#gift-kelompok').removeAttr('disabled');
-                //         $('#gift-material').removeAttr('disabled');
-                //         $('#gift_jumlah').removeAttr('disabled');
-                //         $('#btn-gift').removeAttr('disabled');
-                //         $('.btn-craft').removeAttr('disabled');
-                //         $('.btn-use').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        } 
+                    } else {
+                        $('#gift-kelompok').removeAttr('disabled');
+                        $('#gift-material').removeAttr('disabled');
+                        $('#gift_jumlah').removeAttr('disabled');
+                        $('#btn-gift').removeAttr('disabled');
+                        $('.btn-craft').removeAttr('disabled');
+                        $('.btn-use').attr('disabled', 'disabled');
                         
-                //         if (weaponLevel >= 3) {
-                //             $('#btn-upgrade').attr('disabled', 'disabled');
-                //             $('#btn-upgrade').removeClass("btn-primary");
-                //             $('#btn-upgrade').addClass("btn-secondary");
+                        if (weaponLevel >= 3) {
+                            $('#btn-upgrade').attr('disabled', 'disabled');
+                            $('#btn-upgrade').removeClass("btn-primary");
+                            $('#btn-upgrade').addClass("btn-secondary");
 
-                //             $('#btn-weapon-attack').attr('disabled', 'disabled');
-                //             $('#btn-weapon-attack').removeClass("btn-danger");
-                //             $('#btn-weapon-attack').addClass("btn-secondary");
-                //         } else if (weaponLevel < 3) {
-                //             $('#btn-upgrade').removeAttr('disabled');
-                //             $('#btn-upgrade').removeClass("btn-secondary");
-                //             $('#btn-upgrade').addClass("btn-primary");
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        } else if (weaponLevel < 3) {
+                            $('#btn-upgrade').removeAttr('disabled');
+                            $('#btn-upgrade').removeClass("btn-secondary");
+                            $('#btn-upgrade').addClass("btn-primary");
 
-                //             $('#btn-weapon-attack').attr('disabled', 'disabled');
-                //             $('#btn-weapon-attack').removeClass("btn-danger");
-                //             $('#btn-weapon-attack').addClass("btn-secondary");
-                //         }
-                //     }
-                // } else {
-                //     disableAllControl();
-                // }
+                            $('#btn-weapon-attack').attr('disabled', 'disabled');
+                            $('#btn-weapon-attack').removeClass("btn-danger");
+                            $('#btn-weapon-attack').addClass("btn-secondary");
+                        }
+                    }
+                } else {
+                    disableAllControl();
+                }
             }
 
             // [RICKY] Tampilan halaman saat reload
@@ -618,14 +618,14 @@
 
                     $('#winner-modal').modal({backdrop: 'static', keyboard: false});
                     $('#winner-modal').modal('show');
-                    $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0&controls=0');
+                    $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
                 } else {
                     // $('#winner-modal').modal('hide');
                     // $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=1');
 
                     $('#reminder-modal').modal({backdrop: 'static', keyboard: false});
                     $('#reminder-modal').modal('show');
-                    $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0&controls=0');
+                    $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
                 }
             });
 
@@ -668,36 +668,6 @@
                     $("#jumlah-material-" + value.id).text(amount);
                 });
             });
-
-            // [RICKY] Grant permission
-            // if (navigator.permissions) {
-        
-            //     navigator.permissions.query({name:'geolocation'})
-            //     .then(function(permissionStatus) {  
-            //         // console.log('geolocation permission state is ', permissionStatus.state);
-
-            //         permissionStatus.onchange = function() {  
-            //             // console.log('geolocation permission state has changed to ', this.state);
-            //         };
-            //     });
-
-            //     // navigator.geolocation.getCurrentPosition(ftw, wtf);
-            //     // function ftw(){console.log('yes')}
-            //     // function wtf(){console.log('no')}
-
-            //     Notification.requestPermission(function(result) {  
-            //         if (result === 'denied') {  
-            //             console.log('Permission wasn\'t granted. Allow a retry.');  
-            //             return;  
-            //         } else if (result === 'default') {  
-            //             console.log('The permission request was dismissed.');  
-            //             return;
-            //         }  
-            //         console.log('Permission was granted for notifications');  
-            //     });
-            // }
-
-            
         </script>
     </body>
 </html>

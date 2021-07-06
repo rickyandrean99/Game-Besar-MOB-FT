@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BuyMaterial;
 use Illuminate\Http\Request;
 use App\Material;
 use App\Team;
@@ -75,6 +76,8 @@ class ShopController extends Controller
             //Simpan
             $material->save();
         }
+
+        broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material"))->toOthers();
 
         //Pengurangan koin
         if ($coin >= $total) {

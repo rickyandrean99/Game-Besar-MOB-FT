@@ -118,6 +118,7 @@ class RoundController extends Controller
                     $set_buff_regeneration = ($team->buff_regeneration  > 0)? $team->buff_regeneration  - 1 : 0;
 
                     $reset = DB::table('teams')->where('id', $team->id)->update([
+                        'material_shopping' => false,
                         'debuff_disable' => false,
                         'debuff_decreased' => $set_debuff_decreased,
                         'debuff_overtime' => false,
