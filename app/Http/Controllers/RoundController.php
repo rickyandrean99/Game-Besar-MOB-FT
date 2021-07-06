@@ -166,7 +166,7 @@ class RoundController extends Controller
     }
 
     // [RICKY] Test untuk update progress dari special weapon part
-    public function testingPartDoang(Request $request) {
+    public function updatePartManual(Request $request) {
         $part_amount = $request->get('amount');
         $secret_weapon = SecretWeapon::find(1);
         $update_part = DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
@@ -176,20 +176,6 @@ class RoundController extends Controller
             event(new BroadcastVideo(true));
         }
 
-        return ["success" => true];
-    }
-
-    // [RICKY] Coba coba private quest result ke tim gan
-    public function cobaPrivate(Request $request) {
-        $receiver_id = $request->get('id_team');
-
-        if ($request->get('status')) {
-            $message = "Tim mu berhasil menyelesaikan quest";
-        } else {
-            $message = "Tim mu gagal menyelesaikan quest";
-        }
-
-        broadcast(new PrivateQuestResult($receiver_id, $message))->toOthers();
         return ["success" => true];
     }
 }

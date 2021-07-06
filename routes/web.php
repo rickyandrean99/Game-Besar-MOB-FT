@@ -36,11 +36,8 @@ Route::post('/gift', 'TeamController@gift')->name('gift');
 Route::post('/update-round', 'RoundController@updateRound')->name('update-round');
 Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
 Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadcast-video');
-Route::post('/testing-part-doang', 'RoundController@testingPartDoang')->name('testing-part-doang'); // Nanti pake route, controller, sama function punya erha kalo tim berhasil selesaiin quest
-Route::post('/coba-private-quest', 'RoundController@cobaPrivate')->name('coba-private'); // ini cuma testing private doang (Gabung sama punya erha)
-
-// [eRHa] Route hasil quest
-Route::post('/quest-result', 'QuestController@result');
+Route::post('/update-part-manual', 'RoundController@updatePartManual')->name('update-part-manual');
+Route::post('/quest-result', 'QuestController@result'); // [eRHa] Route hasil quest
 
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');

@@ -41,18 +41,6 @@
         <input class="form-control ms-3 w-25 d-inline-block" type="number" min="1" value="1" id="part-amount">
         <button class="d-inline-block btn btn-info ms-5 text-white fw-bold" id="btn-update-part">Update Special Weapon Part</button><br>
         <hr style="height: 5px;">
-
-        <!-- [RICKY] Bagian quest tiap tim -->
-        <div class="ms-5 d-inline-block fw-bold h5">Pilih Kelompok : </div>
-        <select class="d-inline-block form-select form-select-lg ms-3 w-25" aria-label=".form-select-lg example" id="quest-team">
-            <option value="" selected disabled>Pilih Kelompok</option>
-            @for($i = 1; $i <= 30; $i++)
-                <option value="{{ $i }}">{{ $i }}</option>
-            @endfor
-        </select>
-        <button class="d-inline-block btn btn-primary ms-5 me-3 ps-4 pe-4 text-white fw-bold" onclick="sendQuestStatus(true)">Berhasil</button>
-        <button class="d-inline-block btn btn-danger text-white ps-4 pe-4 fw-bold" onclick="sendQuestStatus(false)">Gagal</button>
-        <hr style="height: 5px;">
         
         <script>
             // [RICKY] Ronde, sesi, timer
@@ -156,7 +144,7 @@
                 e.preventDefault();
                 const options = {
                     method: 'post',
-                    url: '/testing-part-doang',
+                    url: '/update-part-manual',
                     data: {
                         'amount': $('#part-amount').val()
                     },
@@ -168,23 +156,6 @@
 
                 axios(options);
             });
-
-            // [RICKY] Event untuk private chat quest status (testing doang)
-            function sendQuestStatus(status) {
-                const options = {
-                    method: 'post',
-                    url: '/coba-private-quest',
-                    data: {
-                        'id_team': $('#quest-team').val(),
-                        'status': status
-                    },
-                    transformResponse: [(data) => {
-                        return data;
-                    }]
-                }
-
-                axios(options);
-            }
 
             // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
             window.Echo.channel('roundChannel').listen('.update', (e) => {
