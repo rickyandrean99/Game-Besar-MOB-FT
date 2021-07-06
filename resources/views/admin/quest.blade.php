@@ -29,6 +29,10 @@
 
         {{-- Quest Success --}}
         <div>
+            {{-- <button type="button" class="btn btn-success" onclick="questResult(true)">
+                Berhasil
+            </button> --}}
+
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#successModal">
                 Berhasil
@@ -47,7 +51,7 @@
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="QuestResult(true)">Yes</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="questResult(true)">Yes</button>
                         </div>
                     </div>
                 </div>
@@ -56,6 +60,10 @@
 
         {{-- Quest Failed --}}
         <div>
+            {{-- <button type="button" class="btn btn-danger" onclick="questResult(false)">
+                Gagal
+            </button> --}}
+
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#failedModal">
                 Gagal
@@ -74,7 +82,7 @@
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="QuestResult(false)">Yes</button>
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="questResult(false)">Yes</button>
                         </div>
                     </div>
                 </div>

@@ -18,15 +18,21 @@ class QuestController extends Controller
     }
 
     public function result(Request $request) {
+        $this->authorize('admin-quest');
+
         $receiver_id = $request->get('id_team');
 
         if ($request->get('status')) {
-            $message = "Tim mu berhasil menyelesaikan quest";
+            $message = "Hore, tim anda berhasil !";
 
+            $defaultParts = DB::table('secret_weapons')->select('part_amount_collected')->get();
+            $parts = $defaultParts[0]->part_amount_collected + 1;
 
-        } else {
-            $message = "Tim mu gagal menyelesaikan quest";
-        }
+            DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected'=>$parts]);
+        } else
+            $message = "Yahh, tim anda gagal :')";
+
+        DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>1]);
 
         broadcast(new PrivateQuestResult($receiver_id, $message))->toOthers();
         return ["success" => true];
