@@ -11,8 +11,8 @@ class ShopController extends Controller
 {
     public function index()
     {
-        // $this->authorize('admin-shop');
-        return view('admin.shop', ["material" => Material::all(), "team" => Team::all()]);
+        $this->authorize('admin-shop');
+        return view('admin.shop', ["material" => Material::all(), "team" => Team::where('material_shopping',0)->get()]);
     }
 
     public function insertOrUpdate(Request $request, Team $team)
@@ -81,9 +81,16 @@ class ShopController extends Controller
             $totalCoinsNow = $coin - $total;
             $team->coin = $totalCoinsNow;
             $team->timestamps = false;
-            $team->save();
+        } else {
+            $team->coin = 0;
         }
 
+        //Ubah material shopping ke 1
+        $team->material_shopping = 1;
+
+        //Simpan
+        $team->save();
+        
         return response()->json(array(
             'message' => 'Transaksi berhasil!',
         ), 200);

@@ -46,8 +46,8 @@
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Nama</th>
-                            <th scope="col">Harga</th>
                             <th scope="col">Stok</th>
+                            <th scope="col">Harga</th>
                             <th scope="col" style="width: 150px;">Jumlah</th>
                             <th scope="col">Subtotal</th>
                         </tr>
@@ -57,8 +57,8 @@
                         <tr>
                             <td scope="row" class="idMaterial">{{$m->id}}</td>
                             <td scope="row" class="namaMaterial" id="{{$m->id}}">{{$m->name}}</td>
-                            <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
                             <td>{{$m-> stock}}</td>
+                            <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
                             <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0></td>
                             <td class="subtotal" seq="{{$m->id}}">0</td>
                         </tr>
@@ -148,10 +148,12 @@
 
         //Koin kelompok berubah ketika combo box berubah
         $('#kelompok').on('change', function(e) {
+            document.getElementById('myform').reset();
+            $('.subtotal').text(0);
+            $('.total').text(0);
             coin = $(this).children(":selected").attr("id");
             $('.koinKelompok').text(coin);
             if (coin == "-") {
-                document.getElementById('myform').reset();
                 $('.total').text("-");
                 document.getElementById('buy').disabled = true;
             } else {

@@ -21,7 +21,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
     Route::get('/round', 'RoundController@round')->name('round');
-    Route::resource('shop', "ShopController");
+    Route::get('/shop', "ShopController@index")->name('shop');
     Route::post('insertOrUpdate', "ShopController@insertOrUpdate")->name('insertOrUpdate');
     Route::get('/quest', 'QuestController@index')->name('quest');
 });
