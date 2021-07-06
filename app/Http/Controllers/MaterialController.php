@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BuyMaterial;
 use App\Material;
 use App\Team;
 use Illuminate\Http\Request;
@@ -16,6 +17,8 @@ class MaterialController extends Controller
      */
     public function index()
     {
+        $this->authorize('admin-shop');
+        
         return view('admin.toko', ["material" => Material::all(), "team" => Team::all()]);
     }
 
@@ -118,8 +121,12 @@ class MaterialController extends Controller
                 ]);
             }
         }
-        //Kurangi coin team
+        // Kurangi coin team
         $update_coin_team = DB::table('teams')->where('id', $team_id)->decrement('coin', $total);
+
+        // [TO-DO] (Sesuaikan posisi code ini nantinya) Kalau berhasil pembelian materialnya, send jumlah material yang dibeli ke tim terkait
+        $msg_to_team = "Transaksi anda berhasil"; // ataupun gagal
+        broadcast(new BuyMaterial($team_id, $cart, $msg_to_team))->toOthers();
         
             return response()->json(array(
                 'cart' => 'sukses!',
@@ -127,10 +134,8 @@ class MaterialController extends Controller
                 // 'material_update' => $material_update
             ), 200);
         
-       
-
+        
 
         // Pengecekan jika ada data yang sesuai, maka tinggal update
-        
     }
 }

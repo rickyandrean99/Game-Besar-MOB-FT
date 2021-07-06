@@ -29,3 +29,7 @@ Broadcast::channel('update-hitpoint.{receiver_id}', function ($user, $receiver_i
     return auth()->check();
 });
 
+Broadcast::channel('buy-material.{receiver_id}', function ($user, $receiver_id) {
+    return auth()->check();
+});
+
