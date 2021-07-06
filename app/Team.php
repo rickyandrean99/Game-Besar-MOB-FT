@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Team extends Model
 {
-    public function materials(){
-        return $this->belongsToMany('App\Material', 'materials_id', 'id');
+    //[KENNETH] Hubungan many-to-many antara Team dengan Material.
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class, 'material_team', 'teams_id', 'materials_id')->withPivot('amount');
     }
 }
