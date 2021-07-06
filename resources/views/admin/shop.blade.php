@@ -32,7 +32,7 @@
                     <option value="{{$t->id}}" id="{{$t->coin}}">{{$t->name}}</option>
                     @endforeach
                 </select>
-                
+
             </div>
             <div class="koin">
                 <span>Koin</span><br>
@@ -60,7 +60,7 @@
                             <td scope="row" class="namaMaterial" id="{{$m->id}}">{{$m->name}}</td>
                             <td>{{$m-> stock}}</td>
                             <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
-                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0><button class="btn btn-secondary" style="margin-left:10px; width:50px; height: 45px;">&#8634;</button></td>
+                            <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0><input type="button" seq="{{$m->id}}" class="btn btn-secondary reset" style="margin-left:10px; width:50px; height: 45px;" value=&#8634;></td>
                             <td class="subtotal" seq="{{$m->id}}">0</td>
                         </tr>
                         @endforeach
@@ -176,6 +176,11 @@
             var price = $(".price[seq=" + seq + "]").text();
             var qty = $(".qty[seq=" + seq + "]").val();
 
+            if (qty <= 0) {
+                qty = 0;
+                $(".qty[seq=" + seq + "]").val(qty);
+            }
+
             $(".subtotal[seq=" + seq + "]").html(price * qty);
 
             var grand = 0;
@@ -196,7 +201,7 @@
         function getDataTable() {
             arrVal = [];
             $('#showTable').empty();
-            $('#showTable').append("Item yang akan dibeli:");
+            $('#showTable').append("Item yang akan dibeli:<br>");
             //Iterasi tiap data di table
             $('#materialTable tr').each(function() {
                 var qty = $(this).find(".qty").val();
@@ -251,6 +256,17 @@
                     $('#showSuccess').text(data.message);
                 },
             })
+        });
+
+        $(document).on("click", ".reset", function() {
+            var seq = $(this).attr('seq');
+            $(".qty[seq=" + seq + "]").val(0);
+            $(".subtotal[seq=" + seq + "]").text(0);
+            var grand = 0;
+            $('.subtotal').each(function() {
+                grand += $(this).html() * 1;
+            });
+            $('.total').text(grand);
         });
     });
 </script>
