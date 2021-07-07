@@ -78,15 +78,15 @@ class ShopController extends Controller
             $material->save();
         }
 
-        broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material"))->toOthers();
-
         //Pengurangan koin
         if ($coin >= $total) {
             $totalCoinsNow = $coin - $total;
             $team->coin = $totalCoinsNow;
             $team->timestamps = false;
+            broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material", $totalCoinsNow))->toOthers();
         } else {
             $team->coin = 0;
+            broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material", 0))->toOthers();
         }
 
         //Ubah material shopping ke 1
@@ -94,6 +94,13 @@ class ShopController extends Controller
 
         //Simpan
         $team->save();
+
+        // Tambah history
+        $insert_history = DB::table('histories')->insert([
+            'teams_id' => $id,
+            'name' => 'Berhasil membeli material',
+            'type' => 'buy-material'
+        ]);
         
         return response()->json(array(
             'message' => 'Transaksi berhasil!',

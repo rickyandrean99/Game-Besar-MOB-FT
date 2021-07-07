@@ -16,17 +16,19 @@ class BuyMaterial implements ShouldBroadcast
     public $receiver_id;
     public $material_list;
     public $message;
+    public $coin;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($receiver_id, $material_list, $message)
+    public function __construct($receiver_id, $material_list, $message, $coin)
     {
         $this->receiver_id = $receiver_id;
         $this->material_list = $material_list;
         $this->message = $message;
+        $this->coin = $coin;
     }
 
     /**

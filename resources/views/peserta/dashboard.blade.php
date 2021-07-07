@@ -35,33 +35,29 @@
                 <!-- [RICKY] Struktur content bagian atas (gift, boss, history/log) -->
                 <div class="content-top">
                     <!-- [RICKY] Struktur section gift -->
-                    <section class="gift">
-                        <h3>GIFT</h3>
-                        <label for="">
-                            Pilih Team <br>
-                            <select name="" id="gift-kelompok">
-                                <option value="" selected disabled>-- Pilih Kelompok --</option>
-                                @foreach($friend as $f)
-                                    <option value="{{$f->id}}">{{$f->name}}</option>
-                                @endforeach
-                            </select>
-                        </label>
+                    <section class="gift ps-4 pe-4">
+                        <div class="w-100 text-center h4 fw-bold">GIFT</div>
 
-                        <label for="">
-                            Pilih Material <br>
-                            <select name="" id="gift-material">
-                                <option value="" selected disabled>-- Pilih Material --</option>
-                                @foreach($material as $m)
-                                    <option value="{{$m->materials_id}}">{{$m->nama_material}}</option>
-                                @endforeach
-                            </select>
-                        </label>
+                        <div>Pilih Team</div>
+                        <select id="gift-kelompok" class="form-select w-100 mt-2 mb-3">
+                            <option value="" selected disabled>-- Pilih Kelompok --</option>
+                            @foreach($friend as $f)
+                                <option value="{{$f->id}}">{{$f->name}}</option>
+                            @endforeach
+                        </select>
 
-                        <label for="">
-                            Jumlah <br>
-                            <input type="number" id="gift_jumlah" min='0' value="0">
-                        </label>
-                        <button type="button" class="btn btn-primary" id="btn-gift" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Kirim</button>
+                        <div>Pilih Material</div>
+                        <select id="gift-material" class="form-select w-100 mt-2 mb-3">
+                            <option value="" selected disabled>-- Pilih Material --</option>
+                            @foreach($material as $m)
+                                <option value="{{$m->materials_id}}">{{$m->nama_material}}</option>
+                            @endforeach
+                        </select>
+
+                        <div>Jumlah</div>
+                        <input type="number" id="gift_jumlah" min='1' value="1" class="form-control w-100 mt-2 mb-3">
+                        
+                        <button class="btn btn-primary w-100 mt-2" id="btn-gift" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Gift</button>
                     </section>
 
                     <!-- [RICKY] Struktur section boss -->
@@ -90,12 +86,10 @@
                     <!-- [RICKY] Struktur section history -->
                     <section class="history">
                         <table class="history-table">
-                            <tbody>
-                                @for($i = 1; $i <= 30; $i++)
-                                    <tr>
-                                        <td>History {{ $i }}</td>
-                                    </tr>
-                                @endfor
+                            <tbody id="histories-list">
+                                @foreach($histories as $h)
+                                    <tr><td><div class="history-detail">{{ $h->name }}</div></td></tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </section>
@@ -369,6 +363,11 @@
                 }
             }
 
+            // [RICKY] Saat ada history baru, tabel di scroll ke paling bawah
+            function bringToBottom() {
+                $("#histories-list").scrollTop($("#histories-list")[0].scrollHeight);
+            }
+
             // [RICKY] Tampilan halaman saat reload
             $(document).ready(function() {
                 // [RICKY] Jika hp abis atau ronde tidak aktif, disable semua kontrol
@@ -379,6 +378,7 @@
                 }
 
                 roundSessionTimer();
+                bringToBottom();
             });
             
             // [RICKY] Tampilkan Ronde Sesi Timer secara realtime
@@ -453,8 +453,13 @@
                         '_token':'<?php echo csrf_token() ?>'
                     },
                     success: function(data) {
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.message);
+                        if (data.status) {
+                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            bringToBottom();
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.message);
+                        }
                     }
                 });
             });
@@ -478,10 +483,8 @@
                         'amount': amount
                     },
                     success: function(data) {
-                        $('#result-modal').modal('show');
                         $('#crafting-amount').val(1);
-                        $('#modal-result-message').text(data.message);
-
+                        
                         if (data.crafting_result) {
                             var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
                             $("#jumlah-equipment-" + id_equipment).text(amount_now);
@@ -489,6 +492,12 @@
                             $.each(data.material_update, function(index, value) {
                                 $("#jumlah-material-" + value.materials_id).text(value.amount);
                             });
+
+                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            bringToBottom();
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.message);
                         }
                     }
                 });
@@ -506,11 +515,14 @@
                         'id_equipment': id_equipment
                     },
                     success: function(data) {
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.message);
-
                         if (data.use_result) {
                             $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
+
+                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            bringToBottom();
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.message);
                         }
 
                         if (data.update_hp != 0) {
@@ -531,9 +543,6 @@
                         '_token':'<?php echo csrf_token() ?>'
                     },
                     success: function(data) {
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.message);
-
                         if (data.status) {
                             weaponLevel = data.level_weapon;
                             checkWeaponAction();
@@ -545,11 +554,17 @@
                             } else if (weaponLevel == 3) {
                                 $('#weapon-name').text("Quantum Gun (Lv3)");
                             }
-                        }
 
-                        $.each(data.material_update, function(index, value) {
-                            $("#jumlah-material-" + value.materials_id).text(value.amount);
-                        });
+                            $.each(data.material_update, function(index, value) {
+                                $("#jumlah-material-" + value.materials_id).text(value.amount);
+                            });
+
+                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            bringToBottom();
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.message);
+                        }
                     }
                 });
             });
@@ -581,12 +596,15 @@
                         'jumlah': jumlah
                     },
                     success: function(data) {
-                        $('#gift_jumlah').val('0');
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.msg);
-                        
+                        $('#gift_jumlah').val('1');
+
                         if (data.status) {
+                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.msg + "</div></td></tr>");
                             $("#jumlah-material-" + material).text(data.jumlah_sekarang);
+                            bringToBottom();
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.msg);
                         }
                     }
                 });
@@ -607,22 +625,18 @@
                 if (!aksi) {
                     var boss_hp = 100 * e.boss_hp / 100000;
                     $('#boss-hp-amount').css('width', boss_hp + "%");
+                    $('#result-modal').modal('show');
+                    $('#modal-result-message').text("Round telah berganti");
                 }
             });
 
             // [RICKY] Mendapatkan instruksi saat video di broadcast (PUBLIC-CHANNEL)
             window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
                 if (e.broadcast_winner) {
-                    // $('#reminder-modal').modal('hide');
-                    // $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=1');
-
                     $('#winner-modal').modal({backdrop: 'static', keyboard: false});
                     $('#winner-modal').modal('show');
                     $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
                 } else {
-                    // $('#winner-modal').modal('hide');
-                    // $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=1');
-
                     $('#reminder-modal').modal({backdrop: 'static', keyboard: false});
                     $('#reminder-modal').modal('show');
                     $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
@@ -637,7 +651,8 @@
 
             // [RICKY] Mendapatkan quest result yang dijalanakan (PRIVATE-CHANNEL)
             window.Echo.private('privatequest.' + {{ Auth::user()->team }}).listen('PrivateQuestResult', (e) => {
-                alert(e.message);
+                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                bringToBottom();
             });
 
             // [RICKY] Mendapatkan hp team terbaru saat round berganti (PRIVATE-CHANNEL)
@@ -648,12 +663,19 @@
 
                 teamStatus = (e.health > 0) ? true : false;
                 checkWeaponAction();
+                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                
+                if (e.health <= 0) {
+                    $('#histories-list').append("<tr><td><div class='history-detail'>Tidak dapat bermain lagi</div></td></tr>");
+                }
+
+                bringToBottom();
             });
 
             // [RICKY] Mendapatkan gift yang dikirimkan kelompok lain (PRIVATE-CHANNEL)
             window.Echo.private('send-gift.' + {{ Auth::user()->team }}).listen('SendGift', (e) => {
-                $('#result-modal').modal('show');
-                $('#modal-result-message').text(e.message);
+                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                bringToBottom();
 
                 var getAmountNow = parseInt($("#jumlah-material-" + e.id_material).text());
                 var amount = parseInt(getAmountNow) + parseInt(e.amount);
@@ -666,7 +688,11 @@
                     var getAmountNow = parseInt($("#jumlah-material-" + value.id).text());
                     var amount = parseInt(getAmountNow) + parseInt(value.qty);
                     $("#jumlah-material-" + value.id).text(amount);
+                    $('.coin-amount').text(e.coin);
                 });
+
+                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                bringToBottom();
             });
         </script>
     </body>

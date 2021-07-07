@@ -95,14 +95,28 @@ class RoundController extends Controller
                         if ($team_detail->shield) {
                             $damage_dealt_to_team = (int)(0.5 * $damage_dealt_to_team);
                         }
+
+                        // History kena damage
+                        $msg_receive_damage = 'Terkena damage boss sebesar '.$damage_dealt_to_team;
+                        $insert_history = DB::table('histories')->insert([
+                            'teams_id' => $value,
+                            'name' => $msg_receive_damage,
+                            'type' => 'receive-damage'
+                        ]);
                         
                         // [RICKY] Kurangi HP Team
                         if ($team_detail->hp_amount > $damage_dealt_to_team) {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $damage_dealt_to_team);
-                            broadcast(new UpdateHitpoint($team_detail->id, $team_detail->hp_amount - $damage_dealt_to_team))->toOthers();
+                            broadcast(new UpdateHitpoint($team_detail->id, $team_detail->hp_amount - $damage_dealt_to_team, $msg_receive_damage))->toOthers();
                         } else {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->update(['hp_amount'=> 0]);
-                            broadcast(new UpdateHitpoint($team_detail->id, 0))->toOthers();
+                            broadcast(new UpdateHitpoint($team_detail->id, 0, $msg_receive_damage))->toOthers();
+
+                            $insert_history = DB::table('histories')->insert([
+                                'teams_id' => $value,
+                                'name' => 'Tidak dapat bermain lagi',
+                                'type' => 'game-status'
+                            ]);
                         }
                     }
                 }
@@ -118,7 +132,7 @@ class RoundController extends Controller
                     $set_buff_regeneration = ($team->buff_regeneration  > 0)? $team->buff_regeneration  - 1 : 0;
 
                     $reset = DB::table('teams')->where('id', $team->id)->update([
-                        'material_shopping' => false,
+                        'material_shopping' => true,
                         'debuff_disable' => false,
                         'debuff_decreased' => $set_debuff_decreased,
                         'debuff_overtime' => false,

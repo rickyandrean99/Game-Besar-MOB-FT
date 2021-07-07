@@ -142,10 +142,6 @@ table.history-table {
     border-collapse: collapse;
 }
 
-table.history-table td {
-    border: 1px solid #444444;
-}
-
 table.history-table > tbody {
     display: block;
     overflow-y: auto;
@@ -160,6 +156,14 @@ table.history-table tr {
 
 table.history-table td {
     padding: 2%;
+}
+
+.history-detail {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 1% 0;
+    font-size: 16px;
 }
 
 /* [RICKY] CSS bagian content bawah (material, equipment, control) */

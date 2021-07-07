@@ -24,6 +24,7 @@ class TeamController extends Controller
         $enemy_info = EnemyBoss::find(1);
         $round_info = Round::find(1);
         $secret_weapon = SecretWeapon::find(1);
+        $histories_team = DB::table('histories')->where('teams_id', $id_team)->get();
         $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
         $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
         $material_list = DB::select(DB::raw("SELECT m.id AS materials_id, m.name AS nama_material, coalesce(mt.amount, '0') AS jumlah FROM materials AS m LEFT JOIN (SELECT * FROM material_team WHERE teams_id = $id_team) AS mt ON m.id = mt.materials_id ORDER BY materials_id"));
@@ -37,7 +38,8 @@ class TeamController extends Controller
             'times' => $difference,
             'equipments' => $equipment_list,
             'material' =>$material_list,
-            'friend' =>$friend_list
+            'friend' =>$friend_list,
+            'histories' => $histories_team
         ]);
     }
 
@@ -103,7 +105,14 @@ class TeamController extends Controller
                         ]);
                     }
 
-                    $message = "Crafting berhasil";
+                    $equipment = DB::table('equipments')->where('id', $id_equipment)->get();
+                    $message = "Berhasil crafting ".$amount." equipment ".$equipment[0]->name;
+
+                    $insert_history = DB::table('histories')->insert([
+                        'teams_id' => $id_team,
+                        'name' => $message,
+                        'type' => 'craft-equip'
+                    ]);
                 }
             } else {
                 $crafting_result = false;
@@ -214,10 +223,17 @@ class TeamController extends Controller
 
                 // [RICKY] Kurangi jumlah equipment dan dapatkan jumlah terbaru
                 if ($use_access) {
-                    $message = "Equipment berhasil digunakan";
+                    $equipment = DB::table('equipments')->where('id', $id_equipment)->get();
+                    $message = "Berhasil menggunakan equipment ".$equipment[0]->name;
                     $update_equipment = DB::table('equipment_team')->where('equipments_id', $id_equipment)->where('teams_id', $id_team)->decrement('amount', 1);
                     $get_equipment = DB::table('equipment_team')->where('equipments_id', $id_equipment)->where('teams_id', $id_team)->get();
                     $equipment_amount = $get_equipment[0]->amount;
+
+                    $insert_history = DB::table('histories')->insert([
+                        'teams_id' => $id_team,
+                        'name' => $message,
+                        'type' => 'use-equip'
+                    ]);
                 }
             } else {
                 $use_access = false;
@@ -283,6 +299,12 @@ class TeamController extends Controller
 
                         $level_weapon++;
                         $message = "Berhasil upgrade weapon";
+
+                        $insert_history = DB::table('histories')->insert([
+                            'teams_id' => $id_team,
+                            'name' => $message,
+                            'type' => 'upgrade'
+                        ]);
                     }
                 } else {
                     $upgrade_weapon = false;
@@ -322,7 +344,13 @@ class TeamController extends Controller
                     } else {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['attack_status' => true]);
                         $attack_status = true;
-                        $message = "Attack berhasil dilancarkan";
+                        $message = "Berhasil melakukan attack";
+
+                        $insert_history = DB::table('histories')->insert([
+                            'teams_id' => $id_team,
+                            'name' => $message,
+                            'type' => 'attack'
+                        ]);
                     }
                 } else {
                     $attack_status = false;
@@ -359,26 +387,21 @@ class TeamController extends Controller
         $status = false;
 
         //cek jumlah kepunyaan
-        $cek_jumlah = DB::table('material_team')
-        ->select('amount')
-        ->where('materials_id',$material)
-        ->where('teams_id',$id_team)
-        ->get();
+        $cek_jumlah = DB::table('material_team')->select('amount')->where('materials_id',$material)->where('teams_id',$id_team)->get();
         
         if ($team_detail->hp_amount > 0) {
             if (!$round_detail->action) {
-                if(count($cek_jumlah)>0){
+                if (count($cek_jumlah) > 0) {
                     $jumlah_sekarang = $cek_jumlah[0]->amount;
 
-                    if($jumlah<= $cek_jumlah[0]->amount){
+                    if ($jumlah <= $cek_jumlah[0]->amount) {
                         $cek = DB::table('material_team')
                             ->where('materials_id',$material)
                             ->where('teams_id',$tujuan)
                             ->get();
-                        if(count($cek)>0){
+                        if (count($cek)>0) {
                             $update_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
-                        }
-                        else{
+                        } else {
                             $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
                                 'materials_id'=> $material,
                                 'teams_id'=> $tujuan,
@@ -389,13 +412,26 @@ class TeamController extends Controller
                         $update_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
             
                         $status = true;
-                        $msg = "berhasil melakukan gift";
                         $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
+                        
+                        $msg = "Memberikan ".$jumlah." ".$material_detail->name." ke Tim ".$tujuan;
+                        $receiver_history = "Mendapatkan ".$jumlah." ".$material_detail->name." dari Tim ".$id_team;
 
-                        $msg_to_them = "Kamu mendapatkan ".$jumlah." ".$material_detail->name." dari Tim ".$id_team;
+                        $insert_history = DB::table('histories')->insert([
+                            [
+                                'teams_id' => $id_team,
+                                'name' => $msg,
+                                'type' => 'gift'
+                            ], 
+                            [
+                                'teams_id' => $tujuan,
+                                'name' => $receiver_history,
+                                'type' => 'gift'
+                            ]
+                        ]);
 
                         // Pusher send gift disini
-                        broadcast(new SendGift($tujuan, $msg_to_them, $material, $jumlah))->toOthers();
+                        broadcast(new SendGift($tujuan, $receiver_history, $material, $jumlah))->toOthers();
                     }
                 }
                 else{

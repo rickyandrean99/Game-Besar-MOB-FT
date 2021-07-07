@@ -15,16 +15,18 @@ class UpdateHitpoint implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $receiver_id;
     public $health;
+    public $message;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($receiver_id, $health)
+    public function __construct($receiver_id, $health, $message)
     {
         $this->receiver_id = $receiver_id;
         $this->health = $health;
+        $this->message = $message;
     }
 
     /**
