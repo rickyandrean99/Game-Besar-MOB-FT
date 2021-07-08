@@ -24,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/shop', "ShopController@index")->name('shop');
     Route::post('insertOrUpdate', "ShopController@insertOrUpdate")->name('insertOrUpdate');
     Route::get('/quest', 'QuestController@index')->name('quest');
+    Route::get('/rally','RallyController@team')->name('rally');
 });
 
 // Route tipe post yang digunakan olex Ajax
@@ -38,6 +39,7 @@ Route::post('/update-sesi', 'RoundController@updateSesi')->name('update-sesi');
 Route::post('/broadcast-video', 'RoundController@broadcastVideo')->name('broadcast-video');
 Route::post('/update-part-manual', 'RoundController@updatePartManual')->name('update-part-manual');
 Route::post('/quest-result', 'QuestController@result'); // [eRHa] Route hasil quest
+Route::post('rally/simpan', 'RallyController@rallySimpan')->name('rallysimpan');
 
 Auth::routes(['register' => false]);
 Route::get('/home', 'HomeController@index')->name('home');

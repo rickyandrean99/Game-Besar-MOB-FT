@@ -58,7 +58,7 @@
                         <tr>
                             <td scope="row" class="idMaterial">{{$m->id}}</td>
                             <td scope="row" class="namaMaterial" id="{{$m->id}}">{{$m->name}}</td>
-                            <td>{{$m-> stock}}</td>
+                            <td class="stock" seq="{{$m->id}}">{{$m-> stock}}</td>
                             <td class="price" seq="{{$m->id}}">{{$m-> price}}</td>
                             <td><input type="number" style="width: 100px;" class="qty" seq="{{$m->id}}" min=0><input type="button" seq="{{$m->id}}" class="btn btn-secondary reset" style="margin-left:10px; width:50px; height: 45px;" value=&#8634;></td>
                             <td class="subtotal" seq="{{$m->id}}">0</td>
@@ -118,8 +118,8 @@
             </div>
         </div>
     </div>
-    <!-- Modal Sukses -->
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <!-- Modal Status -->
+    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -129,7 +129,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div id="showSuccess"></div>
+                    <div id="showStatus"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" onclick="location.reload();">Oke</button>
@@ -139,17 +139,32 @@
     </div>
 </body>
 <script>
-    document.getElementById('myform').reset();
     $('document').ready(function() {
+        document.getElementById('myform').reset();
         //Nonaktifkan tombol buy dan kosongkan isi koin
         document.getElementById('buy').disabled = true;
+        $("select").val("-").change();
         $('.koinKelompok').text("-");
         var coin = "";
         var total = "";
 
+        $('.stock').each(function() {
+            if ($(this).text() == 0) {
+                $(this).addClass('red');
+            } else {
+                $(this).removeClass('red');
+            }
+        });
         //Koin kelompok berubah ketika combo box berubah
         $('#kelompok').on('change', function(e) {
             document.getElementById('myform').reset();
+            $('.stock').each(function() {
+                if ($(this).text() == 0) {
+                    $(this).addClass('red');
+                } else {
+                    $(this).removeClass('red');
+                }
+            });
             $('.subtotal').text(0);
             $('.total').text(0);
             coin = $(this).children(":selected").attr("id");
@@ -173,8 +188,37 @@
         $('.qty').on('change', function() {
             coin = $('#kelompok').children(":selected").attr("id");
             var seq = $(this).attr('seq');
+            var stock = parseInt($(".stock[seq=" + seq + "]").text());
+            var qty = parseInt($(".qty[seq=" + seq + "]").val());
+
+            // $('.stock').each(function() {
+            //     var stock = parseInt($(this).text());
+            //     if (stock < qty) {
+            //         $(this).addClass('red');
+            //         document.getElementById('buy').disabled = true;
+            //     } else {
+            //         if(stock != 0){
+            //             $(this).removeClass('red');
+            //         }
+            //         if (coin != "-") {
+            //             document.getElementById('buy').disabled = false;
+            //         }
+            //     }
+            // });
+
+            if (stock < qty) {
+                $(".stock[seq=" + seq + "]").addClass('red');
+                document.getElementById('buy').disabled = true;
+            } else {
+                if (stock != 0) {
+                    $(".stock[seq=" + seq + "]").removeClass('red');
+                }
+                if (coin != "-") {
+                    document.getElementById('buy').disabled = false;
+                }
+            }
+
             var price = $(".price[seq=" + seq + "]").text();
-            var qty = $(".qty[seq=" + seq + "]").val();
 
             if (qty <= 0) {
                 qty = 0;
@@ -194,6 +238,7 @@
             } else {
                 $('.koinKelompok').removeClass('red');
             }
+
         });
 
         var arrVal = [];
@@ -252,14 +297,15 @@
                     'cart': cart
                 },
                 success: function(data) {
-                    $('#successModal').modal('show');
-                    $('#showSuccess').text(data.message);
+                    $('#statusModal').modal('show');
+                    $('#showStatus').text(data.message);
                 },
             })
         });
 
         $(document).on("click", ".reset", function() {
             var seq = $(this).attr('seq');
+            $(".stock[seq=" + seq + "]").removeClass('red');
             $(".qty[seq=" + seq + "]").val(0);
             $(".subtotal[seq=" + seq + "]").text(0);
             var grand = 0;
