@@ -39,7 +39,7 @@ class RoundController extends Controller
         if ($round_detail->round > 0 && $round_detail->round <= 20) {
             // [RICKY] Masuk if jika round itu adalah special
             if ($round_detail->round % 4 == 0) {
-                $boss_attack_list = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30);
+                $boss_attack_list = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25);
                 $boss_damage = 300;
             } else {
                 $random_attack_list = DB::table('random_boss_attacks')->where('id', $round_detail->round)->get();
@@ -58,6 +58,7 @@ class RoundController extends Controller
                 // [RICKY] Cek buff_regeneration (RETURNER)
                 if ($team->buff_regeneration > 0) { 
                     $update_hp_team = DB::table('teams')->where('id', $team->id)->increment('hp_amount', 30);
+                    broadcast(new UpdateHitpoint($team->id, $team->hp_amount + 30, null))->toOthers();
                 }
 
                 // [RICKY] Cek Status debuff_overtime yang stackable (PARADOX SPHERE)
@@ -182,11 +183,12 @@ class RoundController extends Controller
     // [RICKY] Test untuk update progress dari special weapon part
     public function updatePartManual(Request $request) {
         $part_amount = $request->get('amount');
-        $secret_weapon = SecretWeapon::find(1);
         $update_part = DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
-        event(new UpdatePart($secret_weapon->part_amount_collected + $part_amount, $secret_weapon->part_amount_target));
 
-        if ($secret_weapon->part_amount_collected + $part_amount >= $secret_weapon->part_amount_target) {
+        $secret_weapon = SecretWeapon::find(1);
+        event(new UpdatePart($secret_weapon->part_amount_collected, $secret_weapon->part_amount_target));
+
+        if ($secret_weapon->part_amount_collected >= $secret_weapon->part_amount_target) {
             event(new BroadcastVideo(true));
         }
 

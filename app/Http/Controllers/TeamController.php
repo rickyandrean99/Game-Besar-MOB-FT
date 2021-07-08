@@ -176,7 +176,9 @@ class TeamController extends Controller
                                 }
                                 
                             } else if ($id_equipment == 9 && $team_detail->buff_regeneration == 0) {
-                                $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_regeneration' => 2]);
+                                $team_hp = Team::find($id_team);
+                                $update_status = DB::table('teams')->where('id', $id_team)->update(['buff_regeneration' => 1, 'hp_amount' => ($team_hp->hp_amount + 30)]);
+                                $new_hp = $team_hp->hp_amount + 30;
                             } else {
                                 $message = "Tidak dapat digunakan karena equipment serupa masih aktif";
                                 $use_access = false;

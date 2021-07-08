@@ -663,7 +663,10 @@
 
                 teamStatus = (e.health > 0) ? true : false;
                 checkWeaponAction();
-                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+
+                if (e.message != null) {
+                    $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                }
                 
                 if (e.health <= 0) {
                     $('#histories-list').append("<tr><td><div class='history-detail'>Tidak dapat bermain lagi</div></td></tr>");
