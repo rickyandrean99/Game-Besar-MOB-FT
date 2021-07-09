@@ -8,11 +8,15 @@ use DB;
 class RallyController extends Controller
 {
     public function team(){
+        $this->authorize('admin-rally');
+
         $teams = DB::table('teams')->get();
         return view('admin.rally',['teams'=>$teams]);
     }
 
     public function rallySimpan(Request $request){
+        $this->authorize('admin-rally');
+
         $tipe = $request->get('tipe');
         $kelompok1 = $request->get('kelompok1');
         $kelompok2 = $request->get('kelompok2');

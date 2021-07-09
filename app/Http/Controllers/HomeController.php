@@ -30,6 +30,8 @@ class HomeController extends Controller
             return redirect()->route('shop');
         } else if (Auth::user()->role == "quest") {
             return redirect()->route('quest');
+        } else if (Auth::user()->role == "rally") {
+            return redirect()->route('rally');
         } else if (Auth::user()->role == "admin") {
             return redirect()->route('round');
         }
