@@ -33,3 +33,7 @@ Broadcast::channel('buy-material.{receiver_id}', function ($user, $receiver_id) 
     return auth()->check();
 });
 
+Broadcast::channel('update-status.{receiver_id}', function ($user, $receiver_id) {
+    return auth()->check();
+});
+

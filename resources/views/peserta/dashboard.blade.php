@@ -74,7 +74,7 @@
                             </div>
                         </div>
 
-                        <div class="secret-weapon">
+                        <div class="secret-weapon" id="secret-weapon-progress-bar">
                             @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
                             <div style="text-align: center; margin: 1% 0">Secret Weapon</div>
                             <div class="progress">
@@ -170,7 +170,14 @@
                         </div>
 
                         <div class="status">
-                            
+                            <div id="wt" class="bg-info">WT</div>
+                            <div id="ac" class="bg-info">AC</div>
+                            <div id="ps" class="bg-info">PS</div>
+                            <div id="sp" class="bg-danger">SP</div>
+                            <div id="ia" class="bg-danger">IA</div>
+                            <div id="r" class="bg-danger">R</div>
+                            <div id="ms" class="bg-dark text-white">MS</div>
+                            <div id="atk" class="bg-dark text-white">ATK</div>
                         </div>
                     </section>
                 </div>
@@ -291,6 +298,44 @@
             var time = {{ $times }};
             var teamStatus = ( {{ $team->hp_amount }} > 0 ) ? true : false;
             var weaponLevel = {{ $team->weapon_level }};
+            var partStatus = {{ $round->reminder }};
+
+            // Cek in status saat load
+            if (!{{ $team->debuff_disable }}) {
+                $('#wt').hide();
+            }
+
+            if ({{ $team->debuff_decreased }} <= 0) {
+                $('#ac').hide();
+            }
+
+            if (!{{ $team->debuff_overtime }}) {
+                $('#ps').hide();
+            }
+
+            if ({{ $team->buff_increased }} <= 0) {
+                $('#sp').hide();
+            }
+
+            if (!{{ $team->buff_immortal }}) {
+                $('#ia').hide();
+            }
+
+            if ({{ $team->buff_regeneration }} <= 0) {
+                $('#r').hide();
+            }
+
+            if (!{{ $team->shield }}) {
+                $('#ms').hide();
+            }
+
+            if (!{{ $team->attack_status }}) {
+                $('#atk').hide();
+            }
+            
+            if (!partStatus) {
+                $('#secret-weapon-progress-bar').hide();
+            }
 
             // [RICKY] Disable semua control
             function disableAllControl() {
@@ -627,6 +672,14 @@
                     $('#boss-hp-amount').css('width', boss_hp + "%");
                     $('#result-modal').modal('show');
                     $('#modal-result-message').text("Round telah berganti");
+
+                    // Update Status
+                    $('#atk').hide();
+                    $('#ms').hide();
+                    $('#wt').hide();
+                    $('#ps').hide();
+                    $('#r').hide();
+                    $('#ia').hide();
                 }
             });
 
@@ -640,6 +693,7 @@
                     $('#reminder-modal').modal({backdrop: 'static', keyboard: false});
                     $('#reminder-modal').modal('show');
                     $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
+                    $('#secret-weapon-progress-bar').show();
                 }
             });
 
@@ -696,6 +750,17 @@
 
                 $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
                 bringToBottom();
+            });
+
+            // [RICKY] Update Icon Status
+            window.Echo.private('update-status.' + {{ Auth::user()->team }}).listen('UpdateStatus', (e) => {
+                if (e.team.debuff_decreased <= 0) {
+                    $('#ac').hide();
+                }
+
+                if (e.team.buff_increased <= 0) {
+                    $('#sp').hide();
+                }
             });
         </script>
     </body>

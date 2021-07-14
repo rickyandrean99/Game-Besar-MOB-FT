@@ -291,3 +291,8 @@ section.control > div {
     text-align: center;
     width: 100%
 }
+
+div.status > div {
+    display: inline-block;
+    padding: 8px;
+}

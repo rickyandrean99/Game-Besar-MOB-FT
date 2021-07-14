@@ -32,12 +32,11 @@ class QuestController extends Controller
             $parts = $defaultParts[0]->part_amount_collected + 1;
 
             DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected'=>$parts]);
-
-            
+            DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>0]);
         } else
             $message = "Yahh, tim anda gagal :')";
 
-        DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>0]);
+        
         $insert_history = DB::table('histories')->insert([
             'teams_id' => $receiver_id,
             'name' => $message,

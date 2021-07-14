@@ -7,6 +7,7 @@ use App\Events\UpdatePart;
 use App\Events\UpdateRound;
 use App\Events\PrivateQuestResult;
 use App\Events\UpdateHitpoint;
+use App\Events\UpdateStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Team;
@@ -156,7 +157,13 @@ class RoundController extends Controller
         // [RICKY] Pusher broadcast
         $boss_detail = EnemyBoss::find(1);
         event(new UpdateRound($round_detail->round + 1, false, 3, $boss_detail->hp_amount));
+
+        $team_list = Team::all();
+        foreach ($team_list as $tl) {
+            broadcast(new UpdateStatus($tl))->toOthers();
+        }
         return ["success" => true];
+        
     }
 
     // [RICKY] Untuk update sesi jadi action
@@ -176,7 +183,12 @@ class RoundController extends Controller
 
     // [RICKY] Untuk broadcast video
     public function broadcastVideo(Request $request) {
-        event(new BroadcastVideo($request->get('broadcast_type')));
+        $type = $request->get('broadcast_type');
+        if (!($type)) {
+            $update_reminder = DB::table('rounds')->where('id', 1)->update(['reminder'=> true]);
+        }
+
+        event(new BroadcastVideo($type));
         return ["success" => true];
     }
 
