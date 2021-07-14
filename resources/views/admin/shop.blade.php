@@ -191,21 +191,6 @@
             var stock = parseInt($(".stock[seq=" + seq + "]").text());
             var qty = parseInt($(".qty[seq=" + seq + "]").val());
 
-            // $('.stock').each(function() {
-            //     var stock = parseInt($(this).text());
-            //     if (stock < qty) {
-            //         $(this).addClass('red');
-            //         document.getElementById('buy').disabled = true;
-            //     } else {
-            //         if(stock != 0){
-            //             $(this).removeClass('red');
-            //         }
-            //         if (coin != "-") {
-            //             document.getElementById('buy').disabled = false;
-            //         }
-            //     }
-            // });
-
             if (stock < qty) {
                 $(".stock[seq=" + seq + "]").addClass('red');
                 document.getElementById('buy').disabled = true;
@@ -270,14 +255,17 @@
         $('#buy').on("click", function() {
             coin = parseInt($('#kelompok').children(":selected").attr("id"));
             total = parseInt($('#total').text());
-            if (coin >= total) {
+            getDataTable();
+            if (coin >= total || arrVal.length > 3) {
                 if (total == 0) {
                     $('#errorModal').modal('show');
                     $('#showError').text('Kelompok belum membeli material sama sekali.');
+                } else if(arrVal.length > 3){
+                    $('#errorModal').modal('show');
+                    $('#showError').text('Kelompok tidak boleh membeli lebih dari 3 macam material!');
                 } else {
                     $('#buyModal').modal('show');
                 }
-                getDataTable();
             } else if (coin < total) {
                 $('#errorModal').modal('show');
                 $('#showError').text('Koin kelompok tidak mencukupi.');

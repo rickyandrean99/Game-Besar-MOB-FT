@@ -33,7 +33,6 @@ class ShopController extends Controller
 
         //Buat array untuk mengirimkan material yang gagal dibeli.
         $failToBuy = [];
-        $notBuyEverything = [];
 
         //Check secara berulang apakah material yang dicari ada atau tidak
         for ($i = 0; $i < count($cart); $i++) {
