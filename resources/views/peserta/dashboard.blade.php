@@ -416,7 +416,7 @@
             // [RICKY] Tampilan halaman saat reload
             $(document).ready(function() {
                 // [RICKY] Jika hp abis atau ronde tidak aktif, disable semua kontrol
-                if (teamStatus && ronde > 0 && ronde <= 20) {
+                if (teamStatus && ronde > 0 && ronde <= 16) {
                     checkWeaponAction();
                 } else {
                     disableAllControl();
@@ -434,7 +434,7 @@
                 if(ronde < 1) {
                     disableAllControl();
                     $('.ronde').html("Game Besar Belum Dimulai");
-                } else if (ronde > 20) {
+                } else if (ronde > 16) {
                     disableAllControl();
                     $('.ronde').html("Game Besar Sudah Selesai");
                     $('.sesi').text("");

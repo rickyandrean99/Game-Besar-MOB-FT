@@ -151,12 +151,18 @@ class RoundController extends Controller
         }
 
         // [RICKY] Update round
-        $end_time = Carbon::now()->addMinutes(3);
+        if ($round_detail->round % 4 == 3) {
+            $minute = 10;
+        } else {
+            $minute = 4.5;
+        }
+
+        $end_time = Carbon::now()->addMinutes($minute);
         $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
 
         // [RICKY] Pusher broadcast
         $boss_detail = EnemyBoss::find(1);
-        event(new UpdateRound($round_detail->round + 1, false, 3, $boss_detail->hp_amount));
+        event(new UpdateRound($round_detail->round + 1, false, $minute, $boss_detail->hp_amount));
 
         $team_list = Team::all();
         foreach ($team_list as $tl) {
@@ -172,12 +178,18 @@ class RoundController extends Controller
         
         $round_detail = Round::find(1);
 
+        if ($round_detail->round % 4 == 0) {
+            $minute = 2;
+        } else {
+            $minute = 1;
+        }
+
         // [RICKY] Update round
-        $end_time = Carbon::now()->addMinutes(1);
+        $end_time = Carbon::now()->addMinutes($minute);
         $update_round = DB::table('rounds')->where('id', 1)->update(['action'=> true, 'time_end'=> $end_time]);
 
         // [RICKY] Pusher broadcast
-        event(new UpdateRound($round_detail->round, true, 1, null));
+        event(new UpdateRound($round_detail->round, true, $minute, null));
         return ["success" => true];
     }
 
