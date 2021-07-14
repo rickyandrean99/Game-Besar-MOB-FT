@@ -501,6 +501,7 @@
                         if (data.status) {
                             $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
                             bringToBottom();
+                            $('#atk').show();
                         } else {
                             $('#result-modal').modal('show');
                             $('#modal-result-message').text(data.message);
@@ -565,6 +566,16 @@
 
                             $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
                             bringToBottom();
+
+                            if (id_equipment == 7) {
+                                $('#sp').show();
+                            } else if (id_equipment == 8) {
+                                $('#ia').show();
+                            } else if (id_equipment == 9) {
+                                $('#r').show();
+                            } else if (id_equipment == 10) {
+                                $('#ms').show();
+                            }
                         } else {
                             $('#result-modal').modal('show');
                             $('#modal-result-message').text(data.message);
