@@ -12,7 +12,7 @@
         <script src="../js/app.js"></script>
         <link rel="stylesheet" href="{{ asset('assets/css/dashboard-peserta.css') }}">
     </head>
-    
+
     <body>
         <div id="container">
             <!-- [RICKY] Struktur header halaman -->
@@ -29,7 +29,7 @@
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
                 </div>
             </header>
-            
+
             <!-- [RICKY] Struktur content halaman -->
             <div id="content">
                 <!-- [RICKY] Struktur content bagian atas (gift, boss, history/log) -->
@@ -56,7 +56,7 @@
 
                         <div>Jumlah</div>
                         <input type="number" id="gift_jumlah" min='1' value="1" class="form-control w-100 mt-2 mb-3">
-                        
+
                         <button class="btn btn-primary w-100 mt-2" id="btn-gift" data-bs-toggle="modal" data-bs-target="#konfirmasi-gift" >Gift</button>
                     </section>
 
@@ -65,7 +65,7 @@
                         <div class="boss-image">
                             <img src="{{ asset('assets/image/cat.jpeg') }}" width="40%" alt="boss-image" style="border-radius: 20px">
                         </div>
-                        
+
                         <div class="boss-hp">
                             @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
                             <div style="text-align: center; margin: 1% 0">Monster Boss HP</div>
@@ -143,7 +143,7 @@
                             @else
                                 <button class="btn btn-primary" style="width: 49%;" id="btn-upgrade">Upgrade Weapon</button>
                             @endif
-                            
+
                             <div style="margin-top: 1%">
                                 Weapon:
                                 <span id="weapon-name">
@@ -290,7 +290,7 @@
                 </div>
             </div>
         </div>
-        
+
         <script>
             // [RICKY] Ronde, sesi, timer, status, weapon level
             var ronde = parseInt("{{ $round->round }}");
@@ -332,7 +332,7 @@
             if (!{{ $team->attack_status }}) {
                 $('#atk').hide();
             }
-            
+
             if (!partStatus) {
                 $('#secret-weapon-progress-bar').hide();
             }
@@ -376,7 +376,7 @@
                             $('#btn-weapon-attack').attr('disabled', 'disabled');
                             $('#btn-weapon-attack').removeClass("btn-danger");
                             $('#btn-weapon-attack').addClass("btn-secondary");
-                        } 
+                        }
                     } else {
                         $('#gift-kelompok').removeAttr('disabled');
                         $('#gift-material').removeAttr('disabled');
@@ -384,7 +384,7 @@
                         $('#btn-gift').removeAttr('disabled');
                         $('.btn-craft').removeAttr('disabled');
                         $('.btn-use').attr('disabled', 'disabled');
-                        
+
                         if (weaponLevel >= 3) {
                             $('#btn-upgrade').attr('disabled', 'disabled');
                             $('#btn-upgrade').removeClass("btn-primary");
@@ -425,7 +425,7 @@
                 roundSessionTimer();
                 bringToBottom();
             });
-            
+
             // [RICKY] Tampilkan Ronde Sesi Timer secara realtime
             var runTimer = setInterval(function () { roundSessionTimer(); }, 1000);
 
@@ -443,7 +443,7 @@
                     $('.ronde').html("Round " + ronde + "&nbsp;(");
                     var sesi = (aksi) ? "Action" : "Preparation";
                     $('.sesi').text(sesi);
-                    
+
                     if (time > 0) {
                         minutes = (Math.floor(time / 60)).toString().padStart(2, '0');
                         seconds = (time % 60).toString().padStart(2, '0');
@@ -519,7 +519,7 @@
             $(document).on("click", "#btn-confirm-crafting", function() {
                 var id_equipment = $(this).val();
                 var amount = $('#crafting-amount').val();
-                
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ route("crafting-equipment") }}',
@@ -530,7 +530,7 @@
                     },
                     success: function(data) {
                         $('#crafting-amount').val(1);
-                        
+
                         if (data.crafting_result) {
                             var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
                             $("#jumlah-equipment-" + id_equipment).text(amount_now);
@@ -552,7 +552,7 @@
             // [RICKY] Event click button use di modal
             $(document).on("click", "#btn-confirm-use", function() {
                 var id_equipment = $(this).val();
-                
+
                 $.ajax({
                     type: 'POST',
                     url: '{{ route("use-equipment") }}',
@@ -567,7 +567,13 @@
                             $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
                             bringToBottom();
 
-                            if (id_equipment == 7) {
+                            if (id_equipment == 4) {
+                                $('#wt').show();
+                            } else if (id_equipment == 5) {
+                                $('#ac').show();
+                            } else if (id_equipment == 6) {
+                                $('#ps').show();
+                            } else if (id_equipment == 7) {
                                 $('#sp').show();
                             } else if (id_equipment == 8) {
                                 $('#ia').show();
@@ -602,7 +608,7 @@
                         if (data.status) {
                             weaponLevel = data.level_weapon;
                             checkWeaponAction();
-                            
+
                             if (weaponLevel == 1) {
                                 $('#weapon-name').text("Loops Hammer (Lv1)");
                             } else if (weaponLevel == 2) {
@@ -732,7 +738,7 @@
                 if (e.message != null) {
                     $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
                 }
-                
+
                 if (e.health <= 0) {
                     $('#histories-list').append("<tr><td><div class='history-detail'>Tidak dapat bermain lagi</div></td></tr>");
                 }
