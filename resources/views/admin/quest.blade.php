@@ -57,37 +57,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- Quest Failed --}}
-        <div>
-            {{-- <button type="button" class="btn btn-danger" onclick="questResult(false)">
-                Gagal
-            </button> --}}
-
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#failedModal">
-                Gagal
-            </button>
-
-            <!-- Modal -->
-            <div class="modal fade" id="failedModal" tabindex="-1" aria-labelledby="failedModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                        <h5 class="modal-title" id="failedModalLabel">Are you sure ?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Nothing will be changed.
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="questResult(false)">Yes</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 </body>
 <script>

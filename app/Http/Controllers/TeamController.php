@@ -8,6 +8,7 @@ use App\EnemyBoss;
 use App\SecretWeapon;
 use App\Material;
 use App\Events\SendGift;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use DB;
 use Auth;
@@ -19,7 +20,7 @@ class TeamController extends Controller
         $this->authorize('team');
 
         $id_team = Auth::user()->team;
-
+        
         $team_info = Team::find($id_team);
         $enemy_info = EnemyBoss::find(1);
         $round_info = Round::find(1);
@@ -111,8 +112,12 @@ class TeamController extends Controller
                     $insert_history = DB::table('histories')->insert([
                         'teams_id' => $id_team,
                         'name' => $message,
-                        'type' => 'craft-equip'
+                        'type' => 'CRAFT',
+                        'time' =>  Carbon::now(),
+                        'round' => $round_detail->round
                     ]);
+
+                    $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
                 }
             } else {
                 $crafting_result = false;
@@ -234,8 +239,12 @@ class TeamController extends Controller
                     $insert_history = DB::table('histories')->insert([
                         'teams_id' => $id_team,
                         'name' => $message,
-                        'type' => 'use-equip'
+                        'type' => 'USE',
+                        'time' =>  Carbon::now(),
+                        'round' => $round_detail->round
                     ]);
+
+                    $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
                 }
             } else {
                 $use_access = false;
@@ -300,13 +309,17 @@ class TeamController extends Controller
                         }
 
                         $level_weapon++;
-                        $message = "Berhasil upgrade weapon";
+                        $message = "Berhasil meningkatkan senjata";
 
                         $insert_history = DB::table('histories')->insert([
                             'teams_id' => $id_team,
                             'name' => $message,
-                            'type' => 'upgrade'
+                            'type' => 'UPGRADE',
+                            'time' =>  Carbon::now(),
+                            'round' => $round_detail->round
                         ]);
+
+                        $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
                     }
                 } else {
                     $upgrade_weapon = false;
@@ -346,13 +359,17 @@ class TeamController extends Controller
                     } else {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['attack_status' => true]);
                         $attack_status = true;
-                        $message = "Berhasil melakukan attack";
+                        $message = "Berhasil melancarkan serangan";
 
                         $insert_history = DB::table('histories')->insert([
                             'teams_id' => $id_team,
                             'name' => $message,
-                            'type' => 'attack'
+                            'type' => 'ATTACK',
+                            'time' =>  Carbon::now(),
+                            'round' => $round_detail->round
                         ]);
+
+                        $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
                     }
                 } else {
                     $attack_status = false;
@@ -423,14 +440,21 @@ class TeamController extends Controller
                             [
                                 'teams_id' => $id_team,
                                 'name' => $msg,
-                                'type' => 'gift'
+                                'type' => 'GIFT',
+                                'time' =>  Carbon::now(),
+                                'round' => $round_detail->round
                             ], 
                             [
                                 'teams_id' => $tujuan,
                                 'name' => $receiver_history,
-                                'type' => 'gift'
+                                'type' => 'GIFT',
+                                'time' =>  Carbon::now(),
+                                'round' => $round_detail->round
                             ]
                         ]);
+
+                        $msg .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                        $receiver_history .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
 
                         // Pusher send gift disini
                         broadcast(new SendGift($tujuan, $receiver_history, $material, $jumlah))->toOthers();

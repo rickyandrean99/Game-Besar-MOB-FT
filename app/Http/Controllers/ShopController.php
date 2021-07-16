@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Material;
 use App\Team;
 use DB;
+use Carbon\Carbon;
+use App\Round;
 
 class ShopController extends Controller
 {
@@ -37,6 +39,7 @@ class ShopController extends Controller
         //Check secara berulang apakah material yang dicari ada atau tidak
         for ($i = 0; $i < count($cart); $i++) {
             $material_id = $cart[$i]['id'];
+            $round = Round::find(1);
 
             //Ambil class Material sesuai dengan ID 
             $material = Material::find($material_id);
@@ -117,10 +120,10 @@ class ShopController extends Controller
             $totalCoinsNow = $coin - $total;
             $team->coin = $totalCoinsNow;
             $team->timestamps = false;
-            broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material", $totalCoinsNow))->toOthers();
+            broadcast(new BuyMaterial($id, $cart, "Berhasil membeli material &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>", $totalCoinsNow))->toOthers();
         } else if ($coin < $total) {
             $team->coin = 0;
-            broadcast(new BuyMaterial($id, $cart, "Tim berhasil membeli material", 0))->toOthers();
+            broadcast(new BuyMaterial($id, $cart, "Berhasil membeli material &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>", 0))->toOthers();
         }
 
         //Ubah material shopping ke 1
@@ -133,7 +136,9 @@ class ShopController extends Controller
         $insert_history = DB::table('histories')->insert([
             'teams_id' => $id,
             'name' => 'Berhasil membeli material',
-            'type' => 'buy-material'
+            'type' => 'SHOP',
+            'time' =>  Carbon::now(),
+            'round' => $round->round
         ]);
 
         if (empty($failToBuy)) {

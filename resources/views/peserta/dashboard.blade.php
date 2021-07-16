@@ -88,7 +88,7 @@
                         <table class="history-table">
                             <tbody id="histories-list">
                                 @foreach($histories as $h)
-                                    <tr><td><div class="history-detail">{{ $h->name }}</div></td></tr>
+                                    <tr><td><div class="history-detail"><b>[{{ $h->type }}]</b> {{ $h->name }} &nbsp;&nbsp;<span style="font-size: 100%" class="fw-bold fst-italic">{{ $h->time }}</span></div></td></tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -499,7 +499,7 @@
                     },
                     success: function(data) {
                         if (data.status) {
-                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            $('#histories-list').append("<tr><td><div class='history-detail'><b>[ATTACK]</b> " + data.message + "</div></td></tr>");
                             bringToBottom();
                             $('#atk').show();
                         } else {
@@ -539,7 +539,7 @@
                                 $("#jumlah-material-" + value.materials_id).text(value.amount);
                             });
 
-                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            $('#histories-list').append("<tr><td><div class='history-detail'><b>[CRAFT]</b> " + data.message + "</div></td></tr>");
                             bringToBottom();
                         } else {
                             $('#result-modal').modal('show');
@@ -564,7 +564,7 @@
                         if (data.use_result) {
                             $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
 
-                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            $('#histories-list').append("<tr><td><div class='history-detail'><b>[USE]</b> " + data.message + "</div></td></tr>");
                             bringToBottom();
 
                             if (id_equipment == 4) {
@@ -621,7 +621,7 @@
                                 $("#jumlah-material-" + value.materials_id).text(value.amount);
                             });
 
-                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.message + "</div></td></tr>");
+                            $('#histories-list').append("<tr><td><div class='history-detail'><b>[UPGRADE]</b> " + data.message + "</div></td></tr>");
                             bringToBottom();
                         } else {
                             $('#result-modal').modal('show');
@@ -661,7 +661,7 @@
                         $('#gift_jumlah').val('1');
 
                         if (data.status) {
-                            $('#histories-list').append("<tr><td><div class='history-detail'>" + data.msg + "</div></td></tr>");
+                            $('#histories-list').append("<tr><td><div class='history-detail'><b>[GIFT]</b> " + data.msg + "</div></td></tr>");
                             $("#jumlah-material-" + material).text(data.jumlah_sekarang);
                             bringToBottom();
                         } else {
@@ -697,6 +697,9 @@
                     $('#ps').hide();
                     $('#r').hide();
                     $('#ia').hide();
+                } else {
+                    $('#result-modal').modal('show');
+                    $('#modal-result-message').text("Sesi Action Dimulai");
                 }
             });
 
@@ -722,7 +725,7 @@
 
             // [RICKY] Mendapatkan quest result yang dijalanakan (PRIVATE-CHANNEL)
             window.Echo.private('privatequest.' + {{ Auth::user()->team }}).listen('PrivateQuestResult', (e) => {
-                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                $('#histories-list').append("<tr><td><div class='history-detail'><b>[QUEST]</b> " + e.message + "</div></td></tr>");
                 bringToBottom();
             });
 
@@ -736,11 +739,11 @@
                 checkWeaponAction();
 
                 if (e.message != null) {
-                    $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                    $('#histories-list').append("<tr><td><div class='history-detail'><b>[ATTACKED]</b> " + e.message + "</div></td></tr>");
                 }
 
                 if (e.health <= 0) {
-                    $('#histories-list').append("<tr><td><div class='history-detail'>Tidak dapat bermain lagi</div></td></tr>");
+                    $('#histories-list').append("<tr><td><div class='history-detail'><b>[STATUS]</b> Tidak dapat bermain lagi</div></td></tr>");
                 }
 
                 bringToBottom();
@@ -748,7 +751,7 @@
 
             // [RICKY] Mendapatkan gift yang dikirimkan kelompok lain (PRIVATE-CHANNEL)
             window.Echo.private('send-gift.' + {{ Auth::user()->team }}).listen('SendGift', (e) => {
-                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                $('#histories-list').append("<tr><td><div class='history-detail'><b>[GIFT]</b> " + e.message + "</div></td></tr>");
                 bringToBottom();
 
                 var getAmountNow = parseInt($("#jumlah-material-" + e.id_material).text());
@@ -765,11 +768,11 @@
                     $('.coin-amount').text(e.coin);
                 });
 
-                $('#histories-list').append("<tr><td><div class='history-detail'>" + e.message + "</div></td></tr>");
+                $('#histories-list').append("<tr><td><div class='history-detail'><b>[SHOP]</b> " + e.message + "</div></td></tr>");
                 bringToBottom();
             });
 
-            // [RICKY] Update Icon Status
+            // [RICKY] Update Icon Status And Attack Amount
             window.Echo.private('update-status.' + {{ Auth::user()->team }}).listen('UpdateStatus', (e) => {
                 if (e.team.debuff_decreased <= 0) {
                     $('#ac').hide();
@@ -777,6 +780,11 @@
 
                 if (e.team.buff_increased <= 0) {
                     $('#sp').hide();
+                } 
+
+                if (e.attack_amount > 0) {
+                    $('#histories-list').append("<tr><td><div class='history-detail'><b>[ATTACK]</b> Berhasil melancarkan serangan sebesar " + parseInt(e.attack_amount) + "</div></td></tr>");
+                    bringToBottom();
                 }
             });
         </script>

@@ -14,6 +14,7 @@ class UpdateStatus implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $team;
+    public $attack_amount;
     public $receiver_id;
 
     /**
@@ -21,9 +22,10 @@ class UpdateStatus implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct($team)
+    public function __construct($team, $attack_amount)
     {
         $this->team = $team;
+        $this->attack_amount = $attack_amount;
         $this->receiver_id = $team->id;
     }
 

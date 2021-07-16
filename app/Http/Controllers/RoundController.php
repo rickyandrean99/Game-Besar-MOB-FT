@@ -33,8 +33,8 @@ class RoundController extends Controller
         $this->authorize('admin-itd');
 
         $round_detail = Round::find(1);
-        $debuff_overtime = 0;
         $damage_dealt_to_boss = 0;
+        $attack_amount_list = array();
         
         // [RICKY] Sistem serang boss
         if ($round_detail->round > 0 && $round_detail->round <= 20) {
@@ -62,21 +62,21 @@ class RoundController extends Controller
                     broadcast(new UpdateHitpoint($team->id, $team->hp_amount + 30, null))->toOthers();
                 }
 
-                // [RICKY] Cek Status debuff_overtime yang stackable (PARADOX SPHERE)
-                if ($team->debuff_overtime) {
-                    $debuff_overtime++;
-                }
-
                 // [RICKY] Cek Status buff_increased (SCARLET PHANTOM)
                 if ($team->buff_increased > 0) {
                     $damage_weapon += (0.25 * $damage_weapon);
                 }
 
+                // [RICKY] Cek Status debuff_overtime yang stackable (PARADOX SPHERE)
+                if ($team->debuff_overtime) {
+                    $damage_weapon += 10;
+                }
+
                 $damage_dealt_to_boss += $damage_weapon;
+                $attack_amount_list[] = $damage_weapon;
             }
 
-            // [RICKY] Kurangi hp boss berdasarkan damage_dealt_to_boss dan debuff overtime
-            $damage_dealt_to_boss += ($debuff_overtime*10);
+            // [RICKY] Kurangi hp boss berdasarkan damage_dealt_to_boss
             $attack_boss = DB::table('enemy_bosses')->where('id', 1)->decrement('hp_amount', $damage_dealt_to_boss);
 
             // [RICKY] Boss melancarkan serangan tim yang sudah ditentukan
@@ -100,11 +100,16 @@ class RoundController extends Controller
 
                         // History kena damage
                         $msg_receive_damage = 'Terkena damage boss sebesar '.$damage_dealt_to_team;
+
                         $insert_history = DB::table('histories')->insert([
                             'teams_id' => $value,
                             'name' => $msg_receive_damage,
-                            'type' => 'receive-damage'
+                            'type' => 'ATTACKED',
+                            'time' =>  Carbon::now(),
+                            'round' => $round_detail->round
                         ]);
+                        
+                        $msg_receive_damage .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
                         
                         // [RICKY] Kurangi HP Team
                         if ($team_detail->hp_amount > $damage_dealt_to_team) {
@@ -117,7 +122,9 @@ class RoundController extends Controller
                             $insert_history = DB::table('histories')->insert([
                                 'teams_id' => $value,
                                 'name' => 'Tidak dapat bermain lagi',
-                                'type' => 'game-status'
+                                'type' => 'STATUS',
+                                'time' =>  Carbon::now(),
+                                'round' => $round_detail->round
                             ]);
                         }
                     }
@@ -164,12 +171,22 @@ class RoundController extends Controller
         $boss_detail = EnemyBoss::find(1);
         event(new UpdateRound($round_detail->round + 1, false, $minute, $boss_detail->hp_amount));
 
+        // Update Status
         $team_list = Team::all();
-        foreach ($team_list as $tl) {
-            broadcast(new UpdateStatus($tl))->toOthers();
+        foreach ($team_list as $key => $tl) {
+            if ($attack_amount_list[$key] > 0) {
+                $insert_history = DB::table('histories')->insert([
+                    'teams_id' => $tl->id,
+                    'name' => 'Berhasil melancarkan serangan sebesar '.$attack_amount_list[$key],
+                    'type' => 'ATTACK',
+                    'time' =>  Carbon::now(),
+                    'round' => $round_detail->round
+                ]);
+            }
+            broadcast(new UpdateStatus($tl, $attack_amount_list[$key]))->toOthers();
         }
+
         return ["success" => true];
-        
     }
 
     // [RICKY] Untuk update sesi jadi action

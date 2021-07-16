@@ -38,7 +38,7 @@
 
         <!-- [RICKY] Bagian part special weapon -->
         <div class="ms-5 d-inline-block fw-bold h5">Jumlah Part : </div>
-        <input class="form-control ms-3 w-25 d-inline-block" type="number" min="1" value="1" id="part-amount">
+        <input class="form-control ms-3 w-25 d-inline-block" type="number" value="1" id="part-amount">
         <button class="d-inline-block btn btn-info ms-5 text-white fw-bold" id="btn-update-part">Update Special Weapon Part</button><br>
         <hr style="height: 5px;">
         
