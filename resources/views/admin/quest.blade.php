@@ -11,28 +11,36 @@
     <script src="../js/app.js"></script>
 </head>
 <body>
-    {{-- NavBar eRHa --}}
-    <div class="mt-4 me-4" style="float: right">
-        <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+    {{-- [eRHa] NavBar eRHa --}}
+    <div class="navbar d-flex justify-content-between align-items-center m-3">
+        <div>
+            <h3>Selamat datang, {{ Auth::user()->name }}</h3>
+        </div>
+
+        <div class="logout">
+            <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+        </div>
     </div>
 
-    {{-- Main Content eRHa --}}
-    <div class="content">
+    {{-- [eRHa] Main Content --}}
+    <div class="content m-3">
         <label for="team">Pilih Kelompok :</label>
-        <select name="team" id="team" class="form-control">
-            <option disabled selected>Choose one!</option>
-            @foreach ($teams as $team)
-                <option value="{{ $team->id }}">{{ $team->name }}</option>
-            @endforeach
-        </select>
 
-        {{-- Quest Success --}}
+        <div class="form-group">
+            <select name="team" id="team" class="form-control" size="10" multiple>
+                @foreach ($teams as $team)
+                    <option value="{{ $team->id }}">{{ $team->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <small class="text-secondary">Hold Ctrl (Windows) or Command (Mac OS) to select multiple attributes.</small>
+
+        <br>
+
+        {{-- [eRHa] Quest Success --}}
         <div>
-            {{-- <button type="button" class="btn btn-success" onclick="questResult(true)">
-                Berhasil
-            </button> --}}
-
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#successModal">
                 Berhasil
@@ -57,15 +65,65 @@
                 </div>
             </div>
         </div>
+
+        <br>
+
+        {{-- [eRHa] Status table --}}
+        <div class="team-status">
+            <h4><b>STATUS</b></h4>
+
+            <table class="table table-striped">
+                <tr class="table-dark">
+                    <th>No.</th>
+                    <th>Nama Team</th>
+                    <th>Status Quest</th>
+                </tr>
+
+                @foreach ($teams as $team)
+                    <tr>
+                        <td>{{ $team->id }}</td>
+                        <td>{{ $team->name }}</td>
+
+                        @if ($team->material_shopping == 0)
+                            <td class="table-success">Berhasil Menyelesaikan</td>
+                        @else
+                            <td class="table-danger">Belum Menyelesaikan</td>
+                        @endif
+                    </tr>
+                @endforeach
+            </table>
+        </div>
     </div>
 </body>
 <script>
+    function reloadPage() {
+        location.reload();
+    }
+
     function questResult(status) {
+        const arr_team_id = [];
+
+        for (var option of document.getElementById('team').options) {
+            if (option.selected) {
+                arr_team_id.push(option.value);
+            }
+        }
+
+        if (arr_team_id.length == 0)
+            alert("Silakan memilih team terlebih dahulu !");
+        else {
+            arr_team_id.forEach(axiosServ);
+
+            window.setTimeout(reloadPage, 2000);
+        }
+    }
+
+    function axiosServ(teamID) {
         const options = {
             method: 'post',
             url: '/quest-result',
             data: {
-                'id_team': $('#team').val(),
+                'id_team': teamID,
                 'status': status
             },
             transformResponse: [(data) => {

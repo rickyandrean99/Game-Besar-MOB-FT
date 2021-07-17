@@ -17,7 +17,7 @@ class QuestController extends Controller
     public function index() {
         $this->authorize('admin-quest');
 
-        $teams = DB::table('teams')->select('id', 'name')->get();
+        $teams = DB::table('teams')->select('id', 'name', 'material_shopping')->get();
 
         return view('admin.quest', [ 'teams' => $teams ]);
     }
@@ -28,17 +28,18 @@ class QuestController extends Controller
         $receiver_id = $request->get('id_team');
         $round = Round::find(1);
 
-        // if ($request->get('status')) {
-            $message = "Hore, tim anda berhasil menyelesaikan quest";
+        $message = "Selamat, tim anda berhasil menyelesaikan quest";
 
-            $defaultParts = DB::table('secret_weapons')->select('part_amount_collected')->get();
-            $parts = $defaultParts[0]->part_amount_collected + 1;
+        // Add part for scret weapons
+        $defaultParts = DB::table('secret_weapons')->select('part_amount_collected')->get();
+        $parts = $defaultParts[0]->part_amount_collected + 1;
+        DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected'=>$parts]);
 
-            DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected'=>$parts]);
-            DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>0]);
-        // }
+        // Change database for shop
+        DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>0]);
 
-        $insert_history = DB::table('histories')->insert([
+        // Insert history
+        DB::table('histories')->insert([
             'teams_id' => $receiver_id,
             'name' => $message,
             'type' => 'QUEST',
