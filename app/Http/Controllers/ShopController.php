@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Events\BuyMaterial;
+use App\Events\UpdateTable;
 use Illuminate\Http\Request;
 use App\Material;
 use App\Team;
@@ -18,7 +19,13 @@ class ShopController extends Controller
         $this->authorize('team');
         $id_team = Auth::user()->team;
         $team = Team::find($id_team);
-        return view('peserta.shop', ["material" => Material::all(), "team" => $team]);
+        $round = Round::find(1);
+
+        if($team->material_shopping == 0 && $round->action == 0){
+            return view('peserta.shop', ["material" => Material::all(), "team" => $team]);
+        } else {
+            return redirect()->route('dashboard');
+        }     
     }
 
     public function insertOrUpdate(Request $request, Team $team)
@@ -116,6 +123,9 @@ class ShopController extends Controller
             }
 
             $material->save();
+
+            //Update live table Material
+            event(new UpdateTable($material->id, $material->stock ,$material->price));
         }
 
         //Pengurangan koin

@@ -61,7 +61,7 @@
                 if (ronde < 1) {
                     $('.ronde').html("Game Besar Belum Dimulai");
                     $('#btn-action').attr('disabled', 'disabled');
-                } else if (ronde > 16) {
+                } else if (ronde > 13) {
                     $('.ronde').html("Game Besar Sudah Selesai");
                     $('.sesi').text("");
                     $('.timer').text("");

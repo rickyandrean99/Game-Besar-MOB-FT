@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="../js/app.js"></script>
     <link rel="stylesheet" href="{{ asset('assets/css/toko-admin.css') }}">
 </head>
 
@@ -66,7 +67,7 @@
         </form>
     </main>
     <!-- Modal Buy -->
-    <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,9 +93,6 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Gagal membeli!</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="showError"></div>
@@ -106,14 +104,11 @@
         </div>
     </div>
     <!-- Modal Status -->
-    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false" data-backdrop="static">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Berhasil membeli!</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
                 </div>
                 <div class="modal-body">
                     <div id="showStatus"></div>
@@ -130,6 +125,21 @@
         document.getElementById('myform').reset();
         var coin = "";
         var total = "";
+
+        $('#statusModal').on('hide.bs.modal', function(e) {
+            e.preventDefault();
+        });
+
+        $("[type='number']").keypress(function (evt) {
+            evt.preventDefault();
+        });
+
+        $("[type='number']").keydown(function(e) {
+            var elid = $(document.activeElement).hasClass('textInput');
+            if (e.keyCode === 8 && !elid) {
+                return false;
+            };
+        });
 
         $('.stock').each(function() {
             if ($(this).text() == 0) {
@@ -152,12 +162,13 @@
             } else {
                 if (stock != 0) {
                     $(".stock[seq=" + seq + "]").removeClass('red');
+                    document.getElementById('buy').disabled = false;
                 }
             }
 
             var price = $(".price[seq=" + seq + "]").text();
 
-            if (qty <= 0) {
+            if (qty <= 0 || isNaN(qty)) {
                 qty = 0;
                 $(".qty[seq=" + seq + "]").val(qty);
             }
@@ -224,7 +235,7 @@
             }
         });
 
-        // //Kalau modal Buy diklik
+        //Kalau modal Buy diklik
         $('#buysemua').on("click", function() {
             var team_id = {{Auth::user()->team}};
             var cart = arrVal;
@@ -238,6 +249,7 @@
                 },
                 success: function(data) {
                     $('#statusModal').modal('show');
+                    $('#statusModal').modal({backdrop: 'static', keyboard: false});
                     $('#showStatus').text(data.message);
                 },
             })
@@ -254,6 +266,54 @@
             });
             $('.total').text(grand);
         });
+
+        //Mendapatkan jumlah stok & harga terbaru (PUBLIC-CHANNEL)
+        window.Echo.channel('updateTable').listen('.material', (e) => {
+            var seq = e.id;
+            var updateStock = e.stok;
+            var updatePrice = e.harga;
+
+            $(".stock[seq=" + seq + "]").text(updateStock);
+            $(".price[seq=" + seq + "]").text(updatePrice);
+
+            var stock = parseInt($(".stock[seq=" + seq + "]").text());
+            var qty = parseInt($(".qty[seq=" + seq + "]").val());
+
+            if(isNaN(qty)){
+                qty = 0;
+            }
+
+            if (stock < qty) {
+                $(".stock[seq=" + seq + "]").addClass('red');
+                document.getElementById('buy').disabled = true;
+            } else {
+                if (stock != 0) {
+                    $(".stock[seq=" + seq + "]").removeClass('red');
+                }
+            }
+
+            var price = $(".price[seq=" + seq + "]").text();
+
+            if (qty <= 0) {
+                qty = 0;
+                $(".qty[seq=" + seq + "]").val(qty);
+            }
+
+            $(".subtotal[seq=" + seq + "]").html(price * qty);
+
+            var grand = 0;
+            $('.subtotal').each(function() {
+                grand += $(this).html() * 1;
+            });
+            $('.total').text(grand);
+
+            if (grand > coin) {
+                $('.koinKelompok').addClass('red');
+            } else {
+                $('.koinKelompok').removeClass('red');
+            }
+        });
+
     });
 </script>
 

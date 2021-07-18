@@ -35,7 +35,7 @@
             </select>
         </div>
 
-        <small class="text-secondary">Hold Ctrl (Windows) or Command (Mac OS) to select multiple attributes.</small>
+        <small class="text-secondary">Tahan Ctrl + Windows atau Command + Mac OS untuk memilih beberapa tim.</small>
 
         <br>
 
@@ -84,10 +84,10 @@
                         <td>{{ $team->id }}</td>
                         <td>{{ $team->name }}</td>
 
-                        @if ($team->material_shopping == 0)
-                            <td class="table-success">Berhasil Menyelesaikan</td>
+                        @if ($team->quest_status)
+                            <td id="table-status-team-{{ $team->id }}" class="table-status table-success">Berhasil Menyelesaikan</td>
                         @else
-                            <td class="table-danger">Belum Menyelesaikan</td>
+                            <td id="table-status-team-{{ $team->id }}" class="table-status table-danger">Belum Menyelesaikan</td>
                         @endif
                     </tr>
                 @endforeach
@@ -112,9 +112,7 @@
         if (arr_team_id.length == 0)
             alert("Silakan memilih team terlebih dahulu !");
         else {
-            arr_team_id.forEach(axiosServ);
-
-            window.setTimeout(reloadPage, 2000);
+            axiosServ(arr_team_id);
         }
     }
 
@@ -123,8 +121,7 @@
             method: 'post',
             url: '/quest-result',
             data: {
-                'id_team': teamID,
-                'status': status
+                'id_team': teamID
             },
             transformResponse: [(data) => {
                 return data;
@@ -133,5 +130,23 @@
 
         axios(options);
     }
+
+    window.Echo.channel('roundChannel').listen('.update', (e) => {
+        if (!e.action) {
+            $('.table-status').text("Belum Menyelesaikan");
+            $('.table-status').removeClass("table-success");
+            $('.table-status').addClass("table-danger");
+        }
+    });
+
+    window.Echo.channel('adminQuest').listen('.status', (e) => {
+        if (e.success) {
+            $.each(e.team_list, function(key, value) {
+                $("#table-status-team-" + value).text("Berhasil Menyelesaikan");
+                $("#table-status-team-" + value).addClass("table-success");
+                $("#table-status-team-" + value).removeClass("table-danger");
+            });
+        }
+    });
 </script>
 </html>

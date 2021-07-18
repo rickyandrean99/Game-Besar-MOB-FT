@@ -359,7 +359,7 @@ class TeamController extends Controller
                     } else {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['attack_status' => true]);
                         $attack_status = true;
-                        $message = "Berhasil melancarkan serangan";
+                        $message = "Tim menyerang bos. Serangan akan dilancarkan pasa akhir sesi";
 
                         $insert_history = DB::table('histories')->insert([
                             'teams_id' => $id_team,

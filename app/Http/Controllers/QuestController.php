@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Auth;
 use DB;
 use App\Events\PrivateQuestResult;
+use App\Events\UpdateAdminQuest;
 use App\Events\UpdatePart;
 use App\Events\BroadcastVideo;
 use App\SecretWeapon;
@@ -17,7 +18,7 @@ class QuestController extends Controller
     public function index() {
         $this->authorize('admin-quest');
 
-        $teams = DB::table('teams')->select('id', 'name', 'material_shopping')->get();
+        $teams = DB::table('teams')->select('id', 'name', 'quest_status')->get();
 
         return view('admin.quest', [ 'teams' => $teams ]);
     }
@@ -25,36 +26,42 @@ class QuestController extends Controller
     public function result(Request $request) {
         $this->authorize('admin-quest');
 
-        $receiver_id = $request->get('id_team');
         $round = Round::find(1);
-
+        $receiver_id = $request->get('id_team');
         $message = "Selamat, tim anda berhasil menyelesaikan quest";
 
         // Add part for scret weapons
-        $defaultParts = DB::table('secret_weapons')->select('part_amount_collected')->get();
-        $parts = $defaultParts[0]->part_amount_collected + 1;
-        DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected'=>$parts]);
+        DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', count($receiver_id));
 
-        // Change database for shop
-        DB::table('teams')->where('id', $receiver_id)->update(['material_shopping'=>0]);
+        foreach ($receiver_id as $id) {
+            // Update Part Tim
+            DB::table('teams')->where('id', $id)->increment('quest_amount', 1);
 
-        // Insert history
-        DB::table('histories')->insert([
-            'teams_id' => $receiver_id,
-            'name' => $message,
-            'type' => 'QUEST',
-            'time' =>  Carbon::now(),
-            'round' => $round->round
-        ]);
+            // Ubah status material shopping
+            DB::table('teams')->where('id', $id)->update(['material_shopping'=>0, 'quest_status'=>true]);
 
-        $secret_weapon = SecretWeapon::find(1);
+            // Insert history
+            DB::table('histories')->insert([
+                'teams_id' => $id,
+                'name' => $message,
+                'type' => 'QUEST',
+                'time' =>  Carbon::now(),
+                'round' => $round->round
+            ]);
+
+            // Pusher private
+            broadcast(new PrivateQuestResult($id, $message." &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>"))->toOthers();
+        }
 
         // Pusher
-        broadcast(new PrivateQuestResult($receiver_id, $message." &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>"))->toOthers();
+        $secret_weapon = SecretWeapon::find(1);
         event(new UpdatePart($secret_weapon->part_amount_collected, $secret_weapon->part_amount_target));
         if ($secret_weapon->part_amount_collected >= $secret_weapon->part_amount_target) {
             event(new BroadcastVideo(true));
         }
+
+        // broadcast ke halaman quest untuk update table
+        event(new UpdateAdminQuest($receiver_id, true));
 
         return ["success" => true];
     }

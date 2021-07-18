@@ -78,14 +78,15 @@
                 <!-- [RICKY] Struktur section boss -->
                 <section class="boss">
                     <div class="boss-image">
-                        <img src="{{ asset('assets/image/cat.jpeg') }}" width="40%" alt="boss-image"
+                        <img src="{{ asset('assets/image/cat.jpeg') }}" width="30%" alt="boss-image"
                             style="border-radius: 20px">
                     </div>
 
                     <div class="boss-hp">
                         @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
                         <div style="text-align: center; margin: 1% 0">Monster Boss HP</div>
-                        <div class="progress">
+                        <div class="progress" style="background: rgba(0,0,0,0.35)">
+                            <div class="progress-text text-white" id="hp-boss">{{ $boss->hp_amount }}/100000</div>
                             <div class="progress-bar" role="progressbar" style="width: {{ $hp_boss }}%;"
                                 id="boss-hp-amount"></div>
                         </div>
@@ -94,9 +95,19 @@
                     <div class="secret-weapon" id="secret-weapon-progress-bar">
                         @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
                         <div style="text-align: center; margin: 1% 0">Secret Weapon</div>
-                        <div class="progress">
+                        <div class="progress" style="background: rgba(0,0,0,0.35)">
+                            <div class="progress-text text-white" id="progress-part">{{ $weapon->part_amount_collected }}/{{ $weapon->part_amount_target }}</div>
                             <div class="progress-bar" role="progressbar" style="width: {{ $weapon_progress }}%;"
                                 id="part-progress"></div>
+                        </div>
+                    </div>
+
+                    <div class="quest-amount" id="quest-team-progress-bar">
+                        @php $quest_progress = $team->quest_amount * 100 / 10; @endphp
+                        <div style="text-align: center; margin: 1% 0">Quest Team Progress</div>
+                        <div class="progress" style="background: rgba(0,0,0,0.35)">
+                            <div class="progress-text text-white" id="quest-amount-text">{{ $team->quest_amount }}/10</div>
+                            <div class="progress-bar" role="progressbar" style="width: {{ $quest_progress }}%;" id="quest-amount-progress"></div>
                         </div>
                     </div>
                 </section>
@@ -158,7 +169,9 @@
 
                 <!-- [RICKY] Struktur section control -->
                 <section class="control">
-                    <div class="coin">Coin : <span class="coin-amount">{{ $team->coin }}</span></div>
+                    <div class="coin">
+                        Coin : <span class="coin-amount">{{ $team->coin }}</span>
+                    </div>
 
                     <div class="attack">
                         @if ($team->weapon_level == 0)
@@ -344,6 +357,7 @@
         var teamStatus = ({{ $team->hp_amount }} > 0) ? true : false;
         var weaponLevel = {{ $team->weapon_level }};
         var partStatus = {{ $round->reminder }};
+        var questAmount = {{ $team->quest_amount }};
 
         //[KENNETH] Status shopping 
         var shopping = ({{ $team->material_shopping }} == 0) ? true : false;
@@ -383,6 +397,7 @@
 
         if (!partStatus) {
             $('#secret-weapon-progress-bar').hide();
+            $('#quest-team-progress-bar').hide();
         }
 
         // [RICKY] Disable semua control
@@ -400,7 +415,16 @@
             //[KENNETH] Disable button Buy Material
             if (!shopping) {
                 $('#btn-buy-material').attr('disabled', 'disabled');
+            } else {
+                $('#btn-buy-material').removeAttr('disabled');
             }
+        }
+
+        // Update quest progress
+        function updateQuestProgressBar() {
+            $('#quest-amount-text').text(questAmount + "/10");
+            var questProgress = (parseInt(questAmount) * 100 / 10) + "%";
+            $('#quest-amount-progress').css('width', questProgress);
         }
 
         // [RICKY] Pengecekan level senjata dan action
@@ -415,7 +439,7 @@
                     $('.btn-use').removeAttr('disabled');
 
                     //[KENNETH] Disable button Buy Material
-                    if (!shopping) {
+                    if (!shopping || aksi) {
                         $('#btn-buy-material').attr('disabled', 'disabled');
                     }
 
@@ -480,7 +504,7 @@
         // [RICKY] Tampilan halaman saat reload
         $(document).ready(function() {
             // [RICKY] Jika hp abis atau ronde tidak aktif, disable semua kontrol
-            if (teamStatus && ronde > 0 && ronde <= 16) {
+            if (teamStatus && ronde > 0 && ronde <= 13) {
                 checkWeaponAction();
             } else {
                 disableAllControl();
@@ -500,7 +524,7 @@
             if (ronde < 1) {
                 disableAllControl();
                 $('.ronde').html("Game Besar Belum Dimulai");
-            } else if (ronde > 16) {
+            } else if (ronde > 13) {
                 disableAllControl();
                 $('.ronde').html("Game Besar Sudah Selesai");
                 $('.sesi').text("");
@@ -757,6 +781,9 @@
             aksi = e.action;
             time = e.minutes * 60;
 
+            // disable buy material
+            shopping = false;
+
             checkWeaponAction();
             $('#equipment-crafting').modal('hide');
             $('#equipment-use').modal('hide');
@@ -765,6 +792,7 @@
 
             if (!aksi) {
                 var boss_hp = 100 * e.boss_hp / 100000;
+                $('#hp-boss').text(e.boss_hp + "/100000");
                 $('#boss-hp-amount').css('width', boss_hp + "%");
                 $('#result-modal').modal('show');
                 $('#modal-result-message').text("Round telah berganti");
@@ -801,12 +829,14 @@
                 $('#video-reminder').attr('src',
                     'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
                 $('#secret-weapon-progress-bar').show();
+                $('#quest-team-progress-bar').show();
             }
         });
 
         // [RICKY] Mendapatkan jumlah part terbaru (PUBLIC-CHANNEL)
         window.Echo.channel('partChannel').listen('.progress', (e) => {
             var progress = 100 * e.collected / e.target;
+            $('#progress-part').text(e.collected + "/" + e.target);
             $('#part-progress').css('width', progress + "%");
         });
 
@@ -814,7 +844,15 @@
         window.Echo.private('privatequest.' + {{ Auth::user()->team }}).listen('PrivateQuestResult', (e) => {
             $('#histories-list').append("<tr><td><div class='history-detail'><b>[QUEST]</b> " + e.message +
                 "</div></td></tr>");
+            
             bringToBottom();
+
+            // enable button buy
+            shopping = true;
+            $('#btn-buy-material').removeAttr('disabled');
+
+            questAmount += 1;
+            updateQuestProgressBar();
         });
 
         // [RICKY] Mendapatkan hp team terbaru saat round berganti (PRIVATE-CHANNEL)

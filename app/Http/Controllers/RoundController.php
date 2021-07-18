@@ -39,7 +39,7 @@ class RoundController extends Controller
         // [RICKY] Sistem serang boss
         if ($round_detail->round > 0 && $round_detail->round <= 20) {
             // [RICKY] Masuk if jika round itu adalah special
-            if ($round_detail->round % 4 == 0) {
+            if ($round_detail->round % 4 == 0 || $round_detail->round == 13) {
                 $boss_attack_list = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25);
                 $boss_damage = 300;
             } else {
@@ -54,7 +54,11 @@ class RoundController extends Controller
             // [RICKY] Team melancarkan serangan ke boss
             $team_list = Team::all();
             foreach ($team_list as $team) {
-                $damage_weapon = ($team->attack_status)? $team->weapon_level * 50 : 0;
+                if ($team->attack_status && $team->weapon_level > 0) {
+                    $damage_weapon = $team->weapon_level * 50 + 50;
+                } else {
+                    $damage_weapon = 0;
+                }
 
                 // [RICKY] Cek buff_regeneration (RETURNER)
                 if ($team->buff_regeneration > 0) { 
@@ -151,18 +155,15 @@ class RoundController extends Controller
                         'shield' => false,
                         'attack_status' => false,
                         'heal_status' => false,
-                        'buff_debuff_status' => false
+                        'buff_debuff_status' => false,
+                        'quest_status' => false
                     ]);
                 }
             }
         }
 
         // [RICKY] Update round
-        if ($round_detail->round % 4 == 3) {
-            $minute = 10;
-        } else {
-            $minute = 4.5;
-        }
+        $minute = 8;
 
         $end_time = Carbon::now()->addMinutes($minute);
         $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
@@ -192,14 +193,9 @@ class RoundController extends Controller
     // [RICKY] Untuk update sesi jadi action
     public function updateSesi() {
         $this->authorize('admin-itd');
-        
-        $round_detail = Round::find(1);
 
-        if ($round_detail->round % 4 == 0) {
-            $minute = 2;
-        } else {
-            $minute = 1;
-        }
+        $round_detail = Round::find(1);
+        $minute = 1;
 
         // [RICKY] Update round
         $end_time = Carbon::now()->addMinutes($minute);
