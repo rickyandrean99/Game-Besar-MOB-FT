@@ -103,10 +103,19 @@
                     </div>
 
                     <div class="quest-amount" id="quest-team-progress-bar">
-                        @php $quest_progress = $team->quest_amount * 100 / 10; @endphp
+                        
+                        @php
+                            if ($team->quest_amount >= 10) {
+                                $quest_amount = 10;
+                            } else {
+                                $quest_amount = $team->quest_amount;
+                            }
+
+                            $quest_progress = $quest_amount * 100 / 10;
+                        @endphp
                         <div style="text-align: center; margin: 1% 0">Quest Team Progress</div>
                         <div class="progress" style="background: rgba(0,0,0,0.35)">
-                            <div class="progress-text text-white" id="quest-amount-text">{{ $team->quest_amount }}/10</div>
+                            <div class="progress-text text-white" id="quest-amount-text">{{ $quest_amount }}/10</div>
                             <div class="progress-bar" role="progressbar" style="width: {{ $quest_progress }}%;" id="quest-amount-progress"></div>
                         </div>
                     </div>
@@ -357,7 +366,7 @@
         var teamStatus = ({{ $team->hp_amount }} > 0) ? true : false;
         var weaponLevel = {{ $team->weapon_level }};
         var partStatus = {{ $round->reminder }};
-        var questAmount = {{ $team->quest_amount }};
+        var questAmount = ({{ $team->quest_amount }} >= 10) ? 10 : {{ $team->quest_amount }};
 
         //[KENNETH] Status shopping 
         var shopping = ({{ $team->material_shopping }} == 0) ? true : false;
@@ -413,10 +422,12 @@
             $('#btn-upgrade').attr('disabled', 'disabled');
 
             //[KENNETH] Disable button Buy Material
-            if (!shopping) {
+            if (!shopping && questAmount < 10) {
                 $('#btn-buy-material').attr('disabled', 'disabled');
             } else {
-                $('#btn-buy-material').removeAttr('disabled');
+                if (!aksi) {
+                    $('#btn-buy-material').removeAttr('disabled');
+                }
             }
         }
 
@@ -439,9 +450,7 @@
                     $('.btn-use').removeAttr('disabled');
 
                     //[KENNETH] Disable button Buy Material
-                    if (!shopping || aksi) {
-                        $('#btn-buy-material').attr('disabled', 'disabled');
-                    }
+                    $('#btn-buy-material').attr('disabled', 'disabled');
 
                     if (weaponLevel > 0) {
                         $('#btn-upgrade').attr('disabled', 'disabled');
@@ -469,8 +478,10 @@
                     $('.btn-use').attr('disabled', 'disabled');
 
                     //[KENNETH] Disable button Buy Material
-                    if (!shopping) {
+                    if (!shopping && questAmount < 10) {
                         $('#btn-buy-material').attr('disabled', 'disabled');
+                    } else {
+                        $('#btn-buy-material').removeAttr('disabled');
                     }
 
                     if (weaponLevel >= 3) {
@@ -849,9 +860,14 @@
 
             // enable button buy
             shopping = true;
-            $('#btn-buy-material').removeAttr('disabled');
+            if (!aksi) {
+                $('#btn-buy-material').removeAttr('disabled');
+            }
 
-            questAmount += 1;
+            if (questAmount < 10) {
+                questAmount += 1;
+            }
+            
             updateQuestProgressBar();
         });
 

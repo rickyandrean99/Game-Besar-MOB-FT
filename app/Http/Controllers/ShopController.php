@@ -21,7 +21,7 @@ class ShopController extends Controller
         $team = Team::find($id_team);
         $round = Round::find(1);
 
-        if($team->material_shopping == 0 && $round->action == 0){
+        if(($team->material_shopping == 0 || $team->quest_amount >= 10) && $round->action == 0){
             return view('peserta.shop', ["material" => Material::all(), "team" => $team]);
         } else {
             return redirect()->route('dashboard');
