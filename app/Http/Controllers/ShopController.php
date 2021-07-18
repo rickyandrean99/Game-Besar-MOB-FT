@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Events\BuyMaterial;
 use Illuminate\Http\Request;
 use App\Material;
@@ -14,16 +15,18 @@ class ShopController extends Controller
 {
     public function index()
     {
-        $this->authorize('admin-shop');
-        return view('admin.shop', ["material" => Material::all(), "team" => Team::where('material_shopping', 0)->get()]);
+        $this->authorize('team');
+        $id_team = Auth::user()->team;
+        $team = Team::find($id_team);
+        return view('peserta.shop', ["material" => Material::all(), "team" => $team]);
     }
 
     public function insertOrUpdate(Request $request, Team $team)
     {
-        $this->authorize('admin-shop');
+        $this->authorize('team');
 
         //Cari ID Team yang sesuai & ambil array Cart dari Requests
-        $id = $request->get('teams_id');
+        $id =Auth::user()->team;
         $team = Team::find($id);
         $coin = $team->coin;
 

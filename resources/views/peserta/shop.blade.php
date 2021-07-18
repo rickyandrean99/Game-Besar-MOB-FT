@@ -17,26 +17,12 @@
         <div>
             Selamat Datang, {{ Auth::user()->name }}.
         </div>
-        <div class="logout">
-            <span class="h4 fw-bold mr-4 text-dark p-2" style="border-radius: 20px"><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a></span>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-        </div>
     </header>
     <main>
         <div class="pilih">
-            <div class="cboTeam">
-                <label for="kelompok" style="font-weight:bold">Pilih kelompok:</label>
-                <select class="form-control" id="kelompok">
-                    <option value="-" id="-">--Pilih Team--</option>
-                    @foreach($team as $t)
-                    <option value="{{$t->id}}" id="{{$t->coin}}">{{$t->name}}</option>
-                    @endforeach
-                </select>
-
-            </div>
             <div class="koin">
                 <span>Koin</span><br>
-                <span class="koinKelompok"></span>
+                <span class="koinKelompok">{{$team->coin}}</span>
             </div>
         </div>
         <form id="myform">
@@ -74,6 +60,7 @@
                 </table>
             </div>
             <div class="tombol">
+                <a class="btn btn-secondary" href="{{route('dashboard')}}" role="button">Back</a>
                 <button type="button" class="btn btn-primary" id="buy">Buy</button>
             </div>
         </form>
@@ -83,7 +70,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Are you sure?</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Apakah kamu yakin?</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -132,7 +119,7 @@
                     <div id="showStatus"></div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="location.reload();">Oke</button>
+                    <a class="btn btn-primary" href="{{route('dashboard')}}" role="button">Oke!</a>
                 </div>
             </div>
         </div>
@@ -141,10 +128,6 @@
 <script>
     $('document').ready(function() {
         document.getElementById('myform').reset();
-        //Nonaktifkan tombol buy dan kosongkan isi koin
-        document.getElementById('buy').disabled = true;
-        $("select").val("-").change();
-        $('.koinKelompok').text("-");
         var coin = "";
         var total = "";
 
@@ -155,38 +138,10 @@
                 $(this).removeClass('red');
             }
         });
-        //Koin kelompok berubah ketika combo box berubah
-        $('#kelompok').on('change', function(e) {
-            document.getElementById('myform').reset();
-            $('.stock').each(function() {
-                if ($(this).text() == 0) {
-                    $(this).addClass('red');
-                } else {
-                    $(this).removeClass('red');
-                }
-            });
-            $('.subtotal').text(0);
-            $('.total').text(0);
-            coin = $(this).children(":selected").attr("id");
-            $('.koinKelompok').text(coin);
-            if (coin == "-") {
-                $('.total').text("-");
-                $('.koinKelompok').removeClass('red');
-                document.getElementById('buy').disabled = true;
-            } else {
-                total = $('#total').text();
-                if (total > coin) {
-                    $('.koinKelompok').addClass('red');
-                } else {
-                    $('.koinKelompok').removeClass('red');
-                }
-                document.getElementById('buy').disabled = false;
-            }
-        });
 
         //Kalau qty berubah
         $('.qty').on('change', function() {
-            coin = $('#kelompok').children(":selected").attr("id");
+            coin = parseInt($('.koinKelompok').text());
             var seq = $(this).attr('seq');
             var stock = parseInt($(".stock[seq=" + seq + "]").text());
             var qty = parseInt($(".qty[seq=" + seq + "]").val());
@@ -197,9 +152,6 @@
             } else {
                 if (stock != 0) {
                     $(".stock[seq=" + seq + "]").removeClass('red');
-                }
-                if (coin != "-") {
-                    document.getElementById('buy').disabled = false;
                 }
             }
 
@@ -253,28 +205,28 @@
 
         //Kalau button Buy diklik
         $('#buy').on("click", function() {
-            coin = parseInt($('#kelompok').children(":selected").attr("id"));
+            coin = parseInt($('.koinKelompok').text());
             total = parseInt($('#total').text());
             getDataTable();
-            if (coin >= total || arrVal.length > 3) {
+            if (coin >= total) {
                 if (total == 0) {
                     $('#errorModal').modal('show');
-                    $('#showError').text('Kelompok belum membeli material sama sekali.');
+                    $('#showError').text('Wah, kelihatannya belum beli material sama sekali ya?');
                 } else if(arrVal.length > 3){
                     $('#errorModal').modal('show');
-                    $('#showError').text('Kelompok tidak boleh membeli lebih dari 3 macam material!');
+                    $('#showError').text('Hayo.. Tidak boleh membeli lebih dari 3 macam material yaa!');
                 } else {
                     $('#buyModal').modal('show');
                 }
             } else if (coin < total) {
                 $('#errorModal').modal('show');
-                $('#showError').text('Koin kelompok tidak mencukupi.');
+                $('#showError').text('Yahh... koin kelompok tidak mencukupi.');
             }
         });
 
         // //Kalau modal Buy diklik
         $('#buysemua').on("click", function() {
-            var team_id = $('#kelompok').val();
+            var team_id = {{Auth::user()->team}};
             var cart = arrVal;
             $.ajax({
                 type: "POST",
