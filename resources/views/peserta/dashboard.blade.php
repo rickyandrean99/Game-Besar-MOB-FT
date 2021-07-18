@@ -538,6 +538,7 @@
             } else if (ronde > 13) {
                 disableAllControl();
                 $('.ronde').html("Game Besar Sudah Selesai");
+                $('#btn-buy-material').attr('disabled', 'disabled');
                 $('.sesi').text("");
                 $('.timer').text("");
             } else {
