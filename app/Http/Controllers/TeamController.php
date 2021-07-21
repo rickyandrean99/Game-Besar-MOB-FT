@@ -27,11 +27,22 @@ class TeamController extends Controller
         $secret_weapon = SecretWeapon::find(1);
         $histories_team = DB::table('histories')->where('teams_id', $id_team)->get();
         $difference = strtotime($round_info->time_end) - strtotime(date("Y-m-d H:i:s"));
-        $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
+        $equipment_list = DB::select(DB::raw("SELECT e.id AS id_equipment, e.name AS nama_equipment, coalesce(et.amount, '0') AS jumlah_equipment, e.equipment_types_id AS tipe_equipment, e.description as deskripsi_equipment FROM equipments AS e LEFT JOIN (SELECT * FROM equipment_team WHERE teams_id = $id_team) AS et ON e.id = et.equipments_id WHERE e.id NOT IN (1,2,3)ORDER BY id_equipment"));
         $material_list = DB::select(DB::raw("SELECT m.id AS materials_id, m.name AS nama_material, coalesce(mt.amount, '0') AS jumlah FROM materials AS m LEFT JOIN (SELECT * FROM material_team WHERE teams_id = $id_team) AS mt ON m.id = mt.materials_id ORDER BY materials_id"));
         $friend_list = DB::table('teams')->select('id','name')->whereNotIn('id',[$id_team])->get();
-        
-        return view('peserta.dashboard', [
+
+        $equipment_requirement_list = array();
+        for ($i = 4; $i <= 13; $i++) {
+            $equipment_requirement = DB::table('equipment_requirement')->join('materials', 'equipment_requirement.materials_id', '=', 'materials.id')->where('equipment_requirement.equipments_id', $i)->select('materials.name AS nama_material', 'equipment_requirement.amount_need AS jumlah_material')->get();
+
+            $equipment_requirement_list[] = $equipment_requirement;
+        }
+
+        foreach ($equipment_list as $key => $value) {
+            $equipment_list[$key]->requirement = $equipment_requirement_list[$key];
+        }
+
+        return view('peserta.welcome', [
             'team' => $team_info,
             'boss' => $enemy_info,
             'round' => $round_info,
@@ -116,8 +127,8 @@ class TeamController extends Controller
                         'time' =>  Carbon::now(),
                         'round' => $round_detail->round
                     ]);
-
-                    $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                    
+                    $message = "<tr><td><p><b>[CRAFT]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
                 }
             } else {
                 $crafting_result = false;
@@ -244,7 +255,7 @@ class TeamController extends Controller
                         'round' => $round_detail->round
                     ]);
 
-                    $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                    $message = "<tr><td><p><b>[USE]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
                 }
             } else {
                 $use_access = false;
@@ -319,7 +330,7 @@ class TeamController extends Controller
                             'round' => $round_detail->round
                         ]);
 
-                        $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                        $message = "<tr><td><p><b>[UPGRADE]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
                     }
                 } else {
                     $upgrade_weapon = false;
@@ -369,7 +380,7 @@ class TeamController extends Controller
                             'round' => $round_detail->round
                         ]);
 
-                        $message .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                        $message = "<tr><td><p><b>[ATTACK]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
                     }
                 } else {
                     $attack_status = false;
