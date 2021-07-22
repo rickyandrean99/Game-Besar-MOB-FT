@@ -63,7 +63,7 @@ class RoundController extends Controller
                 // [RICKY] Cek buff_regeneration (RETURNER)
                 if ($team->buff_regeneration > 0) { 
                     $update_hp_team = DB::table('teams')->where('id', $team->id)->increment('hp_amount', 30);
-                    broadcast(new UpdateHitpoint($team->id, $team->hp_amount + 30, null))->toOthers();
+                    broadcast(new UpdateHitpoint($team->id, $team->hp_amount + 30, null, null))->toOthers();
                 }
 
                 // [RICKY] Cek Status buff_increased (SCARLET PHANTOM)
@@ -113,15 +113,16 @@ class RoundController extends Controller
                             'round' => $round_detail->round
                         ]);
                         
-                        $msg_receive_damage .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
+                        $msg_receive_damage = "<tr><td><p><b>[ATTACKED]</b><small> ".date('H:i:s')."</small><br><span>".$msg_receive_damage."</span></p></td></tr>";
                         
                         // [RICKY] Kurangi HP Team
                         if ($team_detail->hp_amount > $damage_dealt_to_team) {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $damage_dealt_to_team);
-                            broadcast(new UpdateHitpoint($team_detail->id, $team_detail->hp_amount - $damage_dealt_to_team, $msg_receive_damage))->toOthers();
+                            broadcast(new UpdateHitpoint($team_detail->id, $team_detail->hp_amount - $damage_dealt_to_team, $msg_receive_damage, null))->toOthers();
                         } else {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->update(['hp_amount'=> 0]);
-                            broadcast(new UpdateHitpoint($team_detail->id, 0, $msg_receive_damage))->toOthers();
+                            $death_message = "<tr><td><p><b>[STATUS]</b><small> ".date('H:i:s')."</small><br><span>Tidak dapat bermain lagi</span></p></td></tr>";
+                            broadcast(new UpdateHitpoint($team_detail->id, 0, $msg_receive_damage, $death_message))->toOthers();
 
                             $insert_history = DB::table('histories')->insert([
                                 'teams_id' => $value,

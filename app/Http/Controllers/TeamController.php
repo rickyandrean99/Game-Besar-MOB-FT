@@ -464,10 +464,8 @@ class TeamController extends Controller
                             ]
                         ]);
 
-                        $msg .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
-                        $receiver_history .= " &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>";
-
-                        // Pusher send gift disini
+                        $msg = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$msg."</span></p></td></tr>";
+                        $receiver_history = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$receiver_history."</span></p></td></tr>";
                         broadcast(new SendGift($tujuan, $receiver_history, $material, $jumlah))->toOthers();
                     }
                 }

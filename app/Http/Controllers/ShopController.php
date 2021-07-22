@@ -128,15 +128,16 @@ class ShopController extends Controller
             event(new UpdateTable($material->id, $material->stock ,$material->price));
         }
 
+        $msg = "<tr><td><p><b>[SHOP]</b><small> ".date('H:i:s')."</small><br><span>Berhasil membeli material</span></p></td></tr>";
         //Pengurangan koin
         if ($coin >= $total) {
             $totalCoinsNow = $coin - $total;
             $team->coin = $totalCoinsNow;
             $team->timestamps = false;
-            broadcast(new BuyMaterial($id, $cart, "Berhasil membeli material &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>", $totalCoinsNow))->toOthers();
+            broadcast(new BuyMaterial($id, $cart, $msg, $totalCoinsNow))->toOthers();
         } else if ($coin < $total) {
             $team->coin = 0;
-            broadcast(new BuyMaterial($id, $cart, "Berhasil membeli material &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>", 0))->toOthers();
+            broadcast(new BuyMaterial($id, $cart, $msg, 0))->toOthers();
         }
 
         //Ubah material shopping ke 1

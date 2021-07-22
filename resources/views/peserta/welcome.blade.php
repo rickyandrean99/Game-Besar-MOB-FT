@@ -82,7 +82,7 @@
 
         .round-group {
             /* position: absolute; */
-            width: 300px;
+            width: 400px;
             height: 38px;
             /* left: 650px;
             top: 35px; */
@@ -502,7 +502,6 @@
 
 <body>
     <div class="content">
-
         <div class="container-left">
             <div class="container-profile">
                 <div class="avatar">
@@ -523,7 +522,7 @@
                         <span class="text-glow2" style="font-size: larger;">Weapon</span>
                     </div>
                     <div class="label-content">
-                        <span class="text-glow2" style="font-size: larger;"> : {{ $team->coin }}</span><br>
+                        <span class="text-glow2 coin-amount" style="font-size: larger;"> : {{ $team->coin }}</span><br>
                         <span class="text-glow2" id="weapon-name" style="font-size: larger;"> : 
                             @if ($team->weapon_level == 0)
                                 -
@@ -566,36 +565,47 @@
             </div>
             <!--darah bos  -->
             <div class="darah-boss">
-                <div class="progress" style="height: 1.7rem; border-radius: 25px; width:500px;">
-                    <div class="progress-bar" role="progressbar" style="width: 100%;  background-image: linear-gradient(to right, #b80f0a, #dc1c13);" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                        100/100
-                    </div>
+                @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
+                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="hp-boss" style="position:absolute; text-align: center; width: 100%; padding-top: 4px">{{ $boss->hp_amount }}/100000</div>
+                    <div class="progress-bar" id="boss-hp-amount" role="progressbar" style="width: {{ $hp_boss }}%; background-image: linear-gradient(to right, #b80f0a, #dc1c13);" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             <!--weapon  -->
-            <div class="progress-boss">
-                <div class="progress" style="height: 1.7rem; border-radius: 25px; width:500px;">
-                    <div class="progress-bar" role="progressbar" style="width: 100%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Secret Weapon</div>
-
+            <div class="progress-boss" id="secret-weapon-progress-bar">
+                @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
+                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="progress-part" style="position:absolute; text-align: center; width: 100%; padding-top: 4px">{{ $weapon->part_amount_collected }}/{{ $weapon->part_amount_target }} Part</div>
+                    <div class="progress-bar" id="part-progress" role="progressbar" style="width: {{ $weapon_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             <!-- quest -->
-            <div class="progress-boss">
-                <div class="progress" style="height: 1.7rem; border-radius: 25px; width:500px;">
-                    <div class="progress-bar" role="progressbar" style="width: 100%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">7/10 Quest</div>
+            <div class="progress-boss" id="quest-team-progress-bar">
+                @php
+                    if ($team->quest_amount >= 10) {
+                        $quest_amount = 10;
+                    } else {
+                        $quest_amount = $team->quest_amount;
+                    }
 
+                    $quest_progress = $quest_amount * 100 / 10;
+                @endphp
+                
+                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="quest-amount-text" style="position:absolute; text-align: center; width: 100%; padding-top: 3px">{{ $quest_amount }}/10 Quest</div>
+                    <div class="progress-bar" id="quest-amount-progress" role="progressbar" style="width: {{ $quest_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>
 
         <div class="left-menu">
-            <a class="btn btn-craft text-center" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalCraft" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
+            <a class="btn btn-craft text-center" href="#!" id="btn-craft" role="button" data-bs-toggle="modal" data-bs-target="#modalCraft" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
                 <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/hammer.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Craft" />
             </a>
             <a class="btn btn-inventory" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalInventory" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
                 <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/backpack.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Inventory" />
             </a>
-            <a class="btn btn-gift" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalGift" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
+            <a class="btn btn-gift" id="btn-gift" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalGift" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
                 <img style="width:42px; height:42px; margin-top:10px;" src="https://img.icons8.com/ios/50/000000/gift--v1.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Gift" />
             </a>
         </div>
@@ -630,31 +640,35 @@
             <a class="userButton" href="#!" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;font-size:30px;"><img style="transform: rotate(315deg); height:40px;width:40px; margin-top:17px;" src="https://img.icons8.com/ios/50/000000/sword.png" /></a>
             <div class="userButtons">
                 @if ($team->weapon_level == 0)
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;" disabled="disabled">
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
                         <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
                         <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
                     </a>           
                 @else
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#dc1c13;box-shadow: 0px 0px 15px #dc1c13;font-size:30px;">
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#dc1c13;box-shadow: 0px 0px 15px #dc1c13;font-size:30px;cursor:pointer">
                         <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
                         <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
                     </a>    
                 @endif
                 
                 @if ($team->weapon_level == 3)
-                    <a data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;" disabled="disabled">
+                    <a data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
                         <!-- <img src="{{ asset('img/upgrade.png')}}" style="height:50px;width:50px;" alt="upgrade"> -->
                         <img style="height:35px;width:35px; margin-top:13px; margin-left:1px" src="https://img.icons8.com/ios/50/000000/sword.png" />
                         <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑</p>
                     </a>
                 @else
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#5ec3ee;box-shadow: 0px 0px 15px #5ec3ee;font-size:30px;">
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#5ec3ee;box-shadow: 0px 0px 15px #5ec3ee;font-size:30px;cursor:pointer">
                         <!-- <img src="{{ asset('img/upgrade.png')}}" style="height:50px;width:50px;" alt="upgrade"> -->
                         <img style="height:35px;width:35px; margin-top:13px; margin-left:1px" src="https://img.icons8.com/ios/50/000000/sword.png" />
                         <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑</p>
                     </a>
                 @endif
             </div>
+
+            <button type="button" onclick="enableGift()">Enable</button>
+            <button type="button" onclick="disableGift()">Disable</button>
+            <button type="button" id="btn-buy-material" disabled="disabled">PUNTEN GOPUD</button>
         </div>
     </div>
 
@@ -844,7 +858,7 @@
                                             <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{$m->nama_material}}</h5>
                                             <div>
                                                 <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;" id="select-{{$m->materials_id}}" class="form-select form-select-sm w-100" aria-label=".form-select-sm example">
-                                                    <option selected >--Pilih Kelompok--</option>
+                                                    <option selected disabled value="">--Pilih Kelompok--</option>
                                                     @foreach ($friend as $f)
                                                         <option value="{{ $f->id }}">{{ $f->name }}</option>
                                                     @endforeach
@@ -852,7 +866,7 @@
                                             </div>
                                         </div>
                                         <div class="position-absolute bottom-0 end-0 me-2 mb-2">
-                                            <button type="button" class="btn btn-primary btn-sm color-1 btn-gift-Kirim" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;" >Gift</button>
+                                            <button type="button" class="btn btn-primary btn-sm color-1 btn-gift-material" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;">Gift</button>
                                         </div>
                                     </div>
                                 </div>
@@ -916,10 +930,82 @@
             $('#quest-team-progress-bar').hide();
         }
 
+        // DISABLE BUTTON GIFT
+        function disableGift() {
+            $('#btn-gift').attr('disabled', 'disabled');
+            $('#btn-gift').removeAttr('data-bs-target');
+            $('#btn-gift').removeAttr('href');
+            $('#btn-gift').css('cursor', 'default');
+            $('#btn-gift').css('background', '#808080');
+            $('#btn-gift').css('box-shadow', '0px 0px 15px #808080');
+            $('.btn-gift-material').attr('disabled', 'disabled');
+            $('.btn-gift-material').removeClass('btn-primary');
+            $('.btn-gift-material').removeClass('color-1');
+            $('.btn-gift-material').addClass('btn-secondary');
+        }
+
+        // ENABLE BUTTON CRAFTING
+        function enableGift() {
+            $('#btn-gift').removeAttr('disabled');
+            $('#btn-gift').attr('data-bs-target', '#modalGift');
+            $('#btn-gift').attr('href', '#!');
+            $('#btn-gift').css('cursor', 'pointer');
+            $('#btn-gift').css('background', '#48e2b6');
+            $('#btn-gift').css('box-shadow', '0px 0px 15px #48e2b6');
+            $('.btn-gift-material').removeAttr('disabled');
+            $('.btn-gift-material').removeClass('btn-secondary');
+            $('.btn-gift-material').addClass('color-1');
+            $('.btn-gift-material').addClass('btn-primary');
+        }
+
+        // DISABLE BUTTON CRAFTING
+        function disableCrafting() {
+            $('#btn-craft').attr('disabled', 'disabled');
+            $('#btn-craft').removeAttr('data-bs-target');
+            $('#btn-craft').removeAttr('href');
+            $('#btn-craft').css('cursor', 'default');
+            $('#btn-craft').css('background', '#808080');
+            $('#btn-craft').css('box-shadow', '0px 0px 15px #808080');
+            $('.btn-crafting-equipment').attr('disabled', 'disabled');
+            $('.btn-crafting-equipment').removeClass('btn-primary');
+            $('.btn-crafting-equipment').removeClass('color-1');
+            $('.btn-crafting-equipment').addClass('btn-secondary');
+        }
+
+        // ENABLE BUTTON CRAFTING
+        function enableCrafting() {
+            $('#btn-craft').removeAttr('disabled');
+            $('#btn-craft').attr('data-bs-target', '#modalCraft');
+            $('#btn-craft').attr('href', '#!');
+            $('#btn-craft').css('cursor', 'pointer');
+            $('#btn-craft').css('background', '#48e2b6');
+            $('#btn-craft').css('box-shadow', '0px 0px 15px #48e2b6');
+            $('.btn-crafting-equipment').removeAttr('disabled');
+            $('.btn-crafting-equipment').removeClass('btn-secondary');
+            $('.btn-crafting-equipment').addClass('color-1');
+            $('.btn-crafting-equipment').addClass('btn-primary');
+        }
+
+        // DISABLE BUTTON USE
+        function disableUse() {
+            $('.btn-using-equipment').attr('disabled', 'disabled');
+            $('.btn-using-equipment').removeClass('btn-primary');
+            $('.btn-using-equipment').removeClass('color-1');
+            $('.btn-using-equipment').addClass('btn-secondary');
+        }
+
+        // ENABLE BUTTON USE
+        function enableUse() {
+            $('.btn-using-equipment').removeAttr('disabled');
+            $('.btn-using-equipment').removeClass('btn-secondary');
+            $('.btn-using-equipment').addClass('color-1');
+            $('.btn-using-equipment').addClass('btn-primary');
+        }
+
         // DISABLE BUTTON UPGRADE
         function disableUpgrade() {
             $('#btn-upgrade').attr('disabled', 'disabled');
-            $('#btn-upgrade').removeAttr('href');
+            $('#btn-upgrade').css('cursor', 'default');
             $('#btn-upgrade').css('background', '#808080');
             $('#btn-upgrade').css('box-shadow', '0px 0px 15px #808080');
         }
@@ -927,7 +1013,7 @@
         // ENABLE BUTTON UPGRADE
         function enableUpgrade() {
             $('#btn-upgrade').removeAttr('disabled');
-            $('#btn-upgrade').attr('href', '#');
+            $('#btn-upgrade').css('cursor', 'pointer');
             $('#btn-upgrade').css('background', '#5ec3ee');
             $('#btn-upgrade').css('box-shadow', '0px 0px 15px #5ec3ee');
         }
@@ -935,7 +1021,7 @@
         // DISABLE BUTTON ATTACK
         function disableAttack() {
             $('#btn-weapon-attack').attr('disabled', 'disabled');
-            $('#btn-weapon-attack').removeAttr('href', '#');
+            $('#btn-weapon-attack').css('cursor', 'default');
             $('#btn-weapon-attack').css('background', '#808080');
             $('#btn-weapon-attack').css('box-shadow', '0px 0px 15px #808080');
         }
@@ -943,31 +1029,32 @@
         // ENABLE BUTTON ATTACK
         function enableAttack() {
             $('#btn-weapon-attack').removeAttr('disabled');
-            $('#btn-weapon-attack').attr('href', '#');
+            $('#btn-weapon-attack').css('cursor', 'pointer');
             $('#btn-weapon-attack').css('background', '#dc1c13');
             $('#btn-weapon-attack').css('box-shadow', '0px 0px 15px #dc1c13');
         }
 
-        // Disable semua control
-        function disableAllControl() {
-            $('.btn-gift').attr('disabled', 'disabled');
-            $('.btn-craft').attr('disabled', 'disabled');
-            disableAttack();
-            disableUpgrade();
-            
-            // $('#btn-buy-material').attr('disabled', 'disabled');
-
-            //[KENNETH] Disable button Buy Material
-            if (!shopping && questAmount < 10) {
-                $('#btn-buy-material').attr('disabled', 'disabled');
-            } else {
-                if (!aksi) {
-                    $('#btn-buy-material').removeAttr('disabled');
-                }
-            }
+        // DISABLE SHOP [TODO]
+        function disableShop() {
+            $('#btn-buy-material').attr('disabled', 'disabled');
         }
 
-        // Update quest progress
+        // ENABLE SHOP [TODO]
+        function enableShop() {
+            $('#btn-buy-material').removeAttr('disabled');
+        }
+
+        // DISABLE ALL CONTROL
+        function disableAllControl() {
+            disableGift();
+            disableCrafting();
+            disableUse();
+            disableAttack();
+            disableUpgrade();
+            disableShop();
+        }
+
+        // QUEST TEAM PROGRESS
         function updateQuestProgressBar() {
             $('#quest-amount-text').text(questAmount + "/10");
             var questProgress = (parseInt(questAmount) * 100 / 10) + "%";
@@ -991,37 +1078,32 @@
         }
 
         // CHECK DO AND DONT
-        function checkWeaponAction() {
+        function checkDoAndDont() {
             if (teamStatus) {
                 if (aksi) {
-                    $('.btn-gift').attr('disabled', 'disabled');
-                    $('.btn-craft').attr('disabled', 'disabled');
-                    $('#btn-buy-material').attr('disabled', 'disabled');
-
+                    disableGift();
+                    disableCrafting();
                     disableUpgrade();
+                    disableShop();
+                    enableUse();
                     (weaponLevel > 0) ? enableAttack() : disableAttack();
                 } else {
-                    $('.btn-gift').removeAttr('disabled');
-                    $('.btn-craft').removeAttr('disabled');
-
-                    if (!shopping && questAmount < 10) {
-                        $('#btn-buy-material').attr('disabled', 'disabled');
-                    } else {
-                        $('#btn-buy-material').removeAttr('disabled');
-                    }
-
+                    disableUse();
                     disableAttack();
+                    enableGift();
+                    enableCrafting();
                     (weaponLevel >= 3) ? disableUpgrade() : enableUpgrade();
+                    (shopping || questAmount >= 10) ? enableShop() : disableShop();
                 }
             } else {
                 disableAllControl();
             }
         }
 
-        // [RICKY] Tampilan halaman saat reload
+        // PAGE RELOAD
         $(document).ready(function() {
             if (teamStatus && ronde > 0 && ronde <= 13) {
-                checkWeaponAction();
+                checkDoAndDont();
             } else {
                 disableAllControl();
             }
@@ -1150,7 +1232,7 @@
                     success: function(data) {
                         if (data.status) {
                             weaponLevel = data.level_weapon;
-                            checkWeaponAction();
+                            checkDoAndDont();
 
                             if (weaponLevel == 1) {
                                 $('#weapon-name').text("Loops Hammer");
@@ -1196,7 +1278,41 @@
                     }
                 });
             }
-            
+        });
+
+        // GIFT MATERIAL
+        $(document).on('click', '.btn-gift-material', function(){
+            var jumlah = 3; // GANTI
+            var material = $(this).attr("material");
+            var tujuan = $('#select-' + material).val();
+
+            if (tujuan == "" || tujuan == null) {
+                $('#result-modal').modal('show');
+                $('#modal-result-message').text("Kamu belum memilih kelompok!");
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('gift') }}',
+                    data: {
+                        '_token': '<?php echo csrf_token(); ?>',
+                        'tujuan': tujuan,
+                        'material': material,
+                        'jumlah': jumlah
+                    },
+                    success: function(data) {
+                        if (data.status) {
+                            $('#logTable').append(data.msg);
+                            $(".jumlah-material-" + material).text(data.jumlah_sekarang);
+                            bringToBottom();
+
+                            // RESET JUMLAH GIFT DISINI JADI 1
+                        } else {
+                            $('#result-modal').modal('show');
+                            $('#modal-result-message').text(data.msg);
+                        }
+                    }
+                });
+            }
         });
 
         // [RICKY] Berhentiin video youtube ketika modal close
@@ -1205,67 +1321,24 @@
             $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=1');
         });
 
-        // [Yobong] kirim gift
-        $(document).on('click', '.btn-gift-Kirim', function(){
-            var material = $(this).attr("material");
-            var tujuan = $('#select-' + material).val();
-            alert(material);
-            alert(tujuan);
-        });
-
-        function gift(material) {
-            var material = $(this).attr()
-            var tujuan = $('#select-'+material).val();
-            alert(material);
-            alert(tujuan);
-            // var jumlah = $('#gift_jumlah').val();
-
-            // $.ajax({
-            //     type: 'POST',
-            //     url: '{{ route('gift') }}',
-            //     data: {
-            //         '_token': '<?php echo csrf_token(); ?>',
-            //         'tujuan': tujuan,
-            //         'material': material,
-            //         'jumlah': jumlah
-            //     },
-            //     success: function(data) {
-            //         $('#gift_jumlah').val('1');
-
-            //         if (data.status) {
-            //             $('#histories-list').append("<tr><td><div class='history-detail'><b>[GIFT]</b> " + data
-            //                 .msg + "</div></td></tr>");
-            //             $(".jumlah-material-" + material).text(data.jumlah_sekarang);
-            //             bringToBottom();
-            //         } else {
-            //             $('#result-modal').modal('show');
-            //             $('#modal-result-message').text(data.msg);
-            //         }
-            //     }
-            // });
-        }
-
-        // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update (PUBLIC-CHANNEL)
+        // UPDATE ROUND AND ACTION
         window.Echo.channel('roundChannel').listen('.update', (e) => {
             ronde = e.round;
             aksi = e.action;
             time = e.minutes * 60;
-
-            // disable buy material
             shopping = false;
 
-            checkWeaponAction();
-            $('#equipment-crafting').modal('hide');
-            $('#equipment-use').modal('hide');
-            $('#weapon-upgrade').modal('hide');
-            $('#konfirmasi-gift').modal('hide');
-
+            checkDoAndDont();
+            $('#modalCraft').modal('hide');
+            $('#modalGift').modal('hide');
+            $('#result-modal').modal('show');
+            
             if (!aksi) {
+                $('#modal-result-message').text("Round telah berganti");
+                
                 var boss_hp = 100 * e.boss_hp / 100000;
                 $('#hp-boss').text(e.boss_hp + "/100000");
                 $('#boss-hp-amount').css('width', boss_hp + "%");
-                $('#result-modal').modal('show');
-                $('#modal-result-message').text("Round telah berganti");
 
                 // Update Status
                 $('#atk').hide();
@@ -1275,88 +1348,70 @@
                 $('#r').hide();
                 $('#ia').hide();
             } else {
-                $('#result-modal').modal('show');
                 $('#modal-result-message').text("Sesi Action Dimulai");
             }
         });
 
-        // [RICKY] Mendapatkan instruksi saat video di broadcast (PUBLIC-CHANNEL)
+        // REMINDER AND WINNER BROADCAST VIDEO [TODO]
         window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
-            if (e.broadcast_winner) {
-                $('#winner-modal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $('#winner-modal').modal('show');
-                $('#video-winner').attr('src',
-                    'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
-            } else {
-                $('#reminder-modal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                });
-                $('#reminder-modal').modal('show');
-                $('#video-reminder').attr('src',
-                    'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
-                $('#secret-weapon-progress-bar').show();
-                $('#quest-team-progress-bar').show();
-            }
+            partStatus = true;
+
+            // if (e.broadcast_winner) {
+            //     $('#winner-modal').modal({
+            //         backdrop: 'static',
+            //         keyboard: false
+            //     });
+            //     $('#winner-modal').modal('show');
+            //     $('#video-winner').attr('src',
+            //         'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
+            // } else {
+            //     $('#reminder-modal').modal({
+            //         backdrop: 'static',
+            //         keyboard: false
+            //     });
+            //     $('#reminder-modal').modal('show');
+            //     $('#video-reminder').attr('src',
+            //         'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
+            //     $('#secret-weapon-progress-bar').show();
+            //     $('#quest-team-progress-bar').show();
+            // }
         });
 
-        // [RICKY] Mendapatkan jumlah part terbaru (PUBLIC-CHANNEL)
+        // UPDATE SPECIAL WEAPON PART PROGRESS
         window.Echo.channel('partChannel').listen('.progress', (e) => {
             var progress = 100 * e.collected / e.target;
             $('#progress-part').text(e.collected + "/" + e.target);
             $('#part-progress').css('width', progress + "%");
         });
 
-        // [RICKY] Mendapatkan quest result yang dijalanakan (PRIVATE-CHANNEL)
+        // QUEST SUCCESS THEN ENABLE SHOP
         window.Echo.private('privatequest.' + {{ Auth::user()->team }}).listen('PrivateQuestResult', (e) => {
-            $('#histories-list').append("<tr><td><div class='history-detail'><b>[QUEST]</b> " + e.message +
-                "</div></td></tr>");
-            
+            $('#logTable').append(e.message);
             bringToBottom();
 
-            // enable button buy
             shopping = true;
-            if (!aksi) {
-                $('#btn-buy-material').removeAttr('disabled');
-            }
-
-            if (questAmount < 10) {
-                questAmount += 1;
-            }
-            
+            if (!aksi) enableShop();
+            if (questAmount < 10) questAmount += 1;
             updateQuestProgressBar();
         });
 
-        // [RICKY] Mendapatkan hp team terbaru saat round berganti (PRIVATE-CHANNEL)
+        // UPDATE HITPOINT TEAM
         window.Echo.private('update-hitpoint.' + {{ Auth::user()->team }}).listen('UpdateHitpoint', (e) => {
             var hpAmount = (parseInt(e.health) * 100 / 1000) + "%";
             $('#team-hp-bar').css('width', hpAmount);
             $('#hp-team').text(e.health + "/1000");
 
             teamStatus = (e.health > 0) ? true : false;
-            checkWeaponAction();
-
-            if (e.message != null) {
-                $('#histories-list').append("<tr><td><div class='history-detail'><b>[ATTACKED]</b> " + e.message +
-                    "</div></td></tr>");
-            }
-
-            if (e.health <= 0) {
-                $('#histories-list').append(
-                    "<tr><td><div class='history-detail'><b>[STATUS]</b> Tidak dapat bermain lagi</div></td></tr>"
-                );
-            }
-
+            checkDoAndDont();
+            var status = "{{ \Carbon\Carbon::now()->toTimeString() }}";
+            if (e.message != null) $('#logTable').append(e.message);
+            if (e.health <= 0) $('#logTable').append(e.death);
             bringToBottom();
         });
 
-        // [RICKY] Mendapatkan gift yang dikirimkan kelompok lain (PRIVATE-CHANNEL)
+        // RECEIVE GIFT FROM OTHER TEAMS
         window.Echo.private('send-gift.' + {{ Auth::user()->team }}).listen('SendGift', (e) => {
-            $('#histories-list').append("<tr><td><div class='history-detail'><b>[GIFT]</b> " + e.message +
-                "</div></td></tr>");
+            $('#logTable').append(e.message);
             bringToBottom();
 
             var getAmountNow = parseInt($(".jumlah-material-" + e.id_material).eq(0).text());
@@ -1364,7 +1419,7 @@
             $(".jumlah-material-" + e.id_material).text(amount);
         });
 
-        // [RICKY] Mendapatkan jumlah material terbaru saat membeli di toko
+        // UPDATE MATERIAL & COIN AFTER SHOPPING
         window.Echo.private('buy-material.' + {{ Auth::user()->team }}).listen('BuyMaterial', (e) => {
             $.each(e.material_list, function(index, value) {
                 var getAmountNow = parseInt($(".jumlah-material-" + value.id).eq(0).text());
@@ -1372,9 +1427,8 @@
                 $(".jumlah-material-" + value.id).text(amount);
                 $('.coin-amount').text(e.coin);
             });
-
-            $('#histories-list').append("<tr><td><div class='history-detail'><b>[SHOP]</b> " + e.message +
-                "</div></td></tr>");
+            
+            $('#logTable').append(e.message);
             bringToBottom();
         });
 

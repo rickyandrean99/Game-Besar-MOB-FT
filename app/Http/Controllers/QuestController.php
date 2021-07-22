@@ -50,7 +50,8 @@ class QuestController extends Controller
             ]);
 
             // Pusher private
-            broadcast(new PrivateQuestResult($id, $message." &nbsp;&nbsp;<span style='font-size: 100%' class='fw-bold fst-italic'>".date('H:i:s')."</span>"))->toOthers();
+            $message = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
+            broadcast(new PrivateQuestResult($id, $message))->toOthers();
         }
 
         // Pusher

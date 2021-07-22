@@ -16,17 +16,19 @@ class UpdateHitpoint implements ShouldBroadcast
     public $receiver_id;
     public $health;
     public $message;
+    public $death;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($receiver_id, $health, $message)
+    public function __construct($receiver_id, $health, $message, $death)
     {
         $this->receiver_id = $receiver_id;
         $this->health = $health;
         $this->message = $message;
+        $this->death = $death;
     }
 
     /**
