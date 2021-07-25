@@ -20,7 +20,10 @@ class QuestController extends Controller
 
         $teams = DB::table('teams')->select('id', 'name', 'quest_status')->get();
 
-        return view('admin.quest', [ 'teams' => $teams ]);
+        $round = Round::find(1);
+        $difference = strtotime($round->time_end) - strtotime(date("Y-m-d H:i:s"));
+
+        return view('admin.quest', [ 'teams' => $teams, 'round'=> $round, 'times'=> $difference ]);
     }
 
     public function result(Request $request) {
@@ -50,7 +53,7 @@ class QuestController extends Controller
             ]);
 
             // Pusher private
-            $message = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
+            $message = "<tr><td><p><b>[QUEST]</b><small> ".date('H:i:s')."</small><br><span>".$message."</span></p></td></tr>";
             broadcast(new PrivateQuestResult($id, $message))->toOthers();
         }
 

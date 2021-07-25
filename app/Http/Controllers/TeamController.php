@@ -51,7 +51,8 @@ class TeamController extends Controller
             'equipments' => $equipment_list,
             'material' =>$material_list,
             'friend' =>$friend_list,
-            'histories' => $histories_team
+            'histories' => $histories_team,
+            'materials' => Material::all()
         ]);
     }
 
@@ -370,7 +371,7 @@ class TeamController extends Controller
                     } else {
                         $update_status = DB::table('teams')->where('id', $id_team)->update(['attack_status' => true]);
                         $attack_status = true;
-                        $message = "Tim menyerang bos. Serangan akan dilancarkan pasa akhir sesi";
+                        $message = "Tim menyerang bos. Serangan akan dilancarkan pada akhir sesi";
 
                         $insert_history = DB::table('histories')->insert([
                             'teams_id' => $id_team,

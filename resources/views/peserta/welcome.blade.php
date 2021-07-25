@@ -55,6 +55,24 @@
             background: #c6f6e8;
         }
 
+        .nav-pills .nav-link.active,
+        .nav-pills .show>.nav-link {
+            /* background-color: #33334d; */
+            background-image: linear-gradient(to right, #1F9C8C, #70E8C6);
+            border-radius: 1.5rem;
+            border:none;
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 1.5rem;
+            color: #1F9C8C;
+            border: 1px solid;
+            border-color: #1F9C8C;
+        }
+
+        .nav-link:hover {
+            color: #156d62;
+        }
 
         /* ::-webkit-scrollbar-button {
             display: none
@@ -178,11 +196,22 @@
             font-size: 13px;
         }
 
+        .border-gradient3 {
+            border: double 10px transparent;
+            border-radius: 30px;
+            background-image: linear-gradient(#f9c1b1, #f9c1b1), radial-gradient(circle at top left, #fe5f75,#ffac81);
+            background-origin: border-box;
+            background-clip: content-box, border-box;
+        }
+
         .status span {
             margin-bottom: 0;
         }
 
-
+        #jumlahItem {
+            margin-top: 6rem;
+        }
+        
         .container-left {
             position: absolute;
             width: 370px;
@@ -400,8 +429,14 @@
             margin-top: 6rem;
         }
 
-        .modal-body::-webkit-scrollbar {
+        /* .modal-body::-webkit-scrollbar {
             display: none;
+        } */
+
+        .modal-body::-webkit-scrollbar-thumb {
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+            background: #1F9C8C;
         }
 
         .left-menu a:hover {
@@ -418,9 +453,8 @@
             text-shadow: 2px 0px 20px #70E8C6;
         }
 
-        .nav-pills .nav-link.active,
+        /* .nav-pills .nav-link.active,
         .nav-pills .show>.nav-link {
-            /* background-color: #33334d; */
             background-image: linear-gradient(to right, #1F9C8C, #70E8C6);
             border-radius: 1.5rem;
         }
@@ -433,7 +467,7 @@
 
         .nav-link:hover {
             color: #7c7c7c;
-        }
+        } */
 
         .border-gradient {
             border: double 10px transparent;
@@ -496,7 +530,19 @@
             outline: 0 !important;
             box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
         }
+        .btn-shop {
+            position: fixed;
+            text-align: center;
+            border-radius: 50%;
+            height: 75px;
+            width: 75px;
+            left: 120px;
+            bottom: 115px;
+        }
 
+        .red {
+            color: red;
+        }
     </style>
 </head>
 
@@ -518,12 +564,12 @@
                 </div>
                 <div class="status">
                     <div class="label">
-                        <span class="text-glow2" style="font-size: larger;">Coin</span><br>
-                        <span class="text-glow2" style="font-size: larger;">Weapon</span>
+                        <span class="text-glow2" style="font-size: larger;">Coin : </span><br>
+                        <span class="text-glow2" style="font-size: larger;">Weapon : </span>
                     </div>
                     <div class="label-content">
-                        <span class="text-glow2 coin-amount" style="font-size: larger;"> : {{ $team->coin }}</span><br>
-                        <span class="text-glow2" id="weapon-name" style="font-size: larger;"> : 
+                        <span class="text-glow2 coin-amount" style="font-size: larger;">{{ $team->coin }}</span><br>
+                        <span class="text-glow2" id="weapon-name" style="font-size: larger;">
                             @if ($team->weapon_level == 0)
                                 -
                             @elseif($team->weapon_level == 1)
@@ -540,12 +586,44 @@
             <div style="margin-top: 120px; font-size:14px;" class="text-glow2">Item yang sedang dipakai </div>
             <div class="container-item">
                 <!-- foreach item yang dipake -->
-                <div class="item">
-                    <img class="item2" src="./img/item/Alabaster.jpg">
+                <div class="item" id="wt">
+                    <img class="item2" src="./img/item/Windtalker.jpg">
                 </div>
 
-            </div>
+                <div class="item" id="ac">
+                    <img class="item2" src="./img/item/Antique Cuirass.jpg">
+                </div>
 
+                <div class="item" id="ps">
+                    <img class="item2" src="./img/item/Paradox Sphere.jpg">
+                </div>
+
+                <div class="item" id="sp">
+                    <img class="item2" src="./img/item/Scarlet Phantom.jpg">
+                </div>
+
+                <div class="item" id="r">
+                    <img class="item2" src="./img/item/Returner.jpg">
+                </div>
+
+                <div class="item" id="ia">
+                    <img class="item2" src="./img/item/Immortal Armor.jpg">
+                </div>
+
+                <div class="item" id="ms">
+                    <img class="item2" src="./img/item/Menhir Shield.jpg">
+                </div>
+
+                <div class="item" id="atk">
+                    @if ($team->weapon_level == 1)
+                        <img class="item2" src="./img/item/Loop Harmer.jpg">
+                    @elseif ($team->weapon_level == 2)
+                        <img class="item2" src="./img/item/Master Sword.jpg">
+                    @elseif ($team->weapon_level == 3)
+                        <img class="item2" src="./img/item/Quantum Gun.jpg">
+                    @endif
+                </div>
+            </div>
         </div>
 
 
@@ -600,7 +678,7 @@
 
         <div class="left-menu">
             <a class="btn btn-craft text-center" href="#!" id="btn-craft" role="button" data-bs-toggle="modal" data-bs-target="#modalCraft" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
-                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/hammer.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Craft" />
+                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/hammer-and-anvil.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Craft" />
             </a>
             <a class="btn btn-inventory" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalInventory" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
                 <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/backpack.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Inventory" />
@@ -608,12 +686,19 @@
             <a class="btn btn-gift" id="btn-gift" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalGift" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
                 <img style="width:42px; height:42px; margin-top:10px;" src="https://img.icons8.com/ios/50/000000/gift--v1.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Gift" />
             </a>
+            <a class="btn btn-shop" id="btn-shop" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalShop"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;"  disabled="disabled">
+                <img style="width:42px; height:42px; margin-top:10px;"
+                    src="https://img.icons8.com/ios/50/000000/shop.png" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Shop"/>
+            </a>
         </div>
 
         <div class="right-menu">
             <!-- Tempat logout -->
             <div class="logout">
-                <button type="button" class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13">Logout</button>
+                <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
             </div>
             <br>
             <!-- Tempat log history -->
@@ -666,12 +751,13 @@
                 @endif
             </div>
 
-            <button type="button" onclick="enableGift()">Enable</button>
+            <!-- <button type="button" onclick="enableGift()">Enable</button>
             <button type="button" onclick="disableGift()">Disable</button>
-            <button type="button" id="btn-buy-material" disabled="disabled">PUNTEN GOPUD</button>
+            <button type="button" id="btn-buy-material" disabled="disabled">PUNTEN GOPUD</button> -->
+            
         </div>
     </div>
-
+    
     <!-- Modal -->
     <!-- Modal Craft -->
     <div class="modal fade" id="modalCraft" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -725,7 +811,11 @@
                                                             <div class="col-md-2 mx-auto">
                                                                 <div class="position-relative">
                                                                     <img style="margin-left:30px; border-radius:10px; border:0px; width:80px;" src="./img/item/{{ $er->nama_material }}.jpg" class="img-fluid m-3" alt="...">
-                                                                    <h4 class="position-absolute top-0 text-white" style="margin-top:4.2rem; margin-left:5rem;">{{ $er->jumlah_material }}</h4>
+                                                                    @if ($er->jumlah_material >= 10)
+                                                                    <h4 class="position-absolute top-0 text-white text-glow2" style="margin-top:4.2rem; margin-left:4.5rem;">{{ $er->jumlah_material }}</h4>
+                                                                    @else
+                                                                    <h4 class="position-absolute top-0 text-white text-glow2" style="margin-top:4.2rem; margin-left:4.8rem;">{{ $er->jumlah_material }}</h4>
+                                                                    @endif
                                                                 </div>
                                                                 <p style="color:#fff;text-align:center; font-size:14px">{{ $er->nama_material }}</p>
                                                             </div>
@@ -842,36 +932,41 @@
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
                     <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+                <div class="mx-4">
+                    <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;color:#1F9C8C;" class="form-select form-select-md w-100" aria-label=".form-select-sm example" id="gift-pilih-kelompok">
+                        <option selected value="default">--Pilih Kelompok--</option>
+                        @foreach ($friend as $f)
+                            <option value="{{ $f->id }}">{{ $f->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
                         <!-- Mulai foreach Gift di sini -->
-                       @foreach($material as $m)
-                        <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
-                            <div class="card h-100 border-gradient2">
-                                <div class="row g-0">
-                                    <div class="col-md-4 position-relative">
-                                        <img style="margin-left:30px; border-radius:10px; border:0px;" src="./img/item/{{$m->nama_material}}.jpg" class="img-fluid m-2" alt="...">
-                                        <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}">{{$m->jumlah    }}</h4>
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{$m->nama_material}}</h5>
-                                            <div>
-                                                <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;" id="select-{{$m->materials_id}}" class="form-select form-select-sm w-100" aria-label=".form-select-sm example">
-                                                    <option selected disabled value="">--Pilih Kelompok--</option>
-                                                    @foreach ($friend as $f)
-                                                        <option value="{{ $f->id }}">{{ $f->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                        @foreach($material as $m)
+                            <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
+                                <div class="card h-100 border-gradient2">
+                                    <div class="row g-0">
+                                        <div class="col-md-4 position-relative">
+                                            <img style="margin-left:30px; border-radius:10px; border:0px;" src="./img/item/{{$m->nama_material}}.jpg" class="img-fluid m-2" alt="...">
+                                            <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}" id="jumlahItem">{{$m->jumlah}}</h4>
                                         </div>
-                                        <div class="position-absolute bottom-0 end-0 me-2 mb-2">
-                                            <button type="button" class="btn btn-primary btn-sm color-1 btn-gift-material" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;">Gift</button>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{$m->nama_material}}</h5>
+                                                <!-- <p class="text-glow3 card-text" style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;">
+                                                    Meniadakan serangan musuh untuk 1 Round [Hanya aktif saat Ultimate Round]
+                                                </p> -->
+                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                                    font-weight:bold" type="number" class="form-control form-control-sm w-50 input-material-amount" id="exampleCheck1" value="1" min="1">
+                                                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
+                                                    <button type="button" class="btn btn-primary btn-gift-material color-1" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;">Gift</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                         <!-- End Foreach di sini -->
                     </div>
@@ -881,20 +976,234 @@
     </div>
     <!-- End Modal Gift -->
 
-    <!-- Modal hasil (berhasil/gagal) -->
-    <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="resultModal"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <span id="modal-result-message" class="text-dark" style="display:inline-block; width: 90%"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
-                        style="float: right"></button>
+    <!-- Modal Pesan Gagal -->
+    <div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content  border-gradient3 " style="background-color: #33334D; box-shadow:1px 0px 40px #ff5b5b;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:90px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D;">WARNING</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body" style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;" >
+                        <!-- tempat ganti" text info -->
+                            <p style="text-align: center; font-size:20px; color: #33334D;" id="failed-message"></p>
+                        <!-- end tempat ganti" text info -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- End Modal -->
+    <!-- End Modal Pesan Gagal -->
+    
+    <!-- Modal Shop -->
+    <div class="modal fade" id="modalShop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:110px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">SHOP</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <!-- Foreach Resource di sini -->
+                        @foreach ($materials as $m)
+                            <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
+                                <div class="card h-100 border-gradient2">
+                                    <div class="row g-0">
+                                        <div class="col-md-4 position-relative">
+                                            <img style="width:90px;margin-left:30px; border-radius:10px; border:0px;"
+                                                src="./img/item/{{ $m->name }}.jpg" class="img-fluid m-2"
+                                                alt="...">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-glow2 material-name"
+                                                    style="font-weight: bold; font-size:large;" seq="{{$m->id}}">{{ $m->name }}
+                                                </h5>
+                                                <h6 class="card-text text-glow2" style="font-size:large;">Stock:
+                                                    <span seq="{{ $m->id }}"
+                                                        class="stock">{{ $m->stock }}</span>
+                                                </h6>
+                                                <h6 class="card-text text-glow2" style="font-size:large;">Price:
+                                                    <span seq="{{ $m->id }}"
+                                                        class="price">{{ $m->price }}</span>
+                                                </h6>
+                                                <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                            font-weight:bold" type="number" class="form-control form-control-sm w-25" id="exampleCheck1" value="1">
+                                            <button class="btn btn-primary btn-sm me-md-2 color-1" type="button" style="border-radius:15px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z"/>
+                                                    <path d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z"/>
+                                                </svg>
+                                            </button>
+                                            <p class="my-auto">Subtotal</p>
+                                        </div> -->
+                                            </div>
+                                        </div>
+                                        <div style="margin-left: -20px; margin-bottom: 20px;"
+                                            class="d-grid gap-0 d-md-flex justify-content-md-end">
+                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                    font-weight:bold; font-size:larger" type="number" seq="{{ $m->id }}"
+                                                class="form-control form-control-sm w-25 material-qty"
+                                                id="exampleCheck1" seq="{{$m->id}}" value="0" min=0>
+                                            <p style="margin-right: 10px;" class="my-auto">item</p>
+                                            <button class="btn btn-primary btn-sm me-md-2 color-1 reset" type="button"
+                                                seq="{{ $m->id }}" style="border-radius:50px; width:40px;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="bi bi-arrow-counterclockwise"
+                                                    viewBox="0 0 16 16">
+                                                    <path fill-rule="evenodd"
+                                                        d="M8 3a5 5 0 1 1-4.546 2.914.5.5 0 0 0-.908-.417A6 6 0 1 0 8 2v1z" />
+                                                    <path
+                                                        d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
+                                                </svg>
+                                            </button>
+                                            <p style="font-weight:bold;color:#33334D" class="my-auto">Subtotal: <span
+                                                    seq="{{ $m->id }}" class="subtotal">0</span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                        <!-- End Foreach -->
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: none">
+                    <h5 class="card-title me-auto"
+                        style="margin-left:20px; font-weight: bold; font-size:large; color:#33334D">Jumlah Koin:
+                        <span class="team-coin">{{ $team->coin }}</span>
+                    </h5>
+                    <h5 class="card-title" style="color:#33334D;font-weight: bold; font-size:large;">Total: <span
+                            class="total">0</span></h5>
+                    <button type="button" class="btn btn-primary color-1 material-buy" style="margin-right:20px;border-radius:20px;width:90px;">Buy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirm -->
+    <div class="modal fade " id="modalConfirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:55px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" id="title-modal" style="color:#33334D ;">CONFIRMATION</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body" style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;" >
+                        <!-- tempat ganti" text info -->
+                            <p style="text-align: center; font-size:20px; color: #33334D;" class="result-message"></p>
+                        <!-- end tempat ganti" text info -->
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-secondary color-1-outline btn-no" data-bs-dismiss="modal" aria-label="Close" style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;">No</button>
+                            <button type="button" class="btn btn-primary btn-lg color-1 btn-yes" style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal" onclick="buyMaterial()">Yes</button>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Confirm -->
+
+    <!-- Modal Info -->
+    <div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content  border-gradient " style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:70px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">INFORMATION</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body" style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;" >
+                        <!-- tempat ganti" text info -->
+                            <p style="text-align: center; font-size:20px; color: #33334D;" id="message-round-info"></p>
+                        <!-- end tempat ganti" text info -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Info -->
+
+    <!-- Modal Video Reminder -->
+    <div class="modal fade " id="modalVideoReminder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width:1920px;">
+            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:155px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">ATTENTION</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body " style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;" >
+                        <!-- tempat ganti" text info -->
+
+                        <iframe  style="width:100%; margin:0 auto; border-radius:20px;" height="539" id="video-reminder-source" src="https://www.youtube.com/embed/Jsh-ddCJUH8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                            <source src="https://www.youtube.com/watch?v=pmMjkMtpnTc" type="video/mp4">
+                        </video> -->
+                        <!-- end tempat ganti" text info -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Video Reminder -->
+
+    <!-- Modal Video Winner -->
+    <div class="modal fade " id="modalVideoWinner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width:1920px;">
+            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:155px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">ATTENTION</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body " style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;" >
+                        <!-- tempat ganti" text info -->
+
+                        <iframe  style="width:100%; margin:0 auto; border-radius:20px;" height="539" id="video-winner-source" src="https://www.youtube.com/embed/werYxoKlYm0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                            <source src="https://www.youtube.com/watch?v=pmMjkMtpnTc" type="video/mp4">
+                        </video> -->
+                        <!-- end tempat ganti" text info -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Video Winner -->
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
@@ -1036,12 +1345,22 @@
 
         // DISABLE SHOP [TODO]
         function disableShop() {
-            $('#btn-buy-material').attr('disabled', 'disabled');
+            $('#btn-shop').attr('disabled', 'disabled');
+            $('#btn-shop').removeAttr('data-bs-toggle');
+            $('#btn-shop').removeAttr('data-bs-target');
+            $('#btn-shop').css('cursor', 'default');
+            $('#btn-shop').css('background', '#808080');
+            $('#btn-shop').css('box-shadow', '0px 0px 15px #808080');
         }
 
         // ENABLE SHOP [TODO]
         function enableShop() {
-            $('#btn-buy-material').removeAttr('disabled');
+            $('#btn-shop').removeAttr('disabled');
+            $('#btn-shop').attr('data-bs-toggle', 'modal');
+            $('#btn-shop').attr('data-bs-target', '#modalShop');
+            $('#btn-shop').css('cursor', 'pointer');
+            $('#btn-shop').css('background', '#48e2b6');
+            $('#btn-shop').css('box-shadow', '0px 0px 15px #48e2b6');
         }
 
         // DISABLE ALL CONTROL
@@ -1166,8 +1485,8 @@
                         $('#logTable').append(data.message);
                         bringToBottom();
                     } else {
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.message);
+                        $('#modalAlert').modal('show');
+                        $('#failed-message').text(data.message);
                     }
                 }
             });
@@ -1206,8 +1525,8 @@
                             $('#ms').show();
                         }
                     } else {
-                        $('#result-modal').modal('show');
-                        $('#modal-result-message').text(data.message);
+                        $('#modalAlert').modal('show');
+                        $('#failed-message').text(data.message);
                     }
 
                     // Jika menggunakan item healing
@@ -1236,10 +1555,13 @@
 
                             if (weaponLevel == 1) {
                                 $('#weapon-name').text("Loops Hammer");
+                                $('#atk img').attr('src', './img/item/Loop Harmer.jpg');
                             } else if (weaponLevel == 2) {
                                 $('#weapon-name').text("Master Sword");
+                                $('#atk img').attr('src', './img/item/Master Sword.jpg');
                             } else if (weaponLevel == 3) {
                                 $('#weapon-name').text("Quantum Gun");
+                                $('#atk img').attr('src', './img/item/Quantum Gun.jpg');
                             }
 
                             $.each(data.material_update, function(index, value) {
@@ -1249,8 +1571,8 @@
                             $('#logTable').append(data.message);
                             bringToBottom();
                         } else {
-                            $('#result-modal').modal('show');
-                            $('#modal-result-message').text(data.message);
+                            $('#modalAlert').modal('show');
+                            $('#failed-message').text(data.message);
                         }
                     }
                 });
@@ -1272,8 +1594,8 @@
                             bringToBottom();
                             $('#atk').show();
                         } else {
-                            $('#result-modal').modal('show');
-                            $('#modal-result-message').text(data.message);
+                            $('#modalAlert').modal('show');
+                            $('#failed-message').text(data.message);
                         }
                     }
                 });
@@ -1282,13 +1604,13 @@
 
         // GIFT MATERIAL
         $(document).on('click', '.btn-gift-material', function(){
-            var jumlah = 3; // GANTI
+            var jumlah = $(this).parent().parent().children('.input-material-amount').val();
             var material = $(this).attr("material");
-            var tujuan = $('#select-' + material).val();
+            var tujuan = $('#gift-pilih-kelompok').val();
 
-            if (tujuan == "" || tujuan == null) {
-                $('#result-modal').modal('show');
-                $('#modal-result-message').text("Kamu belum memilih kelompok!");
+            if (tujuan == "default" || tujuan == null) {
+                $('#failed-message').text("Kamu belum memilih kelompok!");
+                $('#modalAlert').modal('show');
             } else {
                 $.ajax({
                     type: 'POST',
@@ -1305,20 +1627,21 @@
                             $(".jumlah-material-" + material).text(data.jumlah_sekarang);
                             bringToBottom();
 
-                            // RESET JUMLAH GIFT DISINI JADI 1
+                            $('.input-material-amount').val(1);
+                            $("#gift-pilih-kelompok").val("default");
                         } else {
-                            $('#result-modal').modal('show');
-                            $('#modal-result-message').text(data.msg);
+                            $('#failed-message').text(data.message);
+                            $('#modalAlert').modal('show');
                         }
                     }
                 });
             }
         });
 
-        // [RICKY] Berhentiin video youtube ketika modal close
-        $(document).on("click", ".stop-video", function() {
-            $('#video-winner').attr('src', 'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=1');
-            $('#video-reminder').attr('src', 'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=1');
+        // [STOP YOUTUBE VIDEO
+        $(document).on("click", "#stop-video", function() {
+            $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
+            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
         });
 
         // UPDATE ROUND AND ACTION
@@ -1331,11 +1654,12 @@
             checkDoAndDont();
             $('#modalCraft').modal('hide');
             $('#modalGift').modal('hide');
-            $('#result-modal').modal('show');
-            
+            $('#modalShop').modal('hide');
+            $('#modalInfo').modal('show');
+
             if (!aksi) {
-                $('#modal-result-message').text("Round telah berganti");
-                
+                $('#message-round-info').text('Round telah berganti');
+
                 var boss_hp = 100 * e.boss_hp / 100000;
                 $('#hp-boss').text(e.boss_hp + "/100000");
                 $('#boss-hp-amount').css('width', boss_hp + "%");
@@ -1348,7 +1672,7 @@
                 $('#r').hide();
                 $('#ia').hide();
             } else {
-                $('#modal-result-message').text("Sesi Action Dimulai");
+                $('#message-round-info').text('Sesi Action Dimulai');
             }
         });
 
@@ -1356,25 +1680,15 @@
         window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
             partStatus = true;
 
-            // if (e.broadcast_winner) {
-            //     $('#winner-modal').modal({
-            //         backdrop: 'static',
-            //         keyboard: false
-            //     });
-            //     $('#winner-modal').modal('show');
-            //     $('#video-winner').attr('src',
-            //         'https://www.youtube.com/embed/ROk9qsYjwY0?start=171&autoplay=1&mute=0');
-            // } else {
-            //     $('#reminder-modal').modal({
-            //         backdrop: 'static',
-            //         keyboard: false
-            //     });
-            //     $('#reminder-modal').modal('show');
-            //     $('#video-reminder').attr('src',
-            //         'https://www.youtube.com/embed/Ngq0omaP8Xg?start=28&autoplay=1&mute=0');
-            //     $('#secret-weapon-progress-bar').show();
-            //     $('#quest-team-progress-bar').show();
-            // }
+            if (e.broadcast_winner) {
+                $('#modalVideoWinner').modal('show');
+                $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
+            } else {
+                $('#modalVideoReminder').modal('show');
+                $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=0');
+                $('#secret-weapon-progress-bar').show();
+                $('#quest-team-progress-bar').show();
+            }
         });
 
         // UPDATE SPECIAL WEAPON PART PROGRESS
@@ -1432,7 +1746,7 @@
             bringToBottom();
         });
 
-        // [RICKY] Update Icon Status And Attack Amount
+        // UPDATE STATUS & ATTACK AMOUNT
         window.Echo.private('update-status.' + {{ Auth::user()->team }}).listen('UpdateStatus', (e) => {
             if (e.team.debuff_decreased <= 0) {
                 $('#ac').hide();
@@ -1443,11 +1757,259 @@
             }
 
             if (e.attack_amount > 0) {
-                $('#histories-list').append(
-                    "<tr><td><div class='history-detail'><b>[ATTACK]</b> Berhasil melancarkan serangan sebesar " +
-                    parseInt(e.attack_amount) + "</div></td></tr>");
+                $('#logTable').append(e.message);
                 bringToBottom();
             }
+        });
+
+        //[KENNETH] Shop's Coding
+        var materialMessage = "";
+        var seq = 0;
+        var materialPrice = 0;
+        var materialStock = 0;
+        var materialQty = 0;
+        var subtotal = 0;
+        var total = 0;
+        var arrOfMaterials = [];
+
+        //Check the stock when opening the modal Shop for the first time
+        function checkStock() {
+            $(".stock").each(function() {
+                if ($(this).text() == 0) {
+                    $(this).addClass("red");
+                }
+            });
+        }
+
+        //Find the subtotal
+        function findSubtotal(seq) {
+            materialPrice = parseInt($(".price[seq=" + seq + "]").text());
+            materialQty = parseInt($(".material-qty[seq=" + seq + "]").val());
+            
+            if(isNaN(materialQty)){
+                materialQty = 0;
+            }
+            
+            subtotal = materialPrice * materialQty;
+            $(".subtotal[seq=" + seq + "]").text(subtotal);
+        }
+
+        //Find total
+        function findTotal() {
+            total = 0;
+            $(".subtotal").each(function() {
+                total += parseInt($(this).text());
+            });
+            $(".total").text(total);
+            compareTotalAndCoin();
+        }
+
+        //Compare total and coin
+        function compareTotalAndCoin() {
+            total = parseInt($(".total").text());
+            coin = parseInt($(".team-coin").text());
+
+            if (total > coin) {
+                $(".team-coin").addClass("red");
+                disableButtonBuy();
+            } else {
+                $(".team-coin").removeClass("red");
+                enableButtonBuy();
+            }
+        }
+
+        function disableButtonBuy() {
+            $(".material-buy").attr("disabled", "disabled");
+        }
+
+        function enableButtonBuy() {
+            $(".material-buy").removeAttr('disabled');
+        }
+
+        function makeStockRed(seq) {
+            $(".stock[seq=" + seq + "]").addClass("red");
+        }
+
+        function defaultStockColor(seq) {
+            $(".stock[seq=" + seq + "]").removeClass("red");
+        }
+
+        //Is this stock available?
+        function isStockAvailable(seq) {
+            materialQty = $(".material-qty[seq=" + seq + "]").val();
+            materialStock = parseInt($(".stock[seq=" + seq + "]").text());
+            if (materialQty > materialStock) {
+                makeStockRed(seq);
+                return false;
+            } else {
+                defaultStockColor(seq);
+                return true;
+            }
+        }
+
+        //Adding material data that have been changed by the user
+        function addDataToArray() {
+            arrOfMaterials = [];
+            $('.result-message').empty();
+            $('.material-qty').each(function() {
+                var qty = $(this).val();
+                if (qty > 0) {
+                    var materialID = $(this).attr('seq');
+                    var materialName = $(".material-name[seq="+materialID+"]").text();
+                    subtotal = $(".subtotal[seq="+materialID+"]").text();
+                    var total = parseInt($(".total").text());
+                    var val = {
+                        "id": materialID,
+                        "name": materialName,
+                        "qty": qty,
+                        "subtotal":subtotal,
+                        "total": total
+                    };
+                    arrOfMaterials.push(val);
+                }
+            });
+        }
+
+        //Show materials in confirmation modal
+        function showModalResult(message){
+            if($.isArray(message)){
+                $(".result-message").append("<h3>Item yang akan dibeli:</h3>" + "<br>");
+                for (var i=0; i<arrOfMaterials.length; i++) {
+                    $(".result-message").append(arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty + ") = " + arrOfMaterials[i].subtotal+ "<br>");
+                }
+                $(".result-message").append("<br><h3>Total: " + arrOfMaterials[0].total + "</h3><br>");
+                $("#modalConfirm").modal("show");
+            } else {
+                $("#modalConfirm").modal("show");
+                $("#title-modal").text("Gagal membeli");
+                $(".result-message").text(message);
+                $(".btn-yes").css("display", "none");
+                $('.btn-no').text("Ok");
+            }
+        }
+
+        //Reset input type number every time modal Shop is being clicked
+        function resetInputValue(){
+            $(".material-qty").each(function() {
+                $(this).val(0);
+                findSubtotal($(this).attr("seq"));
+                findTotal();
+            });
+        };
+
+        //Disable writing in input tag
+        $(".material-qty").keypress(function(e) {
+            e.preventDefault();
+        });
+
+        //Disable backspacing in input tag
+        $(".material-qty").keydown(function(e) {
+            var elid = $(document.activeElement).hasClass('textInput');
+            if (e.keyCode === 8 && !elid) {
+                return false;
+            };
+        });
+
+        $(document).on('show.bs.modal', '#modalShop', function() {
+            $(".stock").each(function() {
+                if ($(this).text() == 0) {
+                    $(this).addClass("red");
+                }
+            });
+            resetInputValue();
+        });
+       
+
+        //When one of the material's input quantity is changed...
+        $(".material-qty").change(function() {
+            seq = $(this).attr("seq");
+            findSubtotal(seq);
+            findTotal();
+            if (!isStockAvailable(seq)) {
+                disableButtonBuy();
+            }
+        });
+
+        //When button reset is clicked...
+        $(".reset").click(function() {
+            seq = $(this).attr("seq");
+            $(".material-qty[seq=" + seq + "]").val(0);
+            findSubtotal(seq);
+            findTotal();
+        });
+
+        //When button buy is clicked...
+        $(".material-buy").click(function() {
+            addDataToArray();
+            //If the length is 0, it'll return true
+            if (arrOfMaterials.length == 0) {
+                materialMessage = "Wah, kelihatannya belum memilih material sama sekali ya?";
+                showModalResult(materialMessage);
+            } else if (arrOfMaterials.length > 3){
+                materialMessage = "Hayo, kalian hanya bisa membeli maksimal tiga macam material saja ya!";
+                showModalResult(materialMessage);
+            } else {
+                showModalResult(arrOfMaterials);
+            }
+        });
+
+        //When button confirmation is clicked
+        function buyMaterial(){
+            $("#modalConfirm").modal("hide");
+            $("#modalShop").modal("hide");
+            disableShop();
+            
+            var team_id = {{Auth::user()->team}};
+            var cart = arrOfMaterials;
+            $.ajax({
+                type: "POST",
+                url: "{{route('insertOrUpdate')}}",
+                data: {
+                    '_token': '<?php echo csrf_token() ?>',
+                    'teams_id': team_id,
+                    'cart': cart
+                },
+                success: function(data) {
+                    //Tampilkan modal konfirmasi
+                    $('#modalConfirm').modal("show");
+                    $(".result-message").text(data.message);
+                    $(".btn-yes").css("display", "none");
+                    $('.btn-no').text("OK");
+
+                    // UPDATE COIN
+                    var coinNow = parseInt($('.coin-amount').text()) - parseInt(total);
+                    $('.coin-amount').text(coinNow);
+
+                    // UPDATE STOK
+                    for (var i=0; i<arrOfMaterials.length; i++) {
+                        var id = arrOfMaterials[i].id;
+                        var amountBefore = $(".jumlah-material-" + id).eq(0).text();
+                        var amount = arrOfMaterials[i].qty;
+                        var result = parseInt(amountBefore) + parseInt(amount);
+                        // alert("Sebelum : " + amountBefore + ", Dapet : " + amount + ", Hasil Akhir : " + result);
+                        $(".jumlah-material-" + id).text(result);
+                    }
+                }
+            })
+        }
+
+        //Pusher listening...
+        window.Echo.channel('updateTable').listen('.material', (e) => {
+            //Take the updated number
+            var seq = e.id;
+            var updateStock = e.stok;
+            var updatePrice = e.harga;
+
+            //Change it into the updated number
+            $(".stock[seq=" + seq + "]").text(updateStock);
+            $(".price[seq=" + seq + "]").text(updatePrice);
+
+            //Check stock's availability
+            isStockAvailable(seq);
+            //Update subtotal
+            findSubtotal(seq);
+            //Update total
+            findTotal(); 
         });
     </script>
 

@@ -16,6 +16,7 @@ class UpdateStatus implements ShouldBroadcast
     public $team;
     public $attack_amount;
     public $receiver_id;
+    public $message;
 
     /**
      * Create a new event instance.
@@ -27,6 +28,7 @@ class UpdateStatus implements ShouldBroadcast
         $this->team = $team;
         $this->attack_amount = $attack_amount;
         $this->receiver_id = $team->id;
+        $this->message = "<tr><td><p><b>[ATTACK]</b><small> ".date('H:i:s')."</small><br><span>Berhasil melancarkan serangan sebesar ".$attack_amount."</span></p></td></tr>";
     }
 
     /**
