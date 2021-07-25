@@ -57,15 +57,15 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Are you sure ?</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <h5 class="modal-title" id="successModalLabel">Are you sure ?</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             Part(s) will be added.
                         </div>
                         <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                        <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="questResult(true)">Yes</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                            <button type="button" class="btn btn-success" data-bs-dismiss="modal" onclick="questResult()">Yes</button>
                         </div>
                     </div>
                 </div>
@@ -107,11 +107,7 @@
     var aksi = {{ $round->action }};
     var time = {{ $times }};
 
-    function reloadPage() {
-        location.reload();
-    }
-
-    function questResult(status) {
+    function questResult() {
         const arr_team_id = [];
 
         for (var option of document.getElementById('team').options) {
@@ -186,6 +182,10 @@
     }
 
     window.Echo.channel('roundChannel').listen('.update', (e) => {
+        ronde = e.round;
+        aksi = e.action;
+        time = e.minutes * 60;
+
         if (!e.action) {
             $('.table-status').text("Belum Menyelesaikan");
             $('.table-status').removeClass("table-success");
@@ -201,13 +201,6 @@
                 $("#table-status-team-" + value).removeClass("table-danger");
             });
         }
-    });
-
-    // [RICKY] Mendapatkan info round, sesi dan waktu saat ronde/sesi di update
-    window.Echo.channel('roundChannel').listen('.update', (e) => {
-        ronde = e.round;
-        aksi = e.action;
-        time = e.minutes * 60;
     });
 </script>
 </html>

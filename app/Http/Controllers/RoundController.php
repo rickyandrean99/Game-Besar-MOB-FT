@@ -145,22 +145,25 @@ class RoundController extends Controller
                     $set_buff_increased = ($team->buff_increased > 0)? $team->buff_increased - 1 : 0;
                     $set_buff_regeneration = ($team->buff_regeneration  > 0)? $team->buff_regeneration  - 1 : 0;
 
-                    $reset = DB::table('teams')->where('id', $team->id)->update([
-                        'material_shopping' => true,
-                        'debuff_disable' => false,
+                    $reset_ye = DB::table('teams')->where('id', $team->id)->update([
                         'debuff_decreased' => $set_debuff_decreased,
-                        'debuff_overtime' => false,
                         'buff_increased' => $set_buff_increased,
-                        'buff_immortal' => false,
                         'buff_regeneration' => $set_buff_regeneration,
-                        'shield' => false,
-                        'attack_status' => false,
-                        'heal_status' => false,
-                        'buff_debuff_status' => false,
-                        'quest_status' => false
                     ]);
                 }
             }
+            
+            $reset = DB::table('teams')->update([
+                'material_shopping' => true,
+                'quest_status' => false,
+                'debuff_disable' => false,
+                'debuff_overtime' => false,
+                'buff_immortal' => false,
+                'shield' => false,
+                'attack_status' => false,
+                'heal_status' => false,
+                'buff_debuff_status' => false
+            ]);
         }
 
         // [RICKY] Update round

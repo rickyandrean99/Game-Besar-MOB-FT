@@ -167,7 +167,7 @@ class ShopController extends Controller
             }
         } else {
             return response()->json(array(
-                'message' => 'Yah, Anda sudah beli nih!'
+                'gagal' => 'Yah, Anda sudah beli nih!'
             ), 200);
         }
     }

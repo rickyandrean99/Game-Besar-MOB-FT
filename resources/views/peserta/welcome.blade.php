@@ -1211,6 +1211,16 @@
     <!-- Alpine.js -->
     <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
     <script>
+        // AWAL INSPECT
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function (e) {
+            if(e.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
+            if(e.ctrlKey && e.keyCode == 85) { return false; }
+        }
+        // AKHIR INSPECT
+
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
@@ -1375,7 +1385,7 @@
 
         // QUEST TEAM PROGRESS
         function updateQuestProgressBar() {
-            $('#quest-amount-text').text(questAmount + "/10");
+            $('#quest-amount-text').text(questAmount + "/10 Quest");
             var questProgress = (parseInt(questAmount) * 100 / 10) + "%";
             $('#quest-amount-progress').css('width', questProgress);
         }
@@ -1638,7 +1648,7 @@
             }
         });
 
-        // [STOP YOUTUBE VIDEO
+        // STOP YOUTUBE VIDEO
         $(document).on("click", "#stop-video", function() {
             $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
             $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
@@ -1693,8 +1703,11 @@
 
         // UPDATE SPECIAL WEAPON PART PROGRESS
         window.Echo.channel('partChannel').listen('.progress', (e) => {
-            var progress = 100 * e.collected / e.target;
-            $('#progress-part').text(e.collected + "/" + e.target);
+            var amount = e.collected;
+            if (e.collected > 250) amount = 250;
+
+            var progress = 100 * amount / e.target;
+            $('#progress-part').text(amount + "/" + e.target + " Part");
             $('#part-progress').css('width', progress + "%");
         });
 
@@ -2012,7 +2025,5 @@
             findTotal(); 
         });
     </script>
-
 </body>
-
 </html>

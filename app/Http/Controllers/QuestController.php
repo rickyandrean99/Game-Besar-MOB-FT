@@ -31,12 +31,19 @@ class QuestController extends Controller
 
         $round = Round::find(1);
         $receiver_id = $request->get('id_team');
-        $message = "Selamat, tim anda berhasil menyelesaikan quest";
-
+        
         // Add part for scret weapons
-        DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', count($receiver_id));
+        $secret = SecretWeapon::find(1);
+
+        if ($secret->part_amount_collected + count($receiver_id) > 250) {
+            DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
+        } else {
+            DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', count($receiver_id));
+        }
 
         foreach ($receiver_id as $id) {
+            $message = "Selamat, tim anda berhasil menyelesaikan quest";
+
             // Update Part Tim
             DB::table('teams')->where('id', $id)->increment('quest_amount', 1);
 
