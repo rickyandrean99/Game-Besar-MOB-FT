@@ -48,8 +48,8 @@
         {{-- [eRHa] Quest Success --}}
         <div>
             <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#successModal">
-                Berhasil
+            <button type="button" id="btn-submit" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#successModal">
+                Submit
             </button>
 
             <!-- Modal -->
@@ -61,7 +61,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Part(s) will be added.
+                            Special Weapon Part(s) will be added.
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -107,6 +107,17 @@
     var aksi = {{ $round->action }};
     var time = {{ $times }};
 
+    var win = ({{ $weapon->part_amount_collected }} >= {{ $weapon->part_amount_target }}) ? true : false;
+    var gameFinishedStatus = {{ $round->game_finished }};
+
+    // Jika Gamebes selesai
+    function gameFinished() {
+        $('.ronde').html("Game Besar Sudah Selesai");
+        $('.sesi').text("");
+        $('.timer').text("");
+        $('#btn-submit').attr('disabled', 'disabled');
+    }
+
     function questResult() {
         const arr_team_id = [];
 
@@ -120,6 +131,8 @@
             alert("Silakan memilih team terlebih dahulu !");
         else {
             axiosServ(arr_team_id);
+
+            document.getElementById('team').value = "";
         }
     }
 
@@ -151,12 +164,8 @@
         if (ronde < 1) {
             $('.ronde').html("Game Besar Belum Dimulai");
             $('#btn-action').attr('disabled', 'disabled');
-        } else if (ronde > 13) {
-            $('.ronde').html("Game Besar Sudah Selesai");
-            $('.sesi').text("");
-            $('.timer').text("");
-            $('#btn-action').attr('disabled', 'disabled');
-            $('#btn-update').attr('disabled', 'disabled');
+        } else if (ronde > 13 || win || gameFinishedStatus) {
+            gameFinished();
         } else {
             $('.ronde').html("Round " + ronde + "&nbsp;(");
             var sesi = (aksi) ? "Action" : "Preparation";
@@ -169,7 +178,7 @@
                 $('#btn-update').attr('disabled', 'disabled');
                 $('#btn-action').removeAttr('disabled');
             }
-            
+
             if (time > 0) {
                 minutes = (Math.floor(time / 60)).toString().padStart(2, '0');
                 seconds = (time % 60).toString().padStart(2, '0');
@@ -200,6 +209,14 @@
                 $("#table-status-team-" + value).addClass("table-success");
                 $("#table-status-team-" + value).removeClass("table-danger");
             });
+        }
+    });
+
+    // Check sesi gamebes sudah selesai atau tidak
+    window.Echo.channel('videoChannel').listen('.broadcast', (e) => {
+        if (e.broadcast_winner) {
+            gameFinished();
+            gameFinishedStatus = true;
         }
     });
 </script>

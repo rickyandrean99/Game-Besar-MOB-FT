@@ -25,7 +25,7 @@ class ShopController extends Controller
             return view('peserta.shop', ["material" => Material::all(), "team" => $team]);
         } else {
             return redirect()->route('dashboard');
-        }     
+        }
     }
 
     public function insertOrUpdate(Request $request, Team $team)
@@ -36,7 +36,7 @@ class ShopController extends Controller
         $id =Auth::user()->team;
         $team = Team::find($id);
         $coin = $team->coin;
-        
+
         if($team->material_shopping == 0){
             //Ambil array dari cart
             $cart = $request->get('cart');
@@ -52,7 +52,7 @@ class ShopController extends Controller
                 $material_id = $cart[$i]['id'];
                 $round = Round::find(1);
 
-                //Ambil class Material sesuai dengan ID 
+                //Ambil class Material sesuai dengan ID
                 $material = Material::find($material_id);
                 $name = $material->name;
                 $material->timestamps = false;
@@ -66,7 +66,7 @@ class ShopController extends Controller
                 $exists = $team->materials()->where('materials_id', $material_id)->first();
 
                 if ($exists != null) {
-                    //Jika stok berjumlah 0 
+                    //Jika stok berjumlah 0
                     if ($stock == 0) {
                         array_push($failToBuy, $name);
                         $total -= $subtotal;
@@ -86,7 +86,7 @@ class ShopController extends Controller
                         $stock -= $quantity;
                     }
                 } else {
-                    //Jika stok berjumlah 0 
+                    //Jika stok berjumlah 0
                     if ($stock == 0) {
                         array_push($failToBuy, $name);
                         $total -= $subtotal;
@@ -158,16 +158,21 @@ class ShopController extends Controller
 
             if (empty($failToBuy)) {
                 return response()->json(array(
-                    'message' => 'Yay, transaksi berhasil!'
+                    'message' => 'Yay, transaksi berhasil!',
+                    'total' => $total,
+                    'coin' => $team->coin
                 ), 200);
             } else {
                 return response()->json(array(
-                    'message' => 'Transaksi berhasil, namun ada beberapa material yang gagal ditambahkan/diupdate atau jumlah tidak ditambahkan/diupdate sesuai karena stok habis.'
+                    'message' => 'Yay, transaksi berhasil, namun ada beberapa material yang gagal ditambahkan/diupdate atau jumlah tidak ditambahkan/diupdate sesuai karena stok habis.',
+                    'total' => $total,
+                    'coin' => $team->coin
                 ), 200);
             }
         } else {
             return response()->json(array(
-                'gagal' => 'Yah, Anda sudah beli nih!'
+                'message' => 'Maaf, kelompok Anda telah menyelesaikan sesi pembelian material!',
+                'coin' => $team->coin
             ), 200);
         }
     }

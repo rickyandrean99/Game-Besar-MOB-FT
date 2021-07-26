@@ -22,8 +22,14 @@ class QuestController extends Controller
 
         $round = Round::find(1);
         $difference = strtotime($round->time_end) - strtotime(date("Y-m-d H:i:s"));
+        $secret_weapon = SecretWeapon::find(1);
 
-        return view('admin.quest', [ 'teams' => $teams, 'round'=> $round, 'times'=> $difference ]);
+        return view('admin.quest', [
+            'teams' => $teams,
+            'round'=> $round,
+            'times'=> $difference,
+            'weapon' => $secret_weapon
+        ]);
     }
 
     public function result(Request $request) {
@@ -31,15 +37,14 @@ class QuestController extends Controller
 
         $round = Round::find(1);
         $receiver_id = $request->get('id_team');
-        
+
         // Add part for scret weapons
         $secret = SecretWeapon::find(1);
 
-        if ($secret->part_amount_collected + count($receiver_id) > 250) {
+        if ($secret->part_amount_collected + count($receiver_id) > 250)
             DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
-        } else {
+        else
             DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', count($receiver_id));
-        }
 
         foreach ($receiver_id as $id) {
             $message = "Selamat, tim anda berhasil menyelesaikan quest";

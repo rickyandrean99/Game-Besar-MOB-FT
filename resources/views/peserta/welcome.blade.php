@@ -211,7 +211,7 @@
         #jumlahItem {
             margin-top: 6rem;
         }
-        
+
         .container-left {
             position: absolute;
             width: 370px;
@@ -446,6 +446,11 @@
         .btn-primary:hover {
             transform: scale(1.05);
         }
+        .btn-secondary:hover {
+            transform: scale(1.05);
+            border: 2px solid #1F9C8C;
+            background-color: transparent;
+        }
 
         .text-glow {
             /* color: #4fda91;  */
@@ -563,13 +568,14 @@
                     </div>
                 </div>
                 <div class="status">
-                    <div class="label">
-                        <span class="text-glow2" style="font-size: larger;">Coin : </span><br>
-                        <span class="text-glow2" style="font-size: larger;">Weapon : </span>
+                    <div class="label" style="width:15px;">
+                        <span class="text-glow2" style="font-size: larger;">Coin</span><br>
+                        <span class="text-glow2" style="font-size: larger;">Weapon</span>
                     </div>
                     <div class="label-content">
-                        <span class="text-glow2 coin-amount" style="font-size: larger;">{{ $team->coin }}</span><br>
+                        <span class="coin-amount text-glow2" style="font-size: larger;">: {{ $team->coin }}</span><br>
                         <span class="text-glow2" id="weapon-name" style="font-size: larger;">
+                         :
                             @if ($team->weapon_level == 0)
                                 -
                             @elseif($team->weapon_level == 1)
@@ -670,7 +676,7 @@
 
                     $quest_progress = $quest_amount * 100 / 10;
                 @endphp
-                
+
                 <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
                     <div class="text-white fw-bold" id="quest-amount-text" style="position:absolute; text-align: center; width: 100%; padding-top: 3px">{{ $quest_amount }}/10 Quest</div>
                     <div class="progress-bar" id="quest-amount-progress" role="progressbar" style="width: {{ $quest_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
@@ -699,7 +705,8 @@
         <div class="right-menu">
             <!-- Tempat logout -->
             <div class="logout">
-                <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a>
+                <!-- <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a> -->
+                <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
             </div>
             <br>
@@ -709,7 +716,7 @@
                     @foreach ($histories as $history)
                         <tr>
                             <td>
-                                <p>
+                                <p style="text-align:justified;">
                                     <b>[{{ $history->type }}]</b>
                                     <small>{{ $history->time }}</small>
                                     <br>
@@ -730,14 +737,14 @@
                     <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
                         <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
                         <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
-                    </a>           
+                    </a>
                 @else
                     <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#dc1c13;box-shadow: 0px 0px 15px #dc1c13;font-size:30px;cursor:pointer">
                         <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
                         <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
-                    </a>    
+                    </a>
                 @endif
-                
+
                 @if ($team->weapon_level == 3)
                     <a data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
                         <!-- <img src="{{ asset('img/upgrade.png')}}" style="height:50px;width:50px;" alt="upgrade"> -->
@@ -756,10 +763,10 @@
             <!-- <button type="button" onclick="enableGift()">Enable</button>
             <button type="button" onclick="disableGift()">Disable</button>
             <button type="button" id="btn-buy-material" disabled="disabled">PUNTEN GOPUD</button> -->
-            
+
         </div>
     </div>
-    
+
     <!-- Modal -->
     <!-- Modal Craft -->
     <div class="modal fade" id="modalCraft" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -789,7 +796,7 @@
                                                 {{ $e->deskripsi_equipment }}
                                             </p>
                                             <div class="d-grid gap-1 d-md-flex justify-content-md-start mb-2">
-                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
                                                 font-size:20px; font-weight:bold" type="number" class="form-control form-control-sm w-25 craft-amount" id="exampleCheck1" value="1">
                                                 <button class="btn btn-primary me-2 btn-sm color-1 btn-crafting-equipment" style="border-radius:25px;width:90px;" type="button" value="{{ $e->id_equipment }}">Craft</button>
                                             </div>
@@ -877,7 +884,7 @@
                                                 <div class="card-body">
                                                     <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{ $m->nama_material }}</h5>
                                                     <p style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;" class="text-glow3 card-text">
-                                                        
+
                                                     </p>
                                                 </div>
                                             </div>
@@ -935,7 +942,7 @@
                     <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="mx-4">
-                    <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;color:#1F9C8C;" class="form-select form-select-md w-100" aria-label=".form-select-sm example" id="gift-pilih-kelompok">
+                    <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;color:#1F9C8C;font-weight:normal;" class="form-select form-select-md w-100" aria-label=".form-select-sm example" id="gift-pilih-kelompok">
                         <option selected value="default">--Pilih Kelompok--</option>
                         @foreach ($friend as $f)
                             <option value="{{ $f->id }}">{{ $f->name }}</option>
@@ -959,12 +966,15 @@
                                                 <!-- <p class="text-glow3 card-text" style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;">
                                                     Meniadakan serangan musuh untuk 1 Round [Hanya aktif saat Ultimate Round]
                                                 </p> -->
-                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
                                                     font-weight:bold" type="number" class="form-control form-control-sm w-50 input-material-amount" id="exampleCheck1" value="1" min="1">
+
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
                                                     <button type="button" class="btn btn-primary btn-gift-material color-1" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;">Gift</button>
                                                 </div>
                                             </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -1002,7 +1012,7 @@
         </div>
     </div>
     <!-- End Modal Pesan Gagal -->
-    
+
     <!-- Modal Shop -->
     <div class="modal fade" id="modalShop" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -1041,7 +1051,7 @@
                                                         class="price">{{ $m->price }}</span>
                                                 </h6>
                                                 <!-- <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
+                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
                                             font-weight:bold" type="number" class="form-control form-control-sm w-25" id="exampleCheck1" value="1">
                                             <button class="btn btn-primary btn-sm me-md-2 color-1" type="button" style="border-radius:15px;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-counterclockwise" viewBox="0 0 16 16">
@@ -1053,15 +1063,10 @@
                                         </div> -->
                                             </div>
                                         </div>
-                                        <div style="margin-left: -20px; margin-bottom: 20px;"
-                                            class="d-grid gap-0 d-md-flex justify-content-md-end">
-                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; 
-                                    font-weight:bold; font-size:larger" type="number" seq="{{ $m->id }}"
-                                                class="form-control form-control-sm w-25 material-qty"
-                                                id="exampleCheck1" seq="{{$m->id}}" value="0" min=0>
+                                        <div style="margin-bottom: 20px;"class="d-grid gap-0 d-md-flex justify-content-md-start">
+                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; font-weight:bold; font-size:larger" type="number" seq="{{ $m->id }}" class="form-control form-control-sm w-25 material-qty ms-2" id="exampleCheck1" seq="{{$m->id}}" value="0" min=0>
                                             <p style="margin-right: 10px;" class="my-auto">item</p>
-                                            <button class="btn btn-primary btn-sm me-md-2 color-1 reset" type="button"
-                                                seq="{{ $m->id }}" style="border-radius:50px; width:40px;">
+                                            <button class="btn btn-primary btn-sm me-md-2 color-1 reset" type="button" seq="{{ $m->id }}" style="border-radius:50px; width:40px;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-arrow-counterclockwise"
                                                     viewBox="0 0 16 16">
@@ -1071,8 +1076,8 @@
                                                         d="M8 4.466V.534a.25.25 0 0 0-.41-.192L5.23 2.308a.25.25 0 0 0 0 .384l2.36 1.966A.25.25 0 0 0 8 4.466z" />
                                                 </svg>
                                             </button>
-                                            <p style="font-weight:bold;color:#33334D" class="my-auto">Subtotal: <span
-                                                    seq="{{ $m->id }}" class="subtotal">0</span>
+                                            <p style="font-weight:bold;color:#33334D" class="my-auto me-2">Subtotal :
+                                                <span seq="{{ $m->id }}" class="subtotal">0</span>
                                             </p>
                                         </div>
                                     </div>
@@ -1082,12 +1087,12 @@
                         <!-- End Foreach -->
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: none">
+                <div class="modal-footer" style="border-top : none">
                     <h5 class="card-title me-auto"
-                        style="margin-left:20px; font-weight: bold; font-size:large; color:#33334D">Jumlah Koin:
+                        style="margin-left :20px; font-weight : bold; font-size :large; color :#33334D">Coin  :
                         <span class="team-coin">{{ $team->coin }}</span>
                     </h5>
-                    <h5 class="card-title" style="color:#33334D;font-weight: bold; font-size:large;">Total: <span
+                    <h5 class="card-title" style="color:#33334D;font-weight: bold; font-size:large;">Total : <span
                             class="total">0</span></h5>
                     <button type="button" class="btn btn-primary color-1 material-buy" style="margin-right:20px;border-radius:20px;width:90px;">Buy</button>
                 </div>
@@ -1114,11 +1119,11 @@
                         <!-- end tempat ganti" text info -->
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-secondary color-1-outline btn-no" data-bs-dismiss="modal" aria-label="Close" style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;">No</button>
+                            <button type="button" class="btn btn-secondary color-1-outline btn-no" data-bs-dismiss="modal" aria-label="Close" style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;border: 2px solid #1F9C8C;">No</button>
                             <button type="button" class="btn btn-primary btn-lg color-1 btn-yes" style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal" onclick="buyMaterial()">Yes</button>
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>
@@ -1214,20 +1219,20 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
     <script>
         // AWAL INSPECT
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function (e) {
-            if(e.keyCode == 123) { return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
-            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
-            if(e.ctrlKey && e.keyCode == 85) { return false; }
-        }
+        // document.addEventListener('contextmenu', event => event.preventDefault());
+        // document.onkeydown = function (e) {
+        //     if(e.keyCode == 123) { return false; }
+        //     if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
+        //     if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
+        //     if(e.ctrlKey && e.keyCode == 85) { return false; }
+        // }
         // AKHIR INSPECT
 
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
-        
+
         var ronde = parseInt("{{ $round->round }}");
         var aksi = {{ $round->action }};
         var time = {{ $times }};
@@ -1237,6 +1242,7 @@
         var questAmount = ({{ $team->quest_amount }} >= 10) ? 10 : {{ $team->quest_amount }};
         var shopping = ({{ $team->material_shopping }} == 0) ? true : false;
         var win = ({{ $weapon->part_amount_collected }} >= {{ $weapon->part_amount_target }}) ? true : false;
+        var gameFinishedStatus = {{ $round->game_finished }};
 
         // EQUIPMENT STATUS CHECK
         if (!{{ $team->debuff_disable }}) { $('#wt').hide(); }
@@ -1403,7 +1409,7 @@
             if(e.keyCode == 109) { return false; }
             if(e.keyCode == 189) { return false; }
         });
-        
+
         // HISTORY AUTO SCROLL
         function bringToBottom() {
             $("#logHistory").scrollTop($("#logHistory")[0].scrollHeight);
@@ -1449,10 +1455,10 @@
         function roundSessionTimer() {
             if (ronde < 1) {
                 disableAllControl();
-                $('.round').html("Game Besar Belum Dimulai");
-            } else if (ronde > 13 || win) {
+                $('.round').html("Game Besar belum dimulai");
+            } else if (ronde > 13 || win || gameFinishedStatus) {
                 disableAllControl();
-                $('.round').html("Game Besar Sudah Selesai");
+                $('.round').html("Game Besar telah selesai");
                 $('.round-session').text("");
                 $('.timer').text("");
             } else {
@@ -1696,7 +1702,7 @@
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
                 $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
-                win = true;
+                gameFinishedStatus = true;
                 disableAllControl();
 
                 $('.round').html("Game Besar Sudah Selesai");
@@ -1763,7 +1769,7 @@
                 $(".jumlah-material-" + value.id).text(amount);
                 $('.coin-amount').text(e.coin);
             });
-            
+
             $('#logTable').append(e.message);
             bringToBottom();
         });
@@ -1807,11 +1813,11 @@
         function findSubtotal(seq) {
             materialPrice = parseInt($(".price[seq=" + seq + "]").text());
             materialQty = parseInt($(".material-qty[seq=" + seq + "]").val());
-            
+
             if(isNaN(materialQty)){
                 materialQty = 0;
             }
-            
+
             subtotal = materialPrice * materialQty;
             $(".subtotal[seq=" + seq + "]").text(subtotal);
         }
@@ -1879,7 +1885,7 @@
                     var materialID = $(this).attr('seq');
                     var materialName = $(".material-name[seq="+materialID+"]").text();
                     subtotal = $(".subtotal[seq="+materialID+"]").text();
-                    var total = parseInt($(".total").text());
+                    total = parseInt($(".total").text());
                     var val = {
                         "id": materialID,
                         "name": materialName,
@@ -1895,11 +1901,11 @@
         //Show materials in confirmation modal
         function showModalResult(message){
             if($.isArray(message)){
-                $(".result-message").append("<h3>Item yang akan dibeli:</h3>" + "<br>");
+                $(".result-message").append("<h3>Are you sure you want to buy this item?</h3>" + "<br>");
                 for (var i=0; i<arrOfMaterials.length; i++) {
                     $(".result-message").append(arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty + ") = " + arrOfMaterials[i].subtotal+ "<br>");
                 }
-                $(".result-message").append("<br><h3>Total: " + arrOfMaterials[0].total + "</h3><br>");
+                $(".result-message").append("<br><h3>Total : " + arrOfMaterials[0].total + "</h3><br>");
                 $("#modalConfirm").modal("show");
             } else {
                 $("#modalConfirm").modal("show");
@@ -1940,7 +1946,7 @@
             });
             resetInputValue();
         });
-       
+
 
         //When one of the material's input quantity is changed...
         $(".material-qty").change(function() {
@@ -1980,7 +1986,7 @@
             $("#modalConfirm").modal("hide");
             $("#modalShop").modal("hide");
             disableShop();
-            
+
             var team_id = {{Auth::user()->team}};
             var cart = arrOfMaterials;
             $.ajax({
@@ -1994,25 +2000,24 @@
                 success: function(data) {
                     //Tampilkan modal konfirmasi
                     $('#modalConfirm').modal("show");
+                    $('#title-modal').text("STATUS");
                     $(".result-message").text(data.message);
                     $(".btn-yes").css("display", "none");
                     $('.btn-no').text("OK");
-
-                    // UPDATE COIN
-                    var coinNow = parseInt($('.coin-amount').text()) - parseInt(total);
-                    $('.coin-amount').text(coinNow);
-
-                    // UPDATE STOK
-                    for (var i=0; i<arrOfMaterials.length; i++) {
-                        var id = arrOfMaterials[i].id;
-                        var amountBefore = $(".jumlah-material-" + id).eq(0).text();
-                        var amount = arrOfMaterials[i].qty;
-                        var result = parseInt(amountBefore) + parseInt(amount);
-                        // alert("Sebelum : " + amountBefore + ", Dapet : " + amount + ", Hasil Akhir : " + result);
-                        $(".jumlah-material-" + id).text(result);
+                    if(data.message.indexOf("transaksi") > -1){
+                        // UPDATE STOK
+                        for (var i=0; i<arrOfMaterials.length; i++) {
+                            var id = arrOfMaterials[i].id;
+                            var amountBefore = $(".jumlah-material-" + id).eq(0).text();
+                            var amount = arrOfMaterials[i].qty;
+                            var result = parseInt(amountBefore) + parseInt(amount);
+                            // alert("Sebelum : " + amountBefore + ", Dapet : " + amount + ", Hasil Akhir : " + result);
+                            $(".jumlah-material-" + id).text(result);
+                        }
                     }
+                    $('.coin-amount').text(": " + data.coin);
                 }
-            })
+            });
         }
 
         //Pusher listening...
@@ -2021,6 +2026,7 @@
             var seq = e.id;
             var updateStock = e.stok;
             var updatePrice = e.harga;
+            var recentPrice = parseInt($(".price[seq=" + seq + "]").text());
 
             //Change it into the updated number
             $(".stock[seq=" + seq + "]").text(updateStock);
@@ -2031,7 +2037,7 @@
             //Update subtotal
             findSubtotal(seq);
             //Update total
-            findTotal(); 
+            findTotal();
         });
     </script>
 </body>

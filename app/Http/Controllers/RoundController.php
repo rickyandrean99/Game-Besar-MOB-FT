@@ -25,7 +25,13 @@ class RoundController extends Controller
 
         $round = Round::find(1);
         $difference = strtotime($round->time_end) - strtotime(date("Y-m-d H:i:s"));
-        return view('admin.round', ['round'=> $round, 'times'=> $difference]);
+        $secret_weapon = SecretWeapon::find(1);
+
+        return view('admin.round', [
+            'round'=> $round,
+            'times'=> $difference,
+            'weapon' => $secret_weapon
+        ]);
     }
 
     // [RICKY] Untuk update round dan set sesi jadi preparation
@@ -35,7 +41,7 @@ class RoundController extends Controller
         $round_detail = Round::find(1);
         $damage_dealt_to_boss = 0;
         $attack_amount_list = array();
-        
+
         // [RICKY] Sistem serang boss
         if ($round_detail->round > 0 && $round_detail->round <= 20) {
             // [RICKY] Masuk if jika round itu adalah special
@@ -61,7 +67,7 @@ class RoundController extends Controller
                 }
 
                 // [RICKY] Cek buff_regeneration (RETURNER)
-                if ($team->buff_regeneration > 0) { 
+                if ($team->buff_regeneration > 0) {
                     $update_hp_team = DB::table('teams')->where('id', $team->id)->increment('hp_amount', 30);
                     broadcast(new UpdateHitpoint($team->id, $team->hp_amount + 30, null, null))->toOthers();
                 }
@@ -87,7 +93,7 @@ class RoundController extends Controller
             foreach ($boss_attack_list as $value) {
                 $team_detail = Team::find($value);
                 $damage_dealt_to_team = $boss_damage;
-                
+
                 // [RICKY] Memastikan apakah tim masih bisa bermain dengan mengecek hp yang dimiliki
                 if ($team_detail->hp_amount > 0) {
                     // [RICKY] Pengecekan apakah monster boss dapat menyerang tim ini (WINDTALKER & IMMORTAL ARMOR)
@@ -112,9 +118,9 @@ class RoundController extends Controller
                             'time' =>  Carbon::now(),
                             'round' => $round_detail->round
                         ]);
-                        
+
                         $msg_receive_damage = "<tr><td><p><b>[ATTACKED]</b><small> ".date('H:i:s')."</small><br><span>".$msg_receive_damage."</span></p></td></tr>";
-                        
+
                         // [RICKY] Kurangi HP Team
                         if ($team_detail->hp_amount > $damage_dealt_to_team) {
                             $attack_team = DB::table('teams')->where('id', $team_detail->id)->decrement('hp_amount', $damage_dealt_to_team);
@@ -152,7 +158,7 @@ class RoundController extends Controller
                     ]);
                 }
             }
-            
+
             $reset = DB::table('teams')->update([
                 'material_shopping' => true,
                 'quest_status' => false,
@@ -171,6 +177,9 @@ class RoundController extends Controller
 
         $end_time = Carbon::now()->addMinutes($minute);
         $update_round = DB::table('rounds')->where('id', 1)->update(['round'=> $round_detail->round + 1, 'action'=> false, 'time_end'=> $end_time]);
+
+        if ($round_detail->round + 1 >= 14)
+            DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
 
         // [RICKY] Pusher broadcast
         $boss_detail = EnemyBoss::find(1);
@@ -216,6 +225,8 @@ class RoundController extends Controller
         if (!($type)) {
             $update_reminder = DB::table('rounds')->where('id', 1)->update(['reminder'=> true]);
         }
+        else
+            DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
 
         event(new BroadcastVideo($type));
         return ["success" => true];
@@ -228,6 +239,7 @@ class RoundController extends Controller
 
         if ($secret->part_amount_collected + $part_amount > 250) {
             DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
+            DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
         } else {
             DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
         }
@@ -236,6 +248,7 @@ class RoundController extends Controller
         event(new UpdatePart($secret_weapon->part_amount_collected, $secret_weapon->part_amount_target));
 
         if ($secret_weapon->part_amount_collected >= $secret_weapon->part_amount_target) {
+            DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
             event(new BroadcastVideo(true));
         }
 
