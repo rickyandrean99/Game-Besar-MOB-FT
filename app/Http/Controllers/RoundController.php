@@ -224,7 +224,13 @@ class RoundController extends Controller
     // [RICKY] Test untuk update progress dari special weapon part
     public function updatePartManual(Request $request) {
         $part_amount = $request->get('amount');
-        $update_part = DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
+        $secret = SecretWeapon::find(1);
+
+        if ($secret->part_amount_collected + $part_amount > 250) {
+            DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
+        } else {
+            DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
+        }
 
         $secret_weapon = SecretWeapon::find(1);
         event(new UpdatePart($secret_weapon->part_amount_collected, $secret_weapon->part_amount_target));

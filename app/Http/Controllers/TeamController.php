@@ -446,7 +446,7 @@ class TeamController extends Controller
                         $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
                         
                         $msg = "Memberikan ".$jumlah." ".$material_detail->name." ke Tim ".$tujuan;
-                        $receiver_history = "Mendapatkan ".$jumlah." ".$material_detail->name." dari Tim ".$id_team;
+                        $receiver_history = "Mendapatkan ".$jumlah." ".$material_detail->name." dari Tim Beta ".$id_team;
 
                         $insert_history = DB::table('histories')->insert([
                             [

@@ -19,8 +19,8 @@ Route::get('/', function () {
 
 // Route tipe get yang digunakan saat mengakses halaman
 Route::middleware(['auth'])->group(function () {
+    // Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
     Route::get('/dashboard', 'TeamController@dashboard')->name('dashboard');
-    Route::get('/puntengopud', 'TeamController@dashboard')->name('dashboard');
     Route::get('/round', 'RoundController@round')->name('round');
     Route::get('/shop', "ShopController@index")->name('shop');
     Route::post('insertOrUpdate', "ShopController@insertOrUpdate")->name('insertOrUpdate');

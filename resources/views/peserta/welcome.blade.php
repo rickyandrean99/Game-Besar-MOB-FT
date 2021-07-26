@@ -615,7 +615,9 @@
                 </div>
 
                 <div class="item" id="atk">
-                    @if ($team->weapon_level == 1)
+                    @if ($team->weapon_level == 0)
+                        <img class="item2" src="">
+                    @elseif ($team->weapon_level == 1)
                         <img class="item2" src="./img/item/Loop Harmer.jpg">
                     @elseif ($team->weapon_level == 2)
                         <img class="item2" src="./img/item/Master Sword.jpg">
@@ -1234,6 +1236,7 @@
         var partStatus = {{ $round->reminder }};
         var questAmount = ({{ $team->quest_amount }} >= 10) ? 10 : {{ $team->quest_amount }};
         var shopping = ({{ $team->material_shopping }} == 0) ? true : false;
+        var win = ({{ $weapon->part_amount_collected }} >= {{ $weapon->part_amount_target }}) ? true : false;
 
         // EQUIPMENT STATUS CHECK
         if (!{{ $team->debuff_disable }}) { $('#wt').hide(); }
@@ -1408,7 +1411,7 @@
 
         // CHECK DO AND DONT
         function checkDoAndDont() {
-            if (teamStatus) {
+            if (teamStatus && !win) {
                 if (aksi) {
                     disableGift();
                     disableCrafting();
@@ -1447,7 +1450,7 @@
             if (ronde < 1) {
                 disableAllControl();
                 $('.round').html("Game Besar Belum Dimulai");
-            } else if (ronde > 13) {
+            } else if (ronde > 13 || win) {
                 disableAllControl();
                 $('.round').html("Game Besar Sudah Selesai");
                 $('.round-session').text("");
@@ -1495,8 +1498,8 @@
                         $('#logTable').append(data.message);
                         bringToBottom();
                     } else {
-                        $('#modalAlert').modal('show');
                         $('#failed-message').text(data.message);
+                        $('#modalAlert').modal('show');
                     }
                 }
             });
@@ -1551,7 +1554,7 @@
 
         // UPGRADE WEAPON
         $(document).on("click", "#btn-upgrade", function() {
-            if (ronde > 0 && ronde < 14 && !aksi && weaponLevel < 3 && teamStatus) {
+            if (ronde > 0 && ronde < 14 && !aksi && weaponLevel < 3 && teamStatus && !win) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('upgrade-weapon') }}',
@@ -1591,7 +1594,7 @@
 
         // ATTACK WEAPON
         $(document).on("click", "#btn-weapon-attack", function() {
-            if (ronde > 0 && ronde < 14 && aksi && weaponLevel > 0 && teamStatus) {
+            if (ronde > 0 && ronde < 14 && aksi && weaponLevel > 0 && teamStatus && !win) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('attack-weapon') }}',
@@ -1640,7 +1643,7 @@
                             $('.input-material-amount').val(1);
                             $("#gift-pilih-kelompok").val("default");
                         } else {
-                            $('#failed-message').text(data.message);
+                            $('#failed-message').text(data.msg);
                             $('#modalAlert').modal('show');
                         }
                     }
@@ -1693,6 +1696,12 @@
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
                 $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
+                win = true;
+                disableAllControl();
+
+                $('.round').html("Game Besar Sudah Selesai");
+                $('.round-session').text("");
+                $('.timer').text("");
             } else {
                 $('#modalVideoReminder').modal('show');
                 $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=0');
