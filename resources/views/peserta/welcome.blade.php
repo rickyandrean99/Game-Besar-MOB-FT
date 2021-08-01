@@ -1241,7 +1241,6 @@
         var partStatus = {{ $round->reminder }};
         var questAmount = ({{ $team->quest_amount }} >= 10) ? 10 : {{ $team->quest_amount }};
         var shopping = ({{ $team->material_shopping }} == 0) ? true : false;
-        var win = ({{ $weapon->part_amount_collected }} >= {{ $weapon->part_amount_target }}) ? true : false;
         var gameFinishedStatus = {{ $round->game_finished }};
 
         // EQUIPMENT STATUS CHECK
@@ -1417,7 +1416,7 @@
 
         // CHECK DO AND DONT
         function checkDoAndDont() {
-            if (teamStatus && !win) {
+            if (teamStatus && !gameFinishedStatus) {
                 if (aksi) {
                     disableGift();
                     disableCrafting();
@@ -1456,7 +1455,7 @@
             if (ronde < 1) {
                 disableAllControl();
                 $('.round').html("Game Besar belum dimulai");
-            } else if (ronde > 13 || win || gameFinishedStatus) {
+            } else if (ronde > 13 || gameFinishedStatus) {
                 disableAllControl();
                 $('.round').html("Game Besar telah selesai");
                 $('.round-session').text("");
@@ -1560,7 +1559,7 @@
 
         // UPGRADE WEAPON
         $(document).on("click", "#btn-upgrade", function() {
-            if (ronde > 0 && ronde < 14 && !aksi && weaponLevel < 3 && teamStatus && !win) {
+            if (ronde > 0 && ronde < 14 && !aksi && weaponLevel < 3 && teamStatus && !gameFinishedStatus) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('upgrade-weapon') }}',
@@ -1600,7 +1599,7 @@
 
         // ATTACK WEAPON
         $(document).on("click", "#btn-weapon-attack", function() {
-            if (ronde > 0 && ronde < 14 && aksi && weaponLevel > 0 && teamStatus && !win) {
+            if (ronde > 0 && ronde < 14 && aksi && weaponLevel > 0 && teamStatus && !gameFinishedStatus) {
                 $.ajax({
                     type: 'POST',
                     url: '{{ route('attack-weapon') }}',

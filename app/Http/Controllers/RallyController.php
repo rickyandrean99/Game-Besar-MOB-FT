@@ -25,6 +25,7 @@ class RallyController extends Controller
         if($tipe == "singel"){
             if($status == 'win'){
                 $coin = 100000;
+                $upadate_win = DB::table('teams')->where('id',$kelompok1)->increment('rally_win',1);
             }
             else{
                 $coin = 20000;
@@ -36,6 +37,7 @@ class RallyController extends Controller
                 $coinwin = 250000;
                 $coinlose = 30000;
                 $update1= DB::table('teams')->where('id',$kelompok1)->increment('coin',$coinwin);
+                $update1= DB::table('teams')->where('id',$kelompok1)->increment('rally_win',1);
                 $update2= DB::table('teams')->where('id',$kelompok2)->increment('coin',$coinlose);
             }
             else{
