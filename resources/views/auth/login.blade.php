@@ -5,7 +5,7 @@
 		<div class="container">
 			<div class="row justify-content-center">
 				<div class="col-md-6 text-center mb-5">
-					<h1 style="font-size:50px;" class="heading-section text-glow2">Are you ready to fight?</h1>
+					<h1 style="font-size:50px;" class="heading-section text-glow2">Are you ready to fight Artimus?</h1>
 				</div>
 			</div>
 			<div class="row justify-content-center">

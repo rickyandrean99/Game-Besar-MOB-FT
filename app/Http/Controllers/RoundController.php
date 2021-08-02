@@ -74,7 +74,7 @@ class RoundController extends Controller
 
                 // [RICKY] Cek Status buff_increased (SCARLET PHANTOM)
                 if ($team->buff_increased > 0) {
-                    $damage_weapon += (0.25 * $damage_weapon);
+                    $damage_weapon += intval(0.25 * $damage_weapon);
                 }
 
                 // [RICKY] Cek Status debuff_overtime yang stackable (PARADOX SPHERE)
@@ -97,7 +97,12 @@ class RoundController extends Controller
                 // [RICKY] Memastikan apakah tim masih bisa bermain dengan mengecek hp yang dimiliki
                 if ($team_detail->hp_amount > 0) {
                     // [RICKY] Pengecekan apakah monster boss dapat menyerang tim ini (WINDTALKER & IMMORTAL ARMOR)
-                    if (!($team_detail->debuff_disable) && !($team_detail->buff_immortal)) {
+                    if ( 
+                        (($round_detail->round % 4 == 0 || $round_detail->round == 13) && $team_detail->buff_immortal) || // jika itu ultimate dan dia punya immortal
+                        (($round_detail->round % 4 != 0 && $round_detail->round != 13) && $team_detail->debuff_disable) // Jika itu round biasa dan punya disable
+                    ) {
+                        // ya gak ngapain
+                    } else {
                         // [RICKY] Damage yang diterima dari serangan boss berkurang 25% (ANTIQUE CUIRASS)
                         if ($team_detail->debuff_decreased > 0) {
                             $damage_dealt_to_team = 0.75 * $damage_dealt_to_team;

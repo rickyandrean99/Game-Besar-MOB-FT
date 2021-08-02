@@ -568,7 +568,7 @@
                     </div>
                 </div>
                 <div class="status">
-                    <div class="label" style="width:15px;">
+                    <div class="label">
                         <span class="text-glow2" style="font-size: larger;">Coin</span><br>
                         <span class="text-glow2" style="font-size: larger;">Weapon</span>
                     </div>
@@ -1019,7 +1019,7 @@
             <div class="modal-content  border-gradient "
                 style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
-                    <img style="margin-left:110px; width:30%;" src="./img/kiri.svg">
+                    <img style="margin-left:105px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">SHOP</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
                     <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
@@ -1572,13 +1572,13 @@
                             checkDoAndDont();
 
                             if (weaponLevel == 1) {
-                                $('#weapon-name').text("Loops Hammer");
+                                $('#weapon-name').text(": Loops Hammer");
                                 $('#atk img').attr('src', './img/item/Loop Harmer.jpg');
                             } else if (weaponLevel == 2) {
-                                $('#weapon-name').text("Master Sword");
+                                $('#weapon-name').text(": Master Sword");
                                 $('#atk img').attr('src', './img/item/Master Sword.jpg');
                             } else if (weaponLevel == 3) {
-                                $('#weapon-name').text("Quantum Gun");
+                                $('#weapon-name').text(": Quantum Gun");
                                 $('#atk img').attr('src', './img/item/Quantum Gun.jpg');
                             }
 
@@ -1902,7 +1902,7 @@
             if($.isArray(message)){
                 $(".result-message").append("<h3>Are you sure you want to buy this item?</h3>" + "<br>");
                 for (var i=0; i<arrOfMaterials.length; i++) {
-                    $(".result-message").append(arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty + ") = " + arrOfMaterials[i].subtotal+ "<br>");
+                    $(".result-message").append("<p>"+arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty + ") = <span class="harga-material" seq="arrOfMaterials[i].id">" + arrOfMaterials[i].subtotal + "</span></p><br>");
                 }
                 $(".result-message").append("<br><h3>Total : " + arrOfMaterials[0].total + "</h3><br>");
                 $("#modalConfirm").modal("show");
