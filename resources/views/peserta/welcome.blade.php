@@ -1265,7 +1265,7 @@
                                 data-bs-dismiss="modal" aria-label="Close"
                                 style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;border: 2px solid #1F9C8C;">No</button>
                             <button type="button" class="btn btn-primary btn-lg color-1 btn-yes"
-                                style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal"
+                                style="border-radius:50px;width:120px;font-size:15px;"
                                 onclick="buyMaterial()">Yes</button>
                         </div>
                     </div>
@@ -2264,17 +2264,21 @@
             $(".stock[seq=" + seq + "]").text(updateStock);
             $(".price[seq=" + seq + "]").text(updatePrice);
 
-            if ($('#modalConfirm').data('bs.modal').isShown == true) {
-                if($(".hrg-material[seq=" + seq + "]").text()))
-            }
-
             //Check stock's availability
             isStockAvailable(seq);
             //Update subtotal
             findSubtotal(seq);
             //Update total
             findTotal();
+
+            //If price is updated when modal confirmation is being opened..
+            if ($('#modalConfirm').is(':visible')) {
+                //If the confirmed price of the material is different, re-calculate
+                addDataToArray();
+                showModalResult(arrOfMaterials);
+            }
         });
+
     </script>
 </body>
 
