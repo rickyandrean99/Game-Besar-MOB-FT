@@ -1293,12 +1293,11 @@
                     <div class="row mt-2">
                         <div style="margin-bottom: 30px;">
                             <!-- tempat ganti" text info -->
-                            <p style="text-align: center; font-size:20px; color: #33334D;" class="result-message">Gagal
-                                mengirim material karena jumlah yang dikirim melebihi inventory</p>
+                            <p style="text-align: center; font-size:20px; color: #33334D;" class="result-message"></p>
                             <!-- end tempat ganti" text info -->
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-primary btn-lg color-1 btn-yes"
+                            <button type="button" class="btn btn-primary btn-lg color-1 btn-confirm-yes"
                                 style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal"
                                 aria-label="Close">OK</button>
                         </div>
@@ -1938,6 +1937,10 @@
                 gameFinishedStatus = true;
                 disableAllControl();
 
+                $('.terbang').attr('src', '');
+                $('#hp-boss').text("0/100000");
+                $('#boss-hp-amount').css('width',"0%");
+
                 $('.round').html("Game Besar Sudah Selesai");
                 $('.round-session').text("");
                 $('.timer').text("");
@@ -2074,9 +2077,11 @@
             if (total > coin) {
                 $(".team-coin").addClass("red");
                 disableButtonBuy();
+                disableButtonConfirmBuy();
             } else {
                 $(".team-coin").removeClass("red");
                 enableButtonBuy();
+                enableButtonConfirmBuy();
             }
         }
 
@@ -2086,6 +2091,14 @@
 
         function enableButtonBuy() {
             $(".material-buy").removeAttr('disabled');
+        }
+
+        function disableButtonConfirmBuy() {
+            $(".btn-confirm-yes").attr("disabled", "disabled");
+        }
+
+        function enableButtonConfirmBuy() {
+            $(".btn-confirm-yes").removeAttr('disabled');
         }
 
         function makeStockRed(seq) {
@@ -2145,7 +2158,6 @@
                 $("#modalConfirm").modal("show");
             } else {
                 $("#modalStatus").modal("show");
-                $("#title-modal").text("Gagal membeli");
                 $(".result-message").text(message);
             }
         }
@@ -2276,6 +2288,7 @@
                 //If the confirmed price of the material is different, re-calculate
                 addDataToArray();
                 showModalResult(arrOfMaterials);
+                compareTotalAndCoin();
             }
         });
 

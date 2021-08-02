@@ -43,6 +43,7 @@ class QuestController extends Controller
 
         if ($secret->part_amount_collected + count($receiver_id) > 250)
             DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
+            DB::table('enemy_bosses')->where('id', 1)->update(['hp_amount' => 0]);
         else
             DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', count($receiver_id));
 

@@ -232,6 +232,7 @@ class RoundController extends Controller
         }
         else
             DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
+            DB::table('enemy_bosses')->where('id', 1)->update(['hp_amount' => 0]);
 
         event(new BroadcastVideo($type));
         return ["success" => true];
@@ -245,6 +246,7 @@ class RoundController extends Controller
         if ($secret->part_amount_collected + $part_amount > 250) {
             DB::table('secret_weapons')->where('id', 1)->update(['part_amount_collected' => 250]);
             DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
+            DB::table('enemy_bosses')->where('id', 1)->update(['hp_amount' => 0]);
         } else {
             DB::table('secret_weapons')->where('id', 1)->increment('part_amount_collected', $part_amount);
         }
