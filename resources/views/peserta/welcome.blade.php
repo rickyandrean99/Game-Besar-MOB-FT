@@ -657,7 +657,12 @@
 
         <div class="container-boss">
             <div class="img-boss">
-                <img src="{{ asset('img/KOCHENK.png') }}" class="terbang" alt="Boss" style="width: 400px;">
+                @if ($round->game_finished)
+                    <img src="" class="terbang" style="width: 400px;">
+                @else
+                    <img src="{{ asset('img/KOCHENK.png') }}" class="terbang" style="width: 400px;">
+                @endif
+                
             </div>
             <!--darah bos  -->
             <div class="darah-boss">
@@ -860,7 +865,7 @@
                                                 <div class="d-grid gap-1 d-md-flex justify-content-md-start mb-2">
                                                     <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
                                                 font-size:20px; font-weight:bold" type="number"
-                                                        class="form-control form-control-sm w-25 craft-amount"
+                                                        class="form-control form-control-sm w-25 craft-amount disable-keyboard"
                                                         id="exampleCheck1" value="1">
                                                     <button
                                                         class="btn btn-primary me-2 btn-sm color-1 btn-crafting-equipment"
@@ -1090,8 +1095,8 @@
                                                 </p> -->
                                                 <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
                                                     font-weight:bold" type="number"
-                                                    class="form-control form-control-sm w-50 input-material-amount"
-                                                    id="exampleCheck1" value="1" min="1">
+                                                    class="form-control form-control-sm w-50 input-material-amount disable-keyboard"
+                                                    id="exampleCheck1" min="0" value="1">
 
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
                                                     <button type="button"
@@ -1116,7 +1121,7 @@
     <!-- End Modal Gift -->
 
     <!-- Modal Pesan Gagal -->
-    <div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 3090">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content  border-gradient3 "
                 style="background-color: #33334D; box-shadow:1px 0px 40px #ff5b5b;">
@@ -1297,7 +1302,7 @@
                             <!-- end tempat ganti" text info -->
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-primary btn-lg color-1 btn-confirm-yes"
+                            <button type="button" class="btn btn-primary btn-lg color-1"
                                 style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal"
                                 aria-label="Close">OK</button>
                         </div>
@@ -1391,7 +1396,7 @@
                             <!-- tempat ganti" text info -->
 
                             <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
-                                id="video-winner-source" src="https://www.youtube.com/embed/werYxoKlYm0"
+                                id="video-winner-source" src="https://www.youtube.com/embed/7YHGxL_YRyY"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>
@@ -1422,6 +1427,24 @@
         //     if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
         //     if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
         //     if(e.ctrlKey && e.keyCode == 85) { return false; }
+        // }
+
+        // var myVar = setInterval(myTimer, 100);
+        // function myTimer() {
+        //     console.profile(devtoolsassssss)
+        //     console.profileEnd(devtools)
+        // }
+
+        // var devtoolsassssss = function() {};
+        // devtoolsassssss.toString = function() {
+        //     clearInterval(myVar);
+        // }
+
+        // var devtools = function() {};
+        // devtools.toString = function() {
+        //     clearInterval(myVar);
+        //     console.log('%c 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨\nNI NU ', 'background: #F7EC00; color: #F00; font-size:72px;');
+        //     setTimeout(function(){ document.getElementById('logout-form').submit(); }, 5000);
         // }
         // AKHIR INSPECT
 
@@ -1612,7 +1635,7 @@
         }
 
         // PREVENT CERTAIN CHARACTER
-        $(document).on("keydown", ".craft-amount", function(e) {
+        $(document).on("keydown", ".disable-keyboard", function(e) {
             if (e.keyCode == 188) {
                 return false;
             }
@@ -1890,7 +1913,7 @@
         // STOP YOUTUBE VIDEO
         $(document).on("click", "#stop-video", function() {
             $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
-            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
+            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/7YHGxL_YRyY?autoplay=1&mute=1');
         });
 
         // UPDATE ROUND AND ACTION
@@ -1933,7 +1956,7 @@
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
                 $('#video-winner-source').attr('src',
-                    'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
+                    'https://www.youtube.com/embed/7YHGxL_YRyY?autoplay=1&mute=0');
                 gameFinishedStatus = true;
                 disableAllControl();
 
@@ -2076,10 +2099,12 @@
 
             if (total > coin) {
                 $(".team-coin").addClass("red");
+                $(".total-confirm").addClass("red");
                 disableButtonBuy();
                 disableButtonConfirmBuy();
             } else {
                 $(".team-coin").removeClass("red");
+                $(".total-confirm").removeClass("red");
                 enableButtonBuy();
                 enableButtonConfirmBuy();
             }
@@ -2094,11 +2119,11 @@
         }
 
         function disableButtonConfirmBuy() {
-            $(".btn-confirm-yes").attr("disabled", "disabled");
+            $(".btn-yes").attr("disabled", "disabled");
         }
 
         function enableButtonConfirmBuy() {
-            $(".btn-confirm-yes").removeAttr('disabled');
+            $(".btn-yes").removeAttr('disabled');
         }
 
         function makeStockRed(seq) {
@@ -2154,11 +2179,11 @@
                         ") = <span class='hrg-material' seq='" + arrOfMaterials[i].id + "'>" + arrOfMaterials[i]
                         .subtotal + "</span></span><br>");
                 }
-                $(".result-message").append("<br><h3>Total : " + arrOfMaterials[0].total + "</h3><br>");
+                $(".result-message").append("<br><h3>Total : <span class='total-confirm'>" + arrOfMaterials[0].total + "</span></h3><br>");
                 $("#modalConfirm").modal("show");
             } else {
-                $("#modalStatus").modal("show");
-                $(".result-message").text(message);
+                $('#modalAlert').modal("show");
+                $("#failed-message").text(data.message);
             }
         }
 
@@ -2244,10 +2269,10 @@
                     'cart': cart
                 },
                 success: function(data) {
-                    //Tampilkan modal konfirmasi
-                    $('#modalStatus').modal("show");
-                    $(".result-message").text(data.message);
-                    if (data.message.indexOf("transaksi") > -1) {
+                    if (data.message.indexOf("Selamat") > -1) {
+                        //Tampilkan modal konfirmasi
+                        $('#modalStatus').modal("show");
+                        $(".result-message").text(data.message);
                         // UPDATE STOK
                         for (var i = 0; i < arrOfMaterials.length; i++) {
                             var id = arrOfMaterials[i].id;
@@ -2257,6 +2282,12 @@
                             // alert("Sebelum : " + amountBefore + ", Dapet : " + amount + ", Hasil Akhir : " + result);
                             $(".jumlah-material-" + id).text(result);
                         }
+                    } else if (data.message.indexOf("namun") > -1) {
+                        $('#modalStatus').modal("show");
+                        $(".result-message").text(data.message);
+                    } else {
+                        $('#modalAlert').modal("show");
+                        $("#failed-message").text(data.message);
                     }
                     $('.coin-amount').text(": " + data.coin);
                     $('.team-coin').text(data.coin);

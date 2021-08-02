@@ -158,7 +158,7 @@ class ShopController extends Controller
 
             if (empty($failToBuy)) {
                 return response()->json(array(
-                    'message' => 'Yay, transaksi berhasil!',
+                    'message' => 'Selamat, transaksi Anda berhasil!',
                     'total' => $total,
                     'coin' => $team->coin
                 ), 200);
