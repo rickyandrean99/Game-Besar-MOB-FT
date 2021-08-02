@@ -46,9 +46,6 @@ class RallyController extends Controller
                 $update= DB::table('teams')->where('id',$kelompok2)->increment('coin',$coin);
             }
         }
-
-        return response()->json(array(
-            'msg' => "berhasil menambahkan koin"
-        ), 200);
+        return redirect()->route('rally')->with('status','berhasil menambahkan koin');
     }
 }

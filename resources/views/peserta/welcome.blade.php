@@ -9,7 +9,8 @@
     <title>Gambes - MOB FT 2021</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <!-- Tailwind -->
     <!-- <link href="https://unpkg.com/tailwindcss/dist/tailwind.min.css" rel="stylesheet"> -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -60,7 +61,7 @@
             /* background-color: #33334d; */
             background-image: linear-gradient(to right, #1F9C8C, #70E8C6);
             border-radius: 1.5rem;
-            border:none;
+            border: none;
         }
 
         .nav-pills .nav-link {
@@ -199,7 +200,7 @@
         .border-gradient3 {
             border: double 10px transparent;
             border-radius: 30px;
-            background-image: linear-gradient(#f9c1b1, #f9c1b1), radial-gradient(circle at top left, #fe5f75,#ffac81);
+            background-image: linear-gradient(#f9c1b1, #f9c1b1), radial-gradient(circle at top left, #fe5f75, #ffac81);
             background-origin: border-box;
             background-clip: content-box, border-box;
         }
@@ -446,6 +447,7 @@
         .btn-primary:hover {
             transform: scale(1.05);
         }
+
         .btn-secondary:hover {
             transform: scale(1.05);
             border: 2px solid #1F9C8C;
@@ -535,6 +537,7 @@
             outline: 0 !important;
             box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) !important;
         }
+
         .btn-shop {
             position: fixed;
             text-align: center;
@@ -548,6 +551,7 @@
         .red {
             color: red;
         }
+
     </style>
 </head>
 
@@ -557,13 +561,19 @@
             <div class="container-profile">
                 <div class="avatar">
                     <!-- masukin nomor kelompok disini -->
-                    <p style="text-align: center; margin-top:17px; font-weight:bold; font-size:35px;" class="text-glow">{{ Auth::user()->name }}</p>
+                    <p style="text-align: center; margin-top:17px; font-weight:bold; font-size:35px;" class="text-glow">
+                        {{ Auth::user()->name }}</p>
                 </div>
                 <div class="darah-maharu">
                     @php $hp_amount = $team->hp_amount * 100 / 1000; @endphp
-                    <div class="progress" style="height: 1.5rem; border-radius: 25px; background: rgba(255,255,255,0.4);">
-                        <div class="text-white fw-bold" style="position: absolute; text-align: center; width: 100%; padding-top: 3px" id="hp-team">{{ $team->hp_amount }}/1000</div>
-                        <div class="progress-bar bg-danger" id="team-hp-bar" role="progressbar" style="width: {{ $hp_amount }}%;background-image: linear-gradient(to right, #b80f0a, #dc1c13)" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress"
+                        style="height: 1.5rem; border-radius: 25px; background: rgba(255,255,255,0.4);">
+                        <div class="text-white fw-bold"
+                            style="position: absolute; text-align: center; width: 100%; padding-top: 3px" id="hp-team">
+                            {{ $team->hp_amount }}/1000</div>
+                        <div class="progress-bar bg-danger" id="team-hp-bar" role="progressbar"
+                            style="width: {{ $hp_amount }}%;background-image: linear-gradient(to right, #b80f0a, #dc1c13)"
+                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
                 </div>
@@ -575,7 +585,7 @@
                     <div class="label-content">
                         <span class="coin-amount text-glow2" style="font-size: larger;">: {{ $team->coin }}</span><br>
                         <span class="text-glow2" id="weapon-name" style="font-size: larger;">
-                         :
+                            :
                             @if ($team->weapon_level == 0)
                                 -
                             @elseif($team->weapon_level == 1)
@@ -647,22 +657,32 @@
 
         <div class="container-boss">
             <div class="img-boss">
-                <img src="{{ asset('img/KOCHENK.png')}}" class="terbang" alt="Boss" style="width: 400px;">
+                <img src="{{ asset('img/KOCHENK.png') }}" class="terbang" alt="Boss" style="width: 400px;">
             </div>
             <!--darah bos  -->
             <div class="darah-boss">
                 @php $hp_boss = $boss->hp_amount * 100 / 100000; @endphp
-                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
-                    <div class="text-white fw-bold" id="hp-boss" style="position:absolute; text-align: center; width: 100%; padding-top: 4px">{{ $boss->hp_amount }}/100000</div>
-                    <div class="progress-bar" id="boss-hp-amount" role="progressbar" style="width: {{ $hp_boss }}%; background-image: linear-gradient(to right, #b80f0a, #dc1c13);" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress"
+                    style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="hp-boss"
+                        style="position:absolute; text-align: center; width: 100%; padding-top: 4px">
+                        {{ $boss->hp_amount }}/100000</div>
+                    <div class="progress-bar" id="boss-hp-amount" role="progressbar"
+                        style="width: {{ $hp_boss }}%; background-image: linear-gradient(to right, #b80f0a, #dc1c13);"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             <!--weapon  -->
             <div class="progress-boss" id="secret-weapon-progress-bar">
                 @php $weapon_progress = $weapon->part_amount_collected * 100 / $weapon->part_amount_target; @endphp
-                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
-                    <div class="text-white fw-bold" id="progress-part" style="position:absolute; text-align: center; width: 100%; padding-top: 4px">{{ $weapon->part_amount_collected }}/{{ $weapon->part_amount_target }} Part</div>
-                    <div class="progress-bar" id="part-progress" role="progressbar" style="width: {{ $weapon_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress"
+                    style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="progress-part"
+                        style="position:absolute; text-align: center; width: 100%; padding-top: 4px">
+                        {{ $weapon->part_amount_collected }}/{{ $weapon->part_amount_target }} Part</div>
+                    <div class="progress-bar" id="part-progress" role="progressbar"
+                        style="width: {{ $weapon_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             <!-- quest -->
@@ -673,32 +693,47 @@
                     } else {
                         $quest_amount = $team->quest_amount;
                     }
-
-                    $quest_progress = $quest_amount * 100 / 10;
+                    
+                    $quest_progress = ($quest_amount * 100) / 10;
                 @endphp
 
-                <div class="progress" style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
-                    <div class="text-white fw-bold" id="quest-amount-text" style="position:absolute; text-align: center; width: 100%; padding-top: 3px">{{ $quest_amount }}/10 Quest</div>
-                    <div class="progress-bar" id="quest-amount-progress" role="progressbar" style="width: {{ $quest_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                <div class="progress"
+                    style="position: relative; height: 1.7rem; border-radius: 25px; width:500px; background: rgba(255,255,255,0.4);">
+                    <div class="text-white fw-bold" id="quest-amount-text"
+                        style="position:absolute; text-align: center; width: 100%; padding-top: 3px">
+                        {{ $quest_amount }}/10 Quest</div>
+                    <div class="progress-bar" id="quest-amount-progress" role="progressbar"
+                        style="width: {{ $quest_progress }}%; background-image: linear-gradient(to right, #5ec3ee , #70E8C6);color:#44443d;"
+                        aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
         </div>
 
         <div class="left-menu">
-            <a class="btn btn-craft text-center" href="#!" id="btn-craft" role="button" data-bs-toggle="modal" data-bs-target="#modalCraft" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
-                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/hammer-and-anvil.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Craft" />
+            <a class="btn btn-craft text-center" href="#!" id="btn-craft" role="button" data-bs-toggle="modal"
+                data-bs-target="#modalCraft"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
+                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/hammer-and-anvil.png"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Craft" />
             </a>
-            <a class="btn btn-inventory" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalInventory" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
-                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/backpack.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Inventory" />
+            <a class="btn btn-inventory" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalInventory"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
+                <img style="margin-top:5px;" src="https://img.icons8.com/ios/50/000000/backpack.png"
+                    data-bs-toggle="tooltip" data-bs-placement="right" title="Inventory" />
             </a>
-            <a class="btn btn-gift" id="btn-gift" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalGift" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
-                <img style="width:42px; height:42px; margin-top:10px;" src="https://img.icons8.com/ios/50/000000/gift--v1.png" data-bs-toggle="tooltip" data-bs-placement="right" title="Gift" />
+            <a class="btn btn-gift" id="btn-gift" href="#!" role="button" data-bs-toggle="modal"
+                data-bs-target="#modalGift"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;">
+                <img style="width:42px; height:42px; margin-top:10px;"
+                    src="https://img.icons8.com/ios/50/000000/gift--v1.png" data-bs-toggle="tooltip"
+                    data-bs-placement="right" title="Gift" />
             </a>
-            <a class="btn btn-shop" id="btn-shop" href="#!" role="button" data-bs-toggle="modal" data-bs-target="#modalShop"
-                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;"  disabled="disabled">
+            <a class="btn btn-shop" id="btn-shop" href="#!" role="button" data-bs-toggle="modal"
+                data-bs-target="#modalShop"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;border:0px;" disabled="disabled">
                 <img style="width:42px; height:42px; margin-top:10px;"
                     src="https://img.icons8.com/ios/50/000000/shop.png" data-bs-toggle="tooltip"
-                    data-bs-placement="right" title="Shop"/>
+                    data-bs-placement="right" title="Shop" />
             </a>
         </div>
 
@@ -706,7 +741,9 @@
             <!-- Tempat logout -->
             <div class="logout">
                 <!-- <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"> {{ __('Logout') }}</a> -->
-                <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
+                <a class="btn btn-danger" style="border-radius:20px;width:100px;background-color:#dc1c13"
+                    href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
             </div>
             <br>
@@ -725,37 +762,55 @@
                             </td>
                         </tr>
                     @endforeach
-                </tr>
+                    </tr>
             </div>
         </div>
 
         <div class="userActions">
             <input type="checkbox" name="userToggle" class="userToggle" />
-            <a class="userButton" href="#!" style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;font-size:30px;"><img style="transform: rotate(315deg); height:40px;width:40px; margin-top:17px;" src="https://img.icons8.com/ios/50/000000/sword.png" /></a>
+            <a class="userButton" href="#!"
+                style="background-color:#48e2b6;box-shadow: 0px 0px 15px #48e2b6;font-size:30px;"><img
+                    style="transform: rotate(315deg); height:40px;width:40px; margin-top:17px;"
+                    src="https://img.icons8.com/ios/50/000000/sword.png" /></a>
             <div class="userButtons">
                 @if ($team->weapon_level == 0)
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
-                        <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
-                        <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack"
+                        class="text-center"
+                        style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default"
+                        disabled="disabled">
+                        <!-- <img src="{{ asset('img/attack.png') }}" style="height:50px;width:50px;" alt="attack"> -->
+                        <img style="margin-top:10px; height:40px;width:40px;"
+                            src="https://img.icons8.com/ios/50/000000/battle.png" />
                     </a>
                 @else
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack" class="text-center" style="background-color:#dc1c13;box-shadow: 0px 0px 15px #dc1c13;font-size:30px;cursor:pointer">
-                        <!-- <img src="{{ asset('img/attack.png')}}" style="height:50px;width:50px;" alt="attack"> -->
-                        <img style="margin-top:10px; height:40px;width:40px;" src="https://img.icons8.com/ios/50/000000/battle.png" />
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Attack" id="btn-weapon-attack"
+                        class="text-center"
+                        style="background-color:#dc1c13;box-shadow: 0px 0px 15px #dc1c13;font-size:30px;cursor:pointer">
+                        <!-- <img src="{{ asset('img/attack.png') }}" style="height:50px;width:50px;" alt="attack"> -->
+                        <img style="margin-top:10px; height:40px;width:40px;"
+                            src="https://img.icons8.com/ios/50/000000/battle.png" />
                     </a>
                 @endif
 
                 @if ($team->weapon_level == 3)
-                    <a data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default" disabled="disabled">
-                        <!-- <img src="{{ asset('img/upgrade.png')}}" style="height:50px;width:50px;" alt="upgrade"> -->
-                        <img style="height:35px;width:35px; margin-top:13px; margin-left:1px" src="https://img.icons8.com/ios/50/000000/sword.png" />
-                        <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑</p>
+                    <a data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade"
+                        style="background-color:#808080;box-shadow: 0px 0px 15px #808080;font-size:30px;cursor:default"
+                        disabled="disabled">
+                        <!-- <img src="{{ asset('img/upgrade.png') }}" style="height:50px;width:50px;" alt="upgrade"> -->
+                        <img style="height:35px;width:35px; margin-top:13px; margin-left:1px"
+                            src="https://img.icons8.com/ios/50/000000/sword.png" />
+                        <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑
+                        </p>
                     </a>
                 @else
-                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon" id="btn-upgrade" style="background-color:#5ec3ee;box-shadow: 0px 0px 15px #5ec3ee;font-size:30px;cursor:pointer">
-                        <!-- <img src="{{ asset('img/upgrade.png')}}" style="height:50px;width:50px;" alt="upgrade"> -->
-                        <img style="height:35px;width:35px; margin-top:13px; margin-left:1px" src="https://img.icons8.com/ios/50/000000/sword.png" />
-                        <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑</p>
+                    <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Upgrade Weapon"
+                        id="btn-upgrade"
+                        style="background-color:#5ec3ee;box-shadow: 0px 0px 15px #5ec3ee;font-size:30px;cursor:pointer">
+                        <!-- <img src="{{ asset('img/upgrade.png') }}" style="height:50px;width:50px;" alt="upgrade"> -->
+                        <img style="height:35px;width:35px; margin-top:13px; margin-left:1px"
+                            src="https://img.icons8.com/ios/50/000000/sword.png" />
+                        <p style="font-size:20px; margin-top:-20px; margin-left:20px; font-weight:bold; color:#000">↑
+                        </p>
                     </a>
                 @endif
             </div>
@@ -771,65 +826,97 @@
     <!-- Modal Craft -->
     <div class="modal fade" id="modalCraft" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:105px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">CRAFT</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div>
                         <!-- Foreach Crafting di sini -->
-                        @foreach($equipments as $e)
-                        <div style="margin-bottom: 20px;">
-                            <div class="card h-100 border-gradient2">
-                                <div class="row g-0">
-                                    <div class="col-md-3 position-relative">
-                                        <img style="margin-left:30px; border-radius:10px; border:0px;width:130px;" src="./img/item/{{ $e->nama_equipment }}.jpg" class="img-fluid m-4" alt="...">
-                                    </div>
-                                    <div class="col-md-8 mr-10" style="margin-right:-20px;margin-top:10px;">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{ $e->nama_equipment }}</h5>
-                                            <p style="font-weight: bold; font-size:14px; text-align:justify; text-justify: inter-word;" class="text-glow3 card-text">
-                                                {{ $e->deskripsi_equipment }}
-                                            </p>
-                                            <div class="d-grid gap-1 d-md-flex justify-content-md-start mb-2">
-                                                <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
-                                                font-size:20px; font-weight:bold" type="number" class="form-control form-control-sm w-25 craft-amount" id="exampleCheck1" value="1">
-                                                <button class="btn btn-primary me-2 btn-sm color-1 btn-crafting-equipment" style="border-radius:25px;width:90px;" type="button" value="{{ $e->id_equipment }}">Craft</button>
+                        @foreach ($equipments as $e)
+                            <div style="margin-bottom: 20px;">
+                                <div class="card h-100 border-gradient2">
+                                    <div class="row g-0">
+                                        <div class="col-md-3 position-relative">
+                                            <img style="margin-left:30px; border-radius:10px; border:0px;width:130px;"
+                                                src="./img/item/{{ $e->nama_equipment }}.jpg" class="img-fluid m-4"
+                                                alt="...">
+                                        </div>
+                                        <div class="col-md-8 mr-10" style="margin-right:-20px;margin-top:10px;">
+                                            <div class="card-body">
+                                                <h5 class="card-title text-glow2"
+                                                    style="font-weight: bold; font-size:large;">
+                                                    {{ $e->nama_equipment }}</h5>
+                                                <p style="font-weight: bold; font-size:14px; text-align:justify; text-justify: inter-word;"
+                                                    class="text-glow3 card-text">
+                                                    {{ $e->deskripsi_equipment }}
+                                                </p>
+                                                <div class="d-grid gap-1 d-md-flex justify-content-md-start mb-2">
+                                                    <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
+                                                font-size:20px; font-weight:bold" type="number"
+                                                        class="form-control form-control-sm w-25 craft-amount"
+                                                        id="exampleCheck1" value="1">
+                                                    <button
+                                                        class="btn btn-primary me-2 btn-sm color-1 btn-crafting-equipment"
+                                                        style="border-radius:25px;width:90px;" type="button"
+                                                        value="{{ $e->id_equipment }}">Craft</button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                                        <div class="accordion-item" style="background-color:transparent; border:0px;">
-                                        <!-- jangan lupa id diganti -->
-                                            <h2 style="margin-left:10px;margin-right:10px;" class="accordion-header" id="flush-heading-{{ $e->id_equipment }}">
-                                                <button style="color:#33334D;background-color:transparent; font-weight: bold; " class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse-{{ $e->id_equipment }}" aria-expanded="false" aria-controls="flush-collapse-{{ $e->id_equipment }}">
-                                                    Requirement
-                                                </button>
-                                            </h2>
-                                            <!-- jangan lupa id sama aria-labelledby juga diganti -->
-                                            <div id="flush-collapse-{{ $e->id_equipment }}" class="accordion-collapse collapse" aria-labelledby="flush-heading-{{ $e->id_equipment }}" data-bs-parent="#accordionFlushExample">
-                                                <div class="accordion-body">
-                                                    <div class="mb-3 col-md-12">
-                                                        <div class="row g-0">
-                                                            <!-- Foreach requirement di sini -->
-                                                            @foreach ($e->requirement as $er)
-                                                            <div class="col-md-2 mx-auto">
-                                                                <div class="position-relative">
-                                                                    <img style="margin-left:30px; border-radius:10px; border:0px; width:80px;" src="./img/item/{{ $er->nama_material }}.jpg" class="img-fluid m-3" alt="...">
-                                                                    @if ($er->jumlah_material >= 10)
-                                                                    <h4 class="position-absolute top-0 text-white text-glow2" style="margin-top:4.2rem; margin-left:4.5rem;">{{ $er->jumlah_material }}</h4>
-                                                                    @else
-                                                                    <h4 class="position-absolute top-0 text-white text-glow2" style="margin-top:4.2rem; margin-left:4.8rem;">{{ $er->jumlah_material }}</h4>
-                                                                    @endif
-                                                                </div>
-                                                                <p style="color:#fff;text-align:center; font-size:14px">{{ $er->nama_material }}</p>
+                                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                                            <div class="accordion-item"
+                                                style="background-color:transparent; border:0px;">
+                                                <!-- jangan lupa id diganti -->
+                                                <h2 style="margin-left:10px;margin-right:10px;" class="accordion-header"
+                                                    id="flush-heading-{{ $e->id_equipment }}">
+                                                    <button
+                                                        style="color:#33334D;background-color:transparent; font-weight: bold; "
+                                                        class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse"
+                                                        data-bs-target="#flush-collapse-{{ $e->id_equipment }}"
+                                                        aria-expanded="false"
+                                                        aria-controls="flush-collapse-{{ $e->id_equipment }}">
+                                                        Requirement
+                                                    </button>
+                                                </h2>
+                                                <!-- jangan lupa id sama aria-labelledby juga diganti -->
+                                                <div id="flush-collapse-{{ $e->id_equipment }}"
+                                                    class="accordion-collapse collapse"
+                                                    aria-labelledby="flush-heading-{{ $e->id_equipment }}"
+                                                    data-bs-parent="#accordionFlushExample">
+                                                    <div class="accordion-body">
+                                                        <div class="mb-3 col-md-12">
+                                                            <div class="row g-0">
+                                                                <!-- Foreach requirement di sini -->
+                                                                @foreach ($e->requirement as $er)
+                                                                    <div class="col-md-2 mx-auto">
+                                                                        <div class="position-relative">
+                                                                            <img style="margin-left:30px; border-radius:10px; border:0px; width:80px;"
+                                                                                src="./img/item/{{ $er->nama_material }}.jpg"
+                                                                                class="img-fluid m-3" alt="...">
+                                                                            @if ($er->jumlah_material >= 10)
+                                                                                <h4 class="position-absolute top-0 text-white text-glow2"
+                                                                                    style="margin-top:4.2rem; margin-left:4.5rem;">
+                                                                                    {{ $er->jumlah_material }}</h4>
+                                                                            @else
+                                                                                <h4 class="position-absolute top-0 text-white text-glow2"
+                                                                                    style="margin-top:4.2rem; margin-left:4.8rem;">
+                                                                                    {{ $er->jumlah_material }}</h4>
+                                                                            @endif
+                                                                        </div>
+                                                                        <p
+                                                                            style="color:#fff;text-align:center; font-size:14px">
+                                                                            {{ $er->nama_material }}</p>
+                                                                    </div>
+                                                                @endforeach
+                                                                <!-- End Foreach Requirement di sini -->
                                                             </div>
-                                                            @endforeach
-                                                            <!-- End Foreach Requirement di sini -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -838,7 +925,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                         <!-- End Foreach Di Sini -->
                     </div>
@@ -851,75 +937,100 @@
     <!-- Modal Inventory -->
     <div class="modal fade" id="modalInventory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:80px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">INVENTORY</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <br>
                 <ul class="nav nav-pills nav-justified mx-3 mb-3 " id="pills-tab" role="tablist">
                     <li style="margin-left:10px; margin-right:10px;" class="nav-item" role="presentation">
-                        <button class="nav-link active fw-bold" id="pills-resource-tab" data-bs-toggle="pill" data-bs-target="#pills-resource" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Resource</button>
+                        <button class="nav-link active fw-bold" id="pills-resource-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-resource" type="button" role="tab" aria-controls="pills-home"
+                            aria-selected="true">Resource</button>
                     </li>
                     <li style="margin-left:10px; margin-right:10px;" class="nav-item" role="presentation">
-                        <button class="nav-link fw-bold" id="pills-equipment-tab" data-bs-toggle="pill" data-bs-target="#pills-equipment" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Equipment</button>
+                        <button class="nav-link fw-bold" id="pills-equipment-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-equipment" type="button" role="tab" aria-controls="pills-profile"
+                            aria-selected="false">Equipment</button>
                     </li>
                 </ul>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="tab-content" id="pills-tabContent">
-                        <div class="tab-pane fade show active" id="pills-resource" role="tabpanel" aria-labelledby="pills-resource-tab">
+                        <div class="tab-pane fade show active" id="pills-resource" role="tabpanel"
+                            aria-labelledby="pills-resource-tab">
                             <div class="row">
                                 <!-- Foreach Resource di sini -->
                                 @foreach ($material as $m)
-                                <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
-                                    <div class="card h-100 border-gradient2">
-                                        <div class="row g-0">
-                                            <div class="col-md-4 position-relative">
-                                                <img style="margin-left:30px; border-radius:10px; border:0px;" src="./img/item/{{ $m->nama_material }}.jpg" class="img-fluid m-2" alt="...">
-                                                <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}">{{ $m->jumlah }}</h4>
-                                            </div>
-                                            <div class="col-md-8 mr-10">
-                                                <div class="card-body">
-                                                    <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{ $m->nama_material }}</h5>
-                                                    <p style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;" class="text-glow3 card-text">
+                                    <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
+                                        <div class="card h-100 border-gradient2">
+                                            <div class="row g-0">
+                                                <div class="col-md-4 position-relative">
+                                                    <img style="margin-left:30px; border-radius:10px; border:0px;"
+                                                        src="./img/item/{{ $m->nama_material }}.jpg"
+                                                        class="img-fluid m-2" alt="...">
+                                                    <h4
+                                                        class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}">
+                                                        {{ $m->jumlah }}</h4>
+                                                </div>
+                                                <div class="col-md-8 mr-10">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title text-glow2"
+                                                            style="font-weight: bold; font-size:large;">
+                                                            {{ $m->nama_material }}</h5>
+                                                        <p style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;"
+                                                            class="text-glow3 card-text">
 
-                                                    </p>
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
                                 <!-- End Foreach -->
                             </div>
                         </div>
-                        <div class="tab-pane fade" id="pills-equipment" role="tabpanel" aria-labelledby="pills-equipment-tab">
+                        <div class="tab-pane fade" id="pills-equipment" role="tabpanel"
+                            aria-labelledby="pills-equipment-tab">
                             <div class="row">
                                 @foreach ($equipments as $e)
-                                <!-- Foreach equipment di sini -->
-                                <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
-                                    <div class="card h-100 border-gradient2">
-                                        <div class="row g-0">
-                                            <div class="col-md-4 position-relative">
-                                                <img style="margin-left:30px; border-radius:10px; border:0px; " src="./img/item/{{ $e->nama_equipment }}.jpg" class="img-fluid m-2" alt="...">
-                                                <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem" id="jumlah-equipment-{{ $e->id_equipment }}">{{ $e->jumlah_equipment }}</h4>
-                                            </div>
-                                            <div class="col-md-8 mr-10">
-                                                <div class="card-body">
-                                                    <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{ $e->nama_equipment }}</h5>
-                                                    <p style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;" class="text-glow3 card-text">
-                                                        {{ $e->deskripsi_equipment }}
-                                                    </p>
+                                    <!-- Foreach equipment di sini -->
+                                    <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
+                                        <div class="card h-100 border-gradient2">
+                                            <div class="row g-0">
+                                                <div class="col-md-4 position-relative">
+                                                    <img style="margin-left:30px; border-radius:10px; border:0px; "
+                                                        src="./img/item/{{ $e->nama_equipment }}.jpg"
+                                                        class="img-fluid m-2" alt="...">
+                                                    <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem"
+                                                        id="jumlah-equipment-{{ $e->id_equipment }}">
+                                                        {{ $e->jumlah_equipment }}</h4>
                                                 </div>
-                                                <div class="position-absolute bottom-0 end-0 me-2 mb-2">
-                                                    <button type="button" class="btn btn-primary btn-sm color-1 btn-using-equipment" style="border-radius:15px;width:90px;" value="{{ $e->id_equipment }}">Use</button>
+                                                <div class="col-md-8 mr-10">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title text-glow2"
+                                                            style="font-weight: bold; font-size:large;">
+                                                            {{ $e->nama_equipment }}</h5>
+                                                        <p style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;"
+                                                            class="text-glow3 card-text">
+                                                            {{ $e->deskripsi_equipment }}
+                                                        </p>
+                                                    </div>
+                                                    <div class="position-absolute bottom-0 end-0 me-2 mb-2">
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-sm color-1 btn-using-equipment"
+                                                            style="border-radius:15px;width:90px;"
+                                                            value="{{ $e->id_equipment }}">Use</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 @endforeach
                                 <!-- End Foreach -->
                             </div>
@@ -934,15 +1045,20 @@
     <!-- Modal Gift -->
     <div class="modal fade" id="modalGift" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:120px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">GIFT</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <div class="mx-4">
-                    <select style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;color:#1F9C8C;font-weight:normal;" class="form-select form-select-md w-100" aria-label=".form-select-sm example" id="gift-pilih-kelompok">
+                    <select
+                        style="font-weight:bold; background:transparent; border-radius:0px; border:0px; border-bottom: 3px solid #1F9C8C;color:#1F9C8C;font-weight:normal;"
+                        class="form-select form-select-md w-100" aria-label=".form-select-sm example"
+                        id="gift-pilih-kelompok">
                         <option selected value="default">--Pilih Kelompok--</option>
                         @foreach ($friend as $f)
                             <option value="{{ $f->id }}">{{ $f->name }}</option>
@@ -952,25 +1068,36 @@
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
                         <!-- Mulai foreach Gift di sini -->
-                        @foreach($material as $m)
+                        @foreach ($material as $m)
                             <div class="col-md-6 mt-2" style="margin-bottom: 10px;">
                                 <div class="card h-100 border-gradient2">
                                     <div class="row g-0">
                                         <div class="col-md-4 position-relative">
-                                            <img style="margin-left:30px; border-radius:10px; border:0px;" src="./img/item/{{$m->nama_material}}.jpg" class="img-fluid m-2" alt="...">
-                                            <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}" id="jumlahItem">{{$m->jumlah}}</h4>
+                                            <img style="margin-left:30px; border-radius:10px; border:0px;"
+                                                src="./img/item/{{ $m->nama_material }}.jpg" class="img-fluid m-2"
+                                                alt="...">
+                                            <h4 class="position-absolute top-0 end-0 text-white text-glow2 jumlahItem jumlah-material-{{ $m->materials_id }}"
+                                                id="jumlahItem">{{ $m->jumlah }}</h4>
                                         </div>
                                         <div class="col-md-8">
                                             <div class="card-body">
-                                                <h5 class="card-title text-glow2" style="font-weight: bold; font-size:large;">{{$m->nama_material}}</h5>
+                                                <h5 class="card-title text-glow2"
+                                                    style="font-weight: bold; font-size:large;">
+                                                    {{ $m->nama_material }}
+                                                </h5>
                                                 <!-- <p class="text-glow3 card-text" style="font-weight: bold; font-size:12px; text-align:justify; text-justify: inter-word;">
                                                     Meniadakan serangan musuh untuk 1 Round [Hanya aktif saat Ultimate Round]
                                                 </p> -->
                                                 <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center;
-                                                    font-weight:bold" type="number" class="form-control form-control-sm w-50 input-material-amount" id="exampleCheck1" value="1" min="1">
+                                                    font-weight:bold" type="number"
+                                                    class="form-control form-control-sm w-50 input-material-amount"
+                                                    id="exampleCheck1" value="1" min="1">
 
                                                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-2">
-                                                    <button type="button" class="btn btn-primary btn-gift-material color-1" material="{{$m->materials_id}}" style="border-radius:15px;width:70px;">Gift</button>
+                                                    <button type="button"
+                                                        class="btn btn-primary btn-gift-material color-1"
+                                                        material="{{ $m->materials_id }}"
+                                                        style="border-radius:15px;width:70px;">Gift</button>
                                                 </div>
                                             </div>
 
@@ -991,20 +1118,23 @@
     <!-- Modal Pesan Gagal -->
     <div class="modal fade" id="modalAlert" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient3 " style="background-color: #33334D; box-shadow:1px 0px 40px #ff5b5b;">
+            <div class="modal-content  border-gradient3 "
+                style="background-color: #33334D; box-shadow:1px 0px 40px #ff5b5b;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:90px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D;">WARNING</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
-                        <div style="margin-bottom: 30px;" >
-                        <!-- tempat ganti" text info -->
-                            <p style="text-align: center; font-size:20px; color: #33334D;" id="failed-message"></p>
-                        <!-- end tempat ganti" text info -->
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
+                            <p style="text-align: center; font-size:20px; color: #33334D;" id="failed-message">Gagal
+                                mengirim material, Jumlah yang dikirim melebihi inventory</p>
+                            <!-- end tempat ganti" text info -->
                         </div>
                     </div>
                 </div>
@@ -1040,7 +1170,8 @@
                                         <div class="col-md-8">
                                             <div class="card-body">
                                                 <h5 class="card-title text-glow2 material-name"
-                                                    style="font-weight: bold; font-size:large;" seq="{{$m->id}}">{{ $m->name }}
+                                                    style="font-weight: bold; font-size:large;"
+                                                    seq="{{ $m->id }}">{{ $m->name }}
                                                 </h5>
                                                 <h6 class="card-text text-glow2" style="font-size:large;">Stock:
                                                     <span seq="{{ $m->id }}"
@@ -1063,10 +1194,16 @@
                                         </div> -->
                                             </div>
                                         </div>
-                                        <div style="margin-bottom: 20px;"class="d-grid gap-0 d-md-flex justify-content-md-start">
-                                            <input style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; font-weight:bold; font-size:larger" type="number" seq="{{ $m->id }}" class="form-control form-control-sm w-25 material-qty ms-2" id="exampleCheck1" seq="{{$m->id}}" value="0" min=0>
+                                        <div style="margin-bottom: 20px;"
+                                            class="d-grid gap-0 d-md-flex justify-content-md-start">
+                                            <input
+                                                style="background-color:transparent; border:0px;border-bottom: 3px solid #1F9C8C; border-radius:0px; text-align:center; font-weight:bold; font-size:larger"
+                                                type="number" seq="{{ $m->id }}"
+                                                class="form-control form-control-sm w-25 material-qty ms-2"
+                                                id="exampleCheck1" seq="{{ $m->id }}" value="0" min=0>
                                             <p style="margin-right: 10px;" class="my-auto">item</p>
-                                            <button class="btn btn-primary btn-sm me-md-2 color-1 reset" type="button" seq="{{ $m->id }}" style="border-radius:50px; width:40px;">
+                                            <button class="btn btn-primary btn-sm me-md-2 color-1 reset" type="button"
+                                                seq="{{ $m->id }}" style="border-radius:50px; width:40px;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                     fill="currentColor" class="bi bi-arrow-counterclockwise"
                                                     viewBox="0 0 16 16">
@@ -1089,38 +1226,47 @@
                 </div>
                 <div class="modal-footer" style="border-top : none">
                     <h5 class="card-title me-auto"
-                        style="margin-left :20px; font-weight : bold; font-size :large; color :#33334D">Coin  :
+                        style="margin-left :20px; font-weight : bold; font-size :large; color :#33334D">Coin :
                         <span class="team-coin">{{ $team->coin }}</span>
                     </h5>
                     <h5 class="card-title" style="color:#33334D;font-weight: bold; font-size:large;">Total : <span
                             class="total">0</span></h5>
-                    <button type="button" class="btn btn-primary color-1 material-buy" style="margin-right:20px;border-radius:20px;width:90px;">Buy</button>
+                    <button type="button" class="btn btn-primary color-1 material-buy"
+                        style="margin-right:20px;border-radius:20px;width:90px;">Buy</button>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Modal Confirm -->
-    <div class="modal fade " id="modalConfirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal fade " id="modalConfirm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:55px; width:30%;" src="./img/kiri.svg">
-                    <h5 class="modal-title text-center ms-3 fw-bold" id="title-modal" style="color:#33334D ;">CONFIRMATION</h5>
+                    <h5 class="modal-title text-center ms-3 fw-bold" id="title-modal" style="color:#33334D ;">
+                        CONFIRMATION</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
-                        <div style="margin-bottom: 30px;" >
-                        <!-- tempat ganti" text info -->
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
                             <p style="text-align: center; font-size:20px; color: #33334D;" class="result-message"></p>
-                        <!-- end tempat ganti" text info -->
+                            <!-- end tempat ganti" text info -->
                         </div>
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <button type="button" class="btn btn-secondary color-1-outline btn-no" data-bs-dismiss="modal" aria-label="Close" style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;border: 2px solid #1F9C8C;">No</button>
-                            <button type="button" class="btn btn-primary btn-lg color-1 btn-yes" style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal" onclick="buyMaterial()">Yes</button>
+                            <button type="button" class="btn btn-secondary color-1-outline btn-no"
+                                data-bs-dismiss="modal" aria-label="Close"
+                                style="border-radius:50px;width:120px;background-color:transparent;color:#1F9C8C;border: 2px solid #1F9C8C;">No</button>
+                            <button type="button" class="btn btn-primary btn-lg color-1 btn-yes"
+                                style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal"
+                                onclick="buyMaterial()">Yes</button>
                         </div>
                     </div>
                 </div>
@@ -1129,23 +1275,59 @@
     </div>
     <!-- End Modal Confirm -->
 
-    <!-- Modal Info -->
-    <div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Modal Status -->
+    <div class="modal fade " id="modalStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content border-gradient "
+                style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
-                    <img style="margin-left:70px; width:30%;" src="./img/kiri.svg">
-                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">INFORMATION</h5>
+                    <img style="margin-left:100px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">STATUS</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body" style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
-                        <div style="margin-bottom: 30px;" >
-                        <!-- tempat ganti" text info -->
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
+                            <p style="text-align: center; font-size:20px; color: #33334D;" class="result-message">Gagal
+                                mengirim material karena jumlah yang dikirim melebihi inventory</p>
+                            <!-- end tempat ganti" text info -->
+                        </div>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-primary btn-lg color-1 btn-yes"
+                                style="border-radius:50px;width:120px;font-size:15px;" data-bs-dismiss="modal"
+                                aria-label="Close">OK</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Modal Status -->
+
+    <!-- Modal Info -->
+    <div class="modal fade" id="modalInfo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB;  box-shadow:1px 0px 40px #70E8C6;">
+                <div class="modal-header" style="border-bottom: none;">
+                    <img style="margin-left:70px; width:30%;" src="./img/kiri.svg">
+                    <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">INFORMATION</h5>
+                    <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
+                    <button style="margin-right:3px;" type="button" class="btn-close" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <br>
+                <div class="modal-body" style="margin-left:10px; margin-right:10px;">
+                    <div class="row mt-2">
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
                             <p style="text-align: center; font-size:20px; color: #33334D;" id="message-round-info"></p>
-                        <!-- end tempat ganti" text info -->
+                            <!-- end tempat ganti" text info -->
                         </div>
                     </div>
                 </div>
@@ -1155,26 +1337,33 @@
     <!-- End Modal Info -->
 
     <!-- Modal Video Reminder -->
-    <div class="modal fade " id="modalVideoReminder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade " id="modalVideoReminder" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width:1920px;">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:155px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">ATTENTION</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body " style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
-                        <div style="margin-bottom: 30px;" >
-                        <!-- tempat ganti" text info -->
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
 
-                        <iframe  style="width:100%; margin:0 auto; border-radius:20px;" height="539" id="video-reminder-source" src="https://www.youtube.com/embed/Jsh-ddCJUH8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                            <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
+                                id="video-reminder-source" src="https://www.youtube.com/embed/Jsh-ddCJUH8"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                            <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
                             <source src="https://www.youtube.com/watch?v=pmMjkMtpnTc" type="video/mp4">
                         </video> -->
-                        <!-- end tempat ganti" text info -->
+                            <!-- end tempat ganti" text info -->
                         </div>
                     </div>
                 </div>
@@ -1184,26 +1373,33 @@
     <!-- End Modal Video Reminder -->
 
     <!-- Modal Video Winner -->
-    <div class="modal fade " id="modalVideoWinner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade " id="modalVideoWinner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
+        data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="width:1920px;">
-            <div class="modal-content  border-gradient " style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
+            <div class="modal-content  border-gradient "
+                style="background-color:#ADE9DB; box-shadow:1px 0px 40px #70E8C6;">
                 <div class="modal-header" style="border-bottom: none;">
                     <img style="margin-left:155px; width:30%;" src="./img/kiri.svg">
                     <h5 class="modal-title text-center ms-3 fw-bold" style="color:#33334D ;">ATTENTION</h5>
                     <img style="margin-left:16px; margin-right:20px; width:30%;" src="./img/kanan.svg">
-                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button style="margin-right:3px;" type="button" id="stop-video" class="btn-close"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <br>
                 <div class="modal-body " style="margin-left:10px; margin-right:10px;">
                     <div class="row mt-2">
-                        <div style="margin-bottom: 30px;" >
-                        <!-- tempat ganti" text info -->
+                        <div style="margin-bottom: 30px;">
+                            <!-- tempat ganti" text info -->
 
-                        <iframe  style="width:100%; margin:0 auto; border-radius:20px;" height="539" id="video-winner-source" src="https://www.youtube.com/embed/werYxoKlYm0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                        <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
+                            <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
+                                id="video-winner-source" src="https://www.youtube.com/embed/werYxoKlYm0"
+                                title="YouTube video player" frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowfullscreen></iframe>
+                            <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
                             <source src="https://www.youtube.com/watch?v=pmMjkMtpnTc" type="video/mp4">
                         </video> -->
-                        <!-- end tempat ganti" text info -->
+                            <!-- end tempat ganti" text info -->
                         </div>
                     </div>
                 </div>
@@ -1213,7 +1409,9 @@
     <!-- End Modal Video Winner -->
 
     <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
 
     <!-- Alpine.js -->
     <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
@@ -1228,10 +1426,10 @@
         // }
         // AKHIR INSPECT
 
-        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)
-        })
+        });
 
         var ronde = parseInt("{{ $round->round }}");
         var aksi = {{ $round->action }};
@@ -1244,14 +1442,30 @@
         var gameFinishedStatus = {{ $round->game_finished }};
 
         // EQUIPMENT STATUS CHECK
-        if (!{{ $team->debuff_disable }}) { $('#wt').hide(); }
-        if ({{ $team->debuff_decreased }} <= 0) { $('#ac').hide(); }
-        if (!{{ $team->debuff_overtime }}) { $('#ps').hide(); }
-        if ({{ $team->buff_increased }} <= 0) { $('#sp').hide(); }
-        if (!{{ $team->buff_immortal }}) { $('#ia').hide(); }
-        if ({{ $team->buff_regeneration }} <= 0) { $('#r').hide(); }
-        if (!{{ $team->shield }}) { $('#ms').hide(); }
-        if (!{{ $team->attack_status }}) { $('#atk').hide(); }
+        if (!{{ $team->debuff_disable }}) {
+            $('#wt').hide();
+        }
+        if ({{ $team->debuff_decreased }} <= 0) {
+            $('#ac').hide();
+        }
+        if (!{{ $team->debuff_overtime }}) {
+            $('#ps').hide();
+        }
+        if ({{ $team->buff_increased }} <= 0) {
+            $('#sp').hide();
+        }
+        if (!{{ $team->buff_immortal }}) {
+            $('#ia').hide();
+        }
+        if ({{ $team->buff_regeneration }} <= 0) {
+            $('#r').hide();
+        }
+        if (!{{ $team->shield }}) {
+            $('#ms').hide();
+        }
+        if (!{{ $team->attack_status }}) {
+            $('#atk').hide();
+        }
         if (!partStatus) {
             $('#secret-weapon-progress-bar').hide();
             $('#quest-team-progress-bar').hide();
@@ -1400,13 +1614,27 @@
 
         // PREVENT CERTAIN CHARACTER
         $(document).on("keydown", ".craft-amount", function(e) {
-            if(e.keyCode == 188) { return false; }
-            if(e.keyCode == 190) { return false; }
-            if(e.keyCode == 69) { return false; }
-            if(e.keyCode == 187) { return false; }
-            if(e.keyCode == 107) { return false; }
-            if(e.keyCode == 109) { return false; }
-            if(e.keyCode == 189) { return false; }
+            if (e.keyCode == 188) {
+                return false;
+            }
+            if (e.keyCode == 190) {
+                return false;
+            }
+            if (e.keyCode == 69) {
+                return false;
+            }
+            if (e.keyCode == 187) {
+                return false;
+            }
+            if (e.keyCode == 107) {
+                return false;
+            }
+            if (e.keyCode == 109) {
+                return false;
+            }
+            if (e.keyCode == 189) {
+                return false;
+            }
         });
 
         // HISTORY AUTO SCROLL
@@ -1423,14 +1651,14 @@
                     disableUpgrade();
                     disableShop();
                     enableUse();
-                    (weaponLevel > 0) ? enableAttack() : disableAttack();
+                    (weaponLevel > 0) ? enableAttack(): disableAttack();
                 } else {
                     disableUse();
                     disableAttack();
                     enableGift();
                     enableCrafting();
-                    (weaponLevel >= 3) ? disableUpgrade() : enableUpgrade();
-                    (shopping || questAmount >= 10) ? enableShop() : disableShop();
+                    (weaponLevel >= 3) ? disableUpgrade(): enableUpgrade();
+                    (shopping || questAmount >= 10) ? enableShop(): disableShop();
                 }
             } else {
                 disableAllControl();
@@ -1450,7 +1678,10 @@
         });
 
         // REALTIME ROUND, ACTION AND TIMER
-        var runTimer = setInterval(function() { roundSessionTimer(); }, 1000);
+        var runTimer = setInterval(function() {
+            roundSessionTimer();
+        }, 1000);
+
         function roundSessionTimer() {
             if (ronde < 1) {
                 disableAllControl();
@@ -1493,7 +1724,8 @@
                     $(this).parent().children('.craft-amount').val(1);
 
                     if (data.crafting_result) {
-                        var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) + parseInt(amount);
+                        var amount_now = parseInt($("#jumlah-equipment-" + id_equipment).text()) +
+                            parseInt(amount);
                         $("#jumlah-equipment-" + id_equipment).text(amount_now);
 
                         $.each(data.material_update, function(index, value) {
@@ -1621,7 +1853,7 @@
         });
 
         // GIFT MATERIAL
-        $(document).on('click', '.btn-gift-material', function(){
+        $(document).on('click', '.btn-gift-material', function() {
             var jumlah = $(this).parent().parent().children('.input-material-amount').val();
             var material = $(this).attr("material");
             var tujuan = $('#gift-pilih-kelompok').val();
@@ -1673,6 +1905,7 @@
             $('#modalCraft').modal('hide');
             $('#modalGift').modal('hide');
             $('#modalShop').modal('hide');
+            $('#modalConfirm').modal('hide');
             $('#modalInfo').modal('show');
 
             if (!aksi) {
@@ -1700,7 +1933,8 @@
 
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
-                $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
+                $('#video-winner-source').attr('src',
+                    'https://www.youtube.com/embed/werYxoKlYm0?autoplay=1&mute=0');
                 gameFinishedStatus = true;
                 disableAllControl();
 
@@ -1709,7 +1943,8 @@
                 $('.timer').text("");
             } else {
                 $('#modalVideoReminder').modal('show');
-                $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=0');
+                $('#video-reminder-source').attr('src',
+                    'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=0');
                 $('#secret-weapon-progress-bar').show();
                 $('#quest-team-progress-bar').show();
             }
@@ -1813,7 +2048,7 @@
             materialPrice = parseInt($(".price[seq=" + seq + "]").text());
             materialQty = parseInt($(".material-qty[seq=" + seq + "]").val());
 
-            if(isNaN(materialQty)){
+            if (isNaN(materialQty)) {
                 materialQty = 0;
             }
 
@@ -1882,14 +2117,14 @@
                 var qty = $(this).val();
                 if (qty > 0) {
                     var materialID = $(this).attr('seq');
-                    var materialName = $(".material-name[seq="+materialID+"]").text();
-                    subtotal = $(".subtotal[seq="+materialID+"]").text();
+                    var materialName = $(".material-name[seq=" + materialID + "]").text();
+                    subtotal = $(".subtotal[seq=" + materialID + "]").text();
                     total = parseInt($(".total").text());
                     var val = {
                         "id": materialID,
                         "name": materialName,
                         "qty": qty,
-                        "subtotal":subtotal,
+                        "subtotal": subtotal,
                         "total": total
                     };
                     arrOfMaterials.push(val);
@@ -1898,25 +2133,25 @@
         }
 
         //Show materials in confirmation modal
-        function showModalResult(message){
-            if($.isArray(message)){
+        function showModalResult(message) {
+            if ($.isArray(message)) {
                 $(".result-message").append("<h3>Are you sure you want to buy this item?</h3>" + "<br>");
-                for (var i=0; i<arrOfMaterials.length; i++) {
-                    $(".result-message").append("<p>"+arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty + ") = <span class="harga-material" seq="arrOfMaterials[i].id">" + arrOfMaterials[i].subtotal + "</span></p><br>");
+                for (var i = 0; i < arrOfMaterials.length; i++) {
+                    $(".result-message").append("<span>" + arrOfMaterials[i].name + "(x" + arrOfMaterials[i].qty +
+                        ") = <span class='hrg-material' seq='" + arrOfMaterials[i].id + "'>" + arrOfMaterials[i]
+                        .subtotal + "</span></span><br>");
                 }
                 $(".result-message").append("<br><h3>Total : " + arrOfMaterials[0].total + "</h3><br>");
                 $("#modalConfirm").modal("show");
             } else {
-                $("#modalConfirm").modal("show");
+                $("#modalStatus").modal("show");
                 $("#title-modal").text("Gagal membeli");
                 $(".result-message").text(message);
-                $(".btn-yes").css("display", "none");
-                $('.btn-no').text("Ok");
             }
         }
 
         //Reset input type number every time modal Shop is being clicked
-        function resetInputValue(){
+        function resetInputValue() {
             $(".material-qty").each(function() {
                 $(this).val(0);
                 findSubtotal($(this).attr("seq"));
@@ -1972,7 +2207,7 @@
             if (arrOfMaterials.length == 0) {
                 materialMessage = "Wah, kelihatannya belum memilih material sama sekali ya?";
                 showModalResult(materialMessage);
-            } else if (arrOfMaterials.length > 3){
+            } else if (arrOfMaterials.length > 3) {
                 materialMessage = "Hayo, kalian hanya bisa membeli maksimal tiga macam material saja ya!";
                 showModalResult(materialMessage);
             } else {
@@ -1981,31 +2216,28 @@
         });
 
         //When button confirmation is clicked
-        function buyMaterial(){
+        function buyMaterial() {
             $("#modalConfirm").modal("hide");
             $("#modalShop").modal("hide");
             disableShop();
 
-            var team_id = {{Auth::user()->team}};
+            var team_id = {{ Auth::user()->team }};
             var cart = arrOfMaterials;
             $.ajax({
                 type: "POST",
-                url: "{{route('insertOrUpdate')}}",
+                url: "{{ route('insertOrUpdate') }}",
                 data: {
-                    '_token': '<?php echo csrf_token() ?>',
+                    '_token': '<?php echo csrf_token(); ?>',
                     'teams_id': team_id,
                     'cart': cart
                 },
                 success: function(data) {
                     //Tampilkan modal konfirmasi
-                    $('#modalConfirm').modal("show");
-                    $('#title-modal').text("STATUS");
+                    $('#modalStatus').modal("show");
                     $(".result-message").text(data.message);
-                    $(".btn-yes").css("display", "none");
-                    $('.btn-no').text("OK");
-                    if(data.message.indexOf("transaksi") > -1){
+                    if (data.message.indexOf("transaksi") > -1) {
                         // UPDATE STOK
-                        for (var i=0; i<arrOfMaterials.length; i++) {
+                        for (var i = 0; i < arrOfMaterials.length; i++) {
                             var id = arrOfMaterials[i].id;
                             var amountBefore = $(".jumlah-material-" + id).eq(0).text();
                             var amount = arrOfMaterials[i].qty;
@@ -2015,6 +2247,7 @@
                         }
                     }
                     $('.coin-amount').text(": " + data.coin);
+                    $('.team-coin').text(data.coin);
                 }
             });
         }
@@ -2031,6 +2264,10 @@
             $(".stock[seq=" + seq + "]").text(updateStock);
             $(".price[seq=" + seq + "]").text(updatePrice);
 
+            if ($('#modalConfirm').data('bs.modal').isShown == true) {
+                if($(".hrg-material[seq=" + seq + "]").text()))
+            }
+
             //Check stock's availability
             isStockAvailable(seq);
             //Update subtotal
@@ -2040,4 +2277,5 @@
         });
     </script>
 </body>
+
 </html>

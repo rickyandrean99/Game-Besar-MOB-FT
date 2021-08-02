@@ -23,6 +23,11 @@
         </div>
 
         <div class="container">
+        @if(session('status'))
+            <div class="alert alert-success" id="">
+                {{session('status')}}
+            </div>
+        @endif
         <div class="row justify-content-cent er">
             <div class="col-md-8">
                 <div class="card">
@@ -45,7 +50,7 @@
                         </label>
                         
                         <label for="" id="kelompok2Label" class="hidden">
-                        Lose:
+                        Kalah:
                         <select name="kelompok2" id="kelompok2" >
                         <option value="" selected disabled >-- Pilih Kelompok 2 --</option>
                         @foreach ($teams as $t)
@@ -59,7 +64,7 @@
                         
                         </select> <br> <br>
 
-                        <button type=button id="simpan" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Simpan</button>
+                        <button type=button id="simpan" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" onclick="simpan()">Simpan</button>
                    
                     </div>
                 </div>
@@ -75,14 +80,21 @@
                 <h5 class="modal-title" id="exampleModalLabel">Konfirmasi</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <form action="/rally/simpan" method="post">
+            @csrf
             <div class="modal-body">
                 Yakin untuk memasukan Coin?
+                <input type="hidden" id="tipe_modal" name="tipe" value="">
+                <input type="hidden" id="kelompok1_modal" name="kelompok1" value="">
+                <input type="hidden" id="kelompok2_modal" name="kelompok2" value="">
+                <input type="hidden" id="status_modal" name="status" value="">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tidak</button>
-                <button type="button" class="btn btn-primary" onclick="simpan()">Ya</button>
+                <button type="submit" class="btn btn-primary" >Ya</button>
             </div>
             </div>
+            </form>
         </div>
     </div>
 
@@ -111,21 +123,10 @@
             var kelompok1 = $('#kelompok1').val();
             var kelompok2 = $('#kelompok2').val();
             var status = $('#status').val();
-
-            $.ajax({
-          type: 'POST',
-          url: '{{route("rallysimpan")}}',
-          data: {
-          '_token':'<?php echo csrf_token() ?>',
-          'tipe': tipe,
-          'kelompok1': kelompok1,
-          'kelompok2': kelompok2,
-          'status': status
-          },
-          success: function(data){
-            alert(data.msg);
-          }
-        });
+            $("#tipe_modal").val(tipe);
+            $("#kelompok1_modal").val(kelompok1);
+            $("#kelompok2_modal").val(kelompok2);
+            $("#status_modal").val(status);
     }
     </script>
 
