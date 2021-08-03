@@ -1393,7 +1393,7 @@
                             <!-- tempat ganti" text info -->
 
                             <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
-                                id="video-winner-source" src="https://www.youtube.com/embed/BG7Yyv4SOmw"
+                                id="video-winner-source" src="https://www.youtube.com/embed/ShD-jGHQtFI"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>
@@ -1925,7 +1925,7 @@
         // STOP YOUTUBE VIDEO
         $(document).on("click", "#stop-video", function() {
             $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/k99CHFdrB6g?autoplay=1&mute=1');
-            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/BG7Yyv4SOmw?autoplay=1&mute=1');
+            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/ShD-jGHQtFI?autoplay=1&mute=1');
         });
 
         // UPDATE ROUND AND ACTION
@@ -1968,7 +1968,7 @@
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
                 $('#video-winner-source').attr('src',
-                    'https://www.youtube.com/embed/BG7Yyv4SOmw?autoplay=1&mute=0');
+                    'https://www.youtube.com/embed/ShD-jGHQtFI?autoplay=1&mute=0');
                 gameFinishedStatus = true;
                 disableAllControl();
 
