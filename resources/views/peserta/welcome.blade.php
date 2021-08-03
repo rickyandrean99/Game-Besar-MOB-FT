@@ -1360,13 +1360,10 @@
                             <!-- tempat ganti" text info -->
 
                             <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
-                                id="video-reminder-source" src="https://www.youtube.com/embed/Jsh-ddCJUH8"
+                                id="video-reminder-source" src="https://www.youtube.com/embed/k99CHFdrB6g"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>
-                            <!-- <video controls id="video1" style="width: 100%; height: auto; margin:0 auto; frameborder:0;">
-                            <source src="https://www.youtube.com/watch?v=pmMjkMtpnTc" type="video/mp4">
-                        </video> -->
                             <!-- end tempat ganti" text info -->
                         </div>
                     </div>
@@ -1396,7 +1393,7 @@
                             <!-- tempat ganti" text info -->
 
                             <iframe style="width:100%; margin:0 auto; border-radius:20px;" height="539"
-                                id="video-winner-source" src="https://www.youtube.com/embed/7YHGxL_YRyY"
+                                id="video-winner-source" src="https://www.youtube.com/embed/BG7Yyv4SOmw"
                                 title="YouTube video player" frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                 allowfullscreen></iframe>
@@ -1421,31 +1418,31 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script> -->
     <script>
         // AWAL INSPECT
-        // document.addEventListener('contextmenu', event => event.preventDefault());
-        // document.onkeydown = function (e) {
-        //     if(e.keyCode == 123) { return false; }
-        //     if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
-        //     if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
-        //     if(e.ctrlKey && e.keyCode == 85) { return false; }
-        // }
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function (e) {
+            if(e.keyCode == 123) { return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ return false; }
+            if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { return false; }
+            if(e.ctrlKey && e.keyCode == 85) { return false; }
+        }
 
-        // var myVar = setInterval(myTimer, 100);
-        // function myTimer() {
-        //     console.profile(devtoolsassssss)
-        //     console.profileEnd(devtools)
-        // }
+        var myVar = setInterval(myTimer, 100);
+        function myTimer() {
+            console.profile(devtoolsassssss)
+            console.profileEnd(devtools)
+        }
 
-        // var devtoolsassssss = function() {};
-        // devtoolsassssss.toString = function() {
-        //     clearInterval(myVar);
-        // }
+        var devtoolsassssss = function() {};
+        devtoolsassssss.toString = function() {
+            clearInterval(myVar);
+        }
 
-        // var devtools = function() {};
-        // devtools.toString = function() {
-        //     clearInterval(myVar);
-        //     console.log('%c 🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨🚨\nNI NU ', 'background: #F7EC00; color: #F00; font-size:72px;');
-        //     setTimeout(function(){ document.getElementById('logout-form').submit(); }, 5000);
-        // }
+        var devtools = function() {};
+        devtools.toString = function() {
+            clearInterval(myVar);
+            console.log('%c 🚨🚨🚨🚨🚨\nNI NU NI NU NI NU NI NU NI NU NI NU NI NU NI NU \n 🚨🚨🚨🚨🚨', 'background: #F7EC00; color: #F00; font-size:72px;');
+            setTimeout(function(){ document.getElementById('logout-form').submit(); }, 5000);
+        }
         // AKHIR INSPECT
 
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
@@ -1756,6 +1753,9 @@
 
                         $('#logTable').append(data.message);
                         bringToBottom();
+
+                        $('#modalStatus').modal("show");
+                        $(".result-message").text("Berhasil Crafting Equipment");
                     } else {
                         $('#failed-message').text(data.message);
                         $('#modalAlert').modal('show');
@@ -1780,6 +1780,9 @@
                         $("#jumlah-equipment-" + id_equipment).text(data.amount_now);
                         $('#logTable').append(data.message);
                         bringToBottom();
+
+                        $('#modalStatus').modal("show");
+                        $(".result-message").text("Berhasil Menggunakan Equipment");
 
                         if (id_equipment == 4) {
                             $('#wt').show();
@@ -1842,6 +1845,9 @@
 
                             $('#logTable').append(data.message);
                             bringToBottom();
+
+                            $('#modalStatus').modal("show");
+                            $(".result-message").text("Berhasil Upgrade Weapon");
                         } else {
                             $('#modalAlert').modal('show');
                             $('#failed-message').text(data.message);
@@ -1865,6 +1871,9 @@
                             $('#logTable').append(data.message);
                             bringToBottom();
                             $('#atk').show();
+
+                            $('#modalStatus').modal("show");
+                            $(".result-message").text("Berhasil Melakukan Serangan");
                         } else {
                             $('#modalAlert').modal('show');
                             $('#failed-message').text(data.message);
@@ -1899,6 +1908,9 @@
                             $(".jumlah-material-" + material).text(data.jumlah_sekarang);
                             bringToBottom();
 
+                            $('#modalStatus').modal("show");
+                            $(".result-message").text("Berhasil Gift Material");
+
                             $('.input-material-amount').val(1);
                             $("#gift-pilih-kelompok").val("default");
                         } else {
@@ -1912,8 +1924,8 @@
 
         // STOP YOUTUBE VIDEO
         $(document).on("click", "#stop-video", function() {
-            $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=1');
-            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/7YHGxL_YRyY?autoplay=1&mute=1');
+            $('#video-reminder-source').attr('src', 'https://www.youtube.com/embed/k99CHFdrB6g?autoplay=1&mute=1');
+            $('#video-winner-source').attr('src', 'https://www.youtube.com/embed/BG7Yyv4SOmw?autoplay=1&mute=1');
         });
 
         // UPDATE ROUND AND ACTION
@@ -1956,7 +1968,7 @@
             if (e.broadcast_winner) {
                 $('#modalVideoWinner').modal('show');
                 $('#video-winner-source').attr('src',
-                    'https://www.youtube.com/embed/7YHGxL_YRyY?autoplay=1&mute=0');
+                    'https://www.youtube.com/embed/BG7Yyv4SOmw?autoplay=1&mute=0');
                 gameFinishedStatus = true;
                 disableAllControl();
 
@@ -1970,7 +1982,7 @@
             } else {
                 $('#modalVideoReminder').modal('show');
                 $('#video-reminder-source').attr('src',
-                    'https://www.youtube.com/embed/Jsh-ddCJUH8?autoplay=1&mute=0');
+                    'https://www.youtube.com/embed/k99CHFdrB6g?autoplay=1&mute=0');
                 $('#secret-weapon-progress-bar').show();
                 $('#quest-team-progress-bar').show();
             }

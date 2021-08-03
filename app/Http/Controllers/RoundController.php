@@ -229,10 +229,10 @@ class RoundController extends Controller
         $type = $request->get('broadcast_type');
         if (!($type)) {
             $update_reminder = DB::table('rounds')->where('id', 1)->update(['reminder'=> true]);
-        }
-        else
+        } else {
             DB::table('rounds')->where('id', 1)->update(['game_finished' => true]);
             DB::table('enemy_bosses')->where('id', 1)->update(['hp_amount' => 0]);
+        }
 
         event(new BroadcastVideo($type));
         return ["success" => true];

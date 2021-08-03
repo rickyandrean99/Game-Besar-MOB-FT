@@ -423,51 +423,55 @@ class TeamController extends Controller
         if ($team_detail->hp_amount > 0) {
             if (!$round_detail->action) {
                 if (count($cek_jumlah) > 0) {
-                    $jumlah_sekarang = $cek_jumlah[0]->amount;
+                    if ($jumlah > 0) {
+                        $jumlah_sekarang = $cek_jumlah[0]->amount;
 
-                    if ($jumlah <= $cek_jumlah[0]->amount) {
-                        $cek = DB::table('material_team')
-                            ->where('materials_id',$material)
-                            ->where('teams_id',$tujuan)
-                            ->get();
-                        if (count($cek)>0) {
-                            $update_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
-                        } else {
-                            $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
-                                'materials_id'=> $material,
-                                'teams_id'=> $tujuan,
-                                'amount'=> $jumlah
+                        if ($jumlah <= $cek_jumlah[0]->amount) {
+                            $cek = DB::table('material_team')
+                                ->where('materials_id',$material)
+                                ->where('teams_id',$tujuan)
+                                ->get();
+                            if (count($cek)>0) {
+                                $update_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->increment('amount', $jumlah);
+                            } else {
+                                $insert_material = DB::table('material_team')->where('teams_id', $tujuan)->where('materials_id', $material)->insert([
+                                    'materials_id'=> $material,
+                                    'teams_id'=> $tujuan,
+                                    'amount'=> $jumlah
+                                ]);
+                            }
+                            
+                            $update_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
+                
+                            $status = true;
+                            $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
+                            
+                            $msg = "Memberikan ".$jumlah." ".$material_detail->name." ke Tim ".$tujuan;
+                            $receiver_history = "Mendapatkan ".$jumlah." ".$material_detail->name." dari Tim Beta ".$id_team;
+
+                            $insert_history = DB::table('histories')->insert([
+                                [
+                                    'teams_id' => $id_team,
+                                    'name' => $msg,
+                                    'type' => 'GIFT',
+                                    'time' =>  Carbon::now(),
+                                    'round' => $round_detail->round
+                                ], 
+                                [
+                                    'teams_id' => $tujuan,
+                                    'name' => $receiver_history,
+                                    'type' => 'GIFT',
+                                    'time' =>  Carbon::now(),
+                                    'round' => $round_detail->round
+                                ]
                             ]);
+
+                            $msg = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$msg."</span></p></td></tr>";
+                            $receiver_history = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$receiver_history."</span></p></td></tr>";
+                            broadcast(new SendGift($tujuan, $receiver_history, $material, $jumlah))->toOthers();
                         }
-                        
-                        $update_material_pemilik = DB::table('material_team')->where('teams_id', $id_team)->where('materials_id', $material)->decrement('amount', $jumlah);
-            
-                        $status = true;
-                        $jumlah_sekarang = $cek_jumlah[0]->amount - $jumlah;
-                        
-                        $msg = "Memberikan ".$jumlah." ".$material_detail->name." ke Tim ".$tujuan;
-                        $receiver_history = "Mendapatkan ".$jumlah." ".$material_detail->name." dari Tim Beta ".$id_team;
-
-                        $insert_history = DB::table('histories')->insert([
-                            [
-                                'teams_id' => $id_team,
-                                'name' => $msg,
-                                'type' => 'GIFT',
-                                'time' =>  Carbon::now(),
-                                'round' => $round_detail->round
-                            ], 
-                            [
-                                'teams_id' => $tujuan,
-                                'name' => $receiver_history,
-                                'type' => 'GIFT',
-                                'time' =>  Carbon::now(),
-                                'round' => $round_detail->round
-                            ]
-                        ]);
-
-                        $msg = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$msg."</span></p></td></tr>";
-                        $receiver_history = "<tr><td><p><b>[GIFT]</b><small> ".date('H:i:s')."</small><br><span>".$receiver_history."</span></p></td></tr>";
-                        broadcast(new SendGift($tujuan, $receiver_history, $material, $jumlah))->toOthers();
+                    } else {
+                        $msg = "Masukkan jumlah material yang ingin dikirim";
                     }
                 }
                 else{
